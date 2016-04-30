@@ -1,21 +1,17 @@
 \begin{abstract}
 We consider the problem of verifying safety properties of heap-manipulating programs.
 A central challenge in such verification is to infer auxiliary
-invariants on the heap that enable one to prove the goal property.
+invariants on the heap that enable one to prove the desired goal property.
 Inferring such invariants is tricky for current software verifiers
-due to the limitations of deductive proof engines for existing heap logics 
+due to the limitations of deductive proof engines for existing heap logics
 to automatically extract them during proof search.
-In this paper, we propose an alternative oracle-guided approach for 
+In this thesis, we propose an alternative oracle-guided approach for
 heap invariant synthesis. Our approach reduces the verification problem to
 one of inductive synthesis, where the safety verification problem is
 reduced to one of synthesizing a heap separator pattern from positive
-and negative examples of heaps. 
+and negative examples of heaps.
 This reduction makes our approach modular by offloading the invariant
 synthesis step to an external oracle. This oracle can be implemented in
-various ways, with varying degrees of expressiveness and automation.
-We present a theoretical analysis of this oracle-guided approach. 
-We also show that the oracle-guided approach is effective in practice via
-an evaluation on benchmarks from recent software verification competitions,
-where we can outperform the state of the art verifiers.
+various ways, with varying degrees of expressiveness and automation. We demonstrate one practical implementation of the oracle-guided approach, showing that it is effective in practice via an evaluation on benchmarks from recent software verification competitions, where we can outperform the state of the art verifiers.
 
 \end{abstract}
