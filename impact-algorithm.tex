@@ -13,14 +13,35 @@
   % expand
   \myproc{\procexpand{$v \in V$}:}{
     %
-    if $v$ is an uncovered leaf then \\
-
-    \ForEach{action $(M_v(v),T,m) \in \Delta$}{
-      add a new vertex $w$ to $V$ and a new edge $(v,w)$ to $E$ \\
-      set $M_v(w) \leftarrow m$ and $\psi(w) \leftarrow \true$ \\
-      set $M_e(v,w) \leftarrow T$
+    \If{$v$ is an uncovered leaf}{
+        \ForEach{action $(M_v(v),T,m) \in \Delta$}{
+        add a new vertex $w$ to $V$ and a new edge $(v,w)$ to $E$; \\
+        set $M_v(w) \leftarrow m$ and $\psi(w) \leftarrow \true$; \\
+        set $M_e(v,w) \leftarrow T$;
+      }
     }
   }
   \caption{$\expand$: takes as input a vertex $v \in V$ and expands the control flow graph based on all actions available at that vertex.}
   \label{alg:expand}
+\end{algorithm}
+
+\begin{algorithm}[ht]
+  % Declare functions
+  \SetKwFunction{proccover}{COVER}
+
+  % Declare sub-program markers.
+  \SetKwProg{myproc}{Procedure}{}{}
+
+  % expand
+  \myproc{\proccover{$v, w \in V$}:}{
+    %
+    \If{$v$ is uncovered and $M_v(v) = M_v(w)$ and $v \nvDash w$}{
+      \If{$\psi(v) \vDash \psi(w)$}{
+        add $(v,w)$ to $\Delta$; \\
+        delete all $(x,y) \in \Delta$, s.t. $v \sqsubseteq y$;
+      }
+    }
+  }
+  \caption{$\cover$: takes as input vertices $v, w \in V$ and attempts to cover $v$ with $w$.}
+  \label{alg:cover}
 \end{algorithm}
