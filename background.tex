@@ -28,10 +28,10 @@ semantics (\autoref{sec:semantics}) of our subject language \lang.
     \lang \assign & (\locs: \instrs)^{*} \label{line:prog} \\
     % A statement is a predicate instruction or a heap instruction.
     \instrs \assign & \predinstr\ |\ \heapinstr \label{line:instrs} \\
-    % A predicate instruction: 
-    \predinstr \assign & 
+    % A predicate instruction:
+    \predinstr \assign &
     % updates predicates according to an operation.
-    \predvars \assign \predvars\ \predops\ \predvars 
+    \predvars \assign \predvars\ \predops\ \predvars
     %
     \label{line:bool-op} \\
     % or tests equalities of heap variables,
@@ -41,13 +41,13 @@ semantics (\autoref{sec:semantics}) of our subject language \lang.
     % or branches.
     |\ & \branch\ \predvars, \locs, \locs \label{line:branch} \\
     % A heap instruction: allocates a new cell:
-    \heapinstr \assign & \heapvars \assign \alloc() 
+    \heapinstr \assign & \heapvars \assign \alloc()
     %
     \label{line:alloc} \\
     % or a copy,
     |\ & \heapvars \assign \heapvars \label{line:copy} \\
     % or a load,
-    |\ & \heapvars \assign \heapvars \select \fields 
+    |\ & \heapvars \assign \heapvars \select \fields
     %
     \label{line:load} \\
     % or a store.
@@ -56,7 +56,7 @@ semantics (\autoref{sec:semantics}) of our subject language \lang.
     \label{line:store}
   \end{align}
   \caption{Syntax of heap-updating programs, $\lang$.
-    % 
+    %
     The spaces of control locations, predicate variables, heap
     variables, and fields are denoted $\locs$, $\predvars$,
     $\heapvars$, and $\fields$, respectively.
@@ -76,7 +76,7 @@ location (\autoref{line:prog}).
 %
 An instruction either updates the program's predicate variables or
 heap variables (\autoref{line:instrs}).
-% 
+%
 An instruction that updates predicate variable either stores in a
 predicate variable the result of a Boolean operation
 (\autoref{line:bool-op}),
@@ -117,19 +117,19 @@ labeled edges.
   \fieldmapnm)$, where
   %
   \begin{enumerate}
-  \item 
+  \item
     % Space of cells.
     For the countable universe of heap cells, denoted $\celluni$,
     $\cellsnm \subseteq \celluni$ is a finite set of cells that contains
     a distinguished cell $\nil \in \celluni$.
-  \item 
+  \item
     % Heap-variable labeling:
     $\heapvarnm: \heapvars \to \cellsnm$ maps each heap variable to
     the cell that it stores.
     %
     We denote the space of evaluations of heap variables as
     $\heapevals = \heapvars \to \celluni$.
-  \item 
+  \item
     % Field mapping:
     $\fieldmapnm: \cellsnm \times \fields \to \cellsnm$ maps each cell
     $c \in \cellsnm$ and field $\code{f} \in \fields$ to the child of
@@ -138,16 +138,16 @@ labeled edges.
     We denote the space of field maps as $\fieldmaps = \celluni \times
     \fields \to \celluni$.
 
-  \item 
-    % Predicate labeling: 
+  \item
+    % Predicate labeling:
     $\predlabel: \cellsnm \to 2^{\predvars}$ maps each cell
     $c \in \cellsnm$ to an assignment of Boolean values to $\predvars$.
     %
-    We denote the space of predicate labeling functions as 
+    We denote the space of predicate labeling functions as
     $\predlabelfns = \celluni \to 2^{|\predvars|}$.
 
   \end{enumerate}
-  % 
+  %
   We denote the space of heaps as $\heaps = \pset(\celluni) \times
   \heapevals \times \fieldmaps \times \predlabelfns$, and the space of
   characteristic functions of languages of heaps as $\chars = \heaps
@@ -157,17 +157,17 @@ labeled edges.
   A \lang \emph{state} is a triple $(\locnm, \predevalnm, \heapnm)$,
   where
   \begin{enumerate}
-  \item 
+  \item
     % Location:
     $\locnm \in \locs$ is a control location.
-  \item 
+  \item
     % Predicate evaluation:
     $\predevalnm: \predvars \to \bools$ is an evaluation of predicate
     variables.
     %
     We denote the space of evaluations of predicate variables as
     $\predevals = \predvars \to \bools$.
-  \item 
+  \item
     % Heap:
     $\heapnm \in \heaps$ is a heap.
   \end{enumerate}
@@ -196,10 +196,10 @@ labeled edges.
     %
     { n \notin N & N' = \add{n}{N} \\
       %
-      V' = \upd{V}{\cc{h}}{n} 
+      V' = \upd{V}{\cc{h}}{n}
       & F' = F[ \{ (n, f) \mapsto \nil \}_{f \in \fields} ]
     }
-    % 
+    %
     { \langle (C, V, F), \code{h \assign \alloc()} \rangle \step
       %
       (N', V', F')
@@ -209,10 +209,10 @@ labeled edges.
     %
     {  V' = \upd{V}{\cc{g}}{V(\cc{h})}
     }
-    % 
+    %
     { \langle (C, V, F), \code{g \assign h} \rangle \step
       %
-      (C, V', F) 
+      (C, V', F)
     } \\[\rowspace]
     % Load:
     \inference[LOAD]
@@ -253,7 +253,7 @@ thus we omit a complete description.
 % Define program runs.
 A run of a program $\prognm$ is a sequence of states in which each
 pair of successive states are in $\prognm$'s transition relation.
-% 
+%
 \begin{defn}
   \label{defn:trans-rels}
   % Define runs of a program:
@@ -287,7 +287,7 @@ previous work on shape analysis~\cite{sagiv02}.
   \edgesnm)$, where:
   %
   \begin{enumerate}
-  \item 
+  \item
     % Nodes:
     For the countable universe of nodes $\nodeuni$, $\nodesnm
     \subseteq \nodeuni$ is a finite set of nodes.
@@ -305,13 +305,16 @@ previous work on shape analysis~\cite{sagiv02}.
     %
     We denote the space of predicate-variable labelings as $\predvarlbls =
     \nodeuni \times \predvars \to \threevals$.
-  \item 
+  \item
     % Edges:
     $\edgesnm: N \times \fields \times N \to \threevals$ is a set of
     labeled \emph{edges}.
-    % 
+    %
     We denote the space of labeled edges as $\lbledges = \nodeuni
     \times \fields \times \nodeuni$.
+  \item
+    % Summary:
+    $\edgesnm: N \to \bools$ is a summary-labeling for nodes. A node is a summary node if it can be used to represent more than one concrete node.
   \end{enumerate}
   %
   We denote the class of all heap patterns as $\heappats =
@@ -336,7 +339,7 @@ fields.
   \label{ex:heap-pats-defn}
   % Reintroduce the pattern.
   Pattern $P$ (\autoref{sec:ex-patterns}, \autoref{fig:alt-pattern})
-  is a heap pattern 
+  is a heap pattern
   % TODO: over the predicates [...]
   that contains two summary nodes $s_0$ and $s_1$, and one non-summary
   node $n$.
@@ -369,12 +372,12 @@ $\heapnm$.
   (\nodesnm_{\heapnm}, \varlblnm_{\heapnm}, \edgesnm_{\heapnm})$,
   where:
   \begin{enumerate}
-  \item 
+  \item
     % Nodes:
     Each node in $\heapgph_{\heapnm}$ is a cell in $\cellsnm$.
     %
     I.e., $\nodesnm_{\heapnm} = \cellsnm$.
-  \item 
+  \item
     % Variable labeling:
     Each heap-variable binding in $\heapvarnm$ defines a node labeling
     in $\varlblnm_{\heapnm}$.
@@ -383,7 +386,7 @@ $\heapnm$.
     \heapvars$, if $\heapvarnm(\cc{p}) = c$, then
     $\varlblnm_{\heapnm}(c, \cc{p}) = \true$, and otherwise,
     $\varlblnm_{\heapnm}(c, \cc{p}) = \false$.
-  \item 
+  \item
     % Edges:
     Each field binding in $\fieldmapnm$ defines an edge in
     $\edgesnm_{\heapnm}$.
@@ -424,13 +427,13 @@ described by another pattern.
   \to \nodesnm'$ such that:
   %
   \begin{itemize}
-  \item 
+  \item
     % Variable labelings are preserved.
     $\matchnm$ embeds heap-variable assignments.
-    % 
+    %
     I.e., for each pattern node $\nodenm \in \nodesnm$,
     $\varlblnm(\nodenm) \precord \varlblnm'(\matchnm(\nodenm))$.
-  \item 
+  \item
     % Fields labelings are preserved.
     $\matchnm$ embeds field labelings.
     %
@@ -445,7 +448,7 @@ For each heap $\heapnm \in \heaps$ and pattern $\patnm \in \heappats$,
 if the concrete pattern (\autoref{defn:heap-pat}) of $\heapnm$ entails
 $\patnm$, then $\heapnm$ is \emph{modeled} by $\patnm$, which we
 alternatively denote as $\heapnm \matchedby \patnm$.
-% 
+%
 For any two heap patterns $\patnm_0, \patnm_1 \in \heappats$ and heap
 $\heapnm \in \heaps$, if $\patnm_0 \entails \patnm_1$ and $\heapnm
 \matchedby \patnm_0$, then $\heapnm \matchedby \patnm_1$.
@@ -460,7 +463,7 @@ $\heapnm \in \heaps$, if $\patnm_0 \entails \patnm_1$ and $\heapnm
   the nodes of $A_1$ to the nodes of $\patnm$.
 \end{defn}
 
-%%% Local Variables: 
+%%% Local Variables:
 %%% mode: latex
 %%% TeX-master: "p"
-%%% End: 
+%%% End:
