@@ -1,1 +1,80 @@
-% Describe the modification of the Impact algorithm for heaps
+% describe the modification of the Impact algorithm for heaps
+
+% describe the standard Impact algorithm
+\section{Heap Impact Algorithm}
+\label{sec:heap-impact-algorithm}
+%
+
+\begin{algorithm}[ht]
+  % Declare functions
+  \SetKwFunction{procexpand}{EXPAND}
+
+  % Declare sub-program markers.
+  \SetKwProg{myproc}{Procedure}{}{}
+
+  % expand
+  \myproc{\procexpand{$v \in V$}:}{
+    %
+    \If{$v$ is an uncovered leaf}{
+        \ForEach{action $(M_v(v),T,m) \in \Delta$}{
+        add a new vertex $w$ to $V$ and a new edge $(v,w)$ to $E$; \\
+        set $M_v(w) \leftarrow m$ and $\psi(w) \leftarrow (\true, 1_D)$; \\
+        set $M_e(v,w) \leftarrow T$;
+      }
+    }
+  }
+  \caption{$\expand$: takes as input a vertex $v \in V$ and expands the control flow graph based on all actions available at that vertex.}
+  \label{alg:heap-expand}
+\end{algorithm}
+
+\begin{algorithm}[ht]
+  % Declare functions
+  \SetKwFunction{procrefine}{REFINE}
+
+  % Declare sub-program markers.
+  \SetKwProg{myproc}{Procedure}{}{}
+
+  % expand
+  \myproc{\procrefine{$v \in V$}:}{
+    %
+    \If{$M_v(v) = l_f$ and $\psi(v) \not\equiv (\false, 0_D)$}{
+      let $\pi = (v_0, T_0, v_1) \cdots (v_{n-1}, T_{n-1}, v_n)$ be the unique path from $\epsilon$ to $v$ \\
+      let $\hat{A_0},\cdots,\hat{A_n}$ = \seplearner($\mathcal{U}(\pi)$) \\
+      \eIf{$\hat{A_0},\cdots,\hat{A_n}$ is a valid interpolant}{
+          \For{$i = 0 \cdots n$}{
+          let $\phi = \hat{A}_i^{\langle -i \rangle}$ \\
+          \If{$\psi(v_i) \nvDash \phi$}{
+            remove all pairs $(\cdot, v_i)$ from $\Delta$; \\
+            set $\psi(v_i) \leftarrow \psi(v_i) \land \phi$;
+          }
+        }
+      }
+      {
+        abort (program is unsafe)
+      }
+    }
+  }
+  \caption{$\refine$: takes as input a vertex $v \in V$ at an error location and tags the path from root to $v$ with invariants.}
+  \label{alg:heap-refine}
+\end{algorithm}
+
+\begin{algorithm}[ht]
+  % Declare functions
+  \SetKwFunction{proccover}{COVER}
+
+  % Declare sub-program markers.
+  \SetKwProg{myproc}{Procedure}{}{}
+
+  % expand
+  \myproc{\proccover{$v, w \in V$}:}{
+    %
+    \If{$v$ is uncovered and $M_v(v) = M_v(w)$ and $v \nvDash w$}{
+      \If{$\psi(v) \vDash \psi(w)$}{
+        add $(v,w)$ to $\Delta$; \\
+        delete all $(x,y) \in \Delta$, s.t. $v \sqsubseteq y$;
+      }
+    }
+  }
+  \caption{$\cover$: takes as input vertices $v, w \in V$ and attempts to cover $v$ with $w$.}
+  \label{alg:heap-cover}
+\end{algorithm}
