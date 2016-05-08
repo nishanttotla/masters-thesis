@@ -1,1 +1,26 @@
 % describe the standard Impact algorithm
+\section{Impact Algorithm}
+\label{sec:impact-algorithm}
+%
+
+\begin{algorithm}[ht]
+  % Declare functions
+  \SetKwFunction{procexpand}{EXPAND}
+
+  % Declare sub-program markers.
+  \SetKwProg{myproc}{Procedure}{}{}
+
+  % expand
+  \myproc{\procexpand{$v \in V$}:}{
+    %
+    if $v$ is an uncovered leaf then \\
+
+    \ForEach{action $(M_v(v),T,m) \in \Delta$}{
+      add a new vertex $w$ to $V$ and a new edge $(v,w)$ to $E$ \\
+      set $M_v(w) \leftarrow m$ and $\psi(w) \leftarrow \true$ \\
+      set $M_e(v,w) \leftarrow T$
+    }
+  }
+  \caption{$\expand$: takes as input a vertex $v \in V$ and expands the control flow graph based on all actions available at that vertex.}
+  \label{alg:expand}
+\end{algorithm}
