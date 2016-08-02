@@ -234,7 +234,7 @@ previous work on shape analysis~\cite{sagiv02}.
   \{ \true, \false, \maybe \}$.
   % Define structure of a heap pattern.
   A \emph{heap pattern} is a labeled graph $(\nodesnm, \varlblnm,
-  \edgesnm)$, where:
+  \predlblnm, \edgesnm, \sigma)$, where:
   %
   \begin{enumerate}
   \item
@@ -264,7 +264,7 @@ previous work on shape analysis~\cite{sagiv02}.
     \times \fields \times \nodeuni$.
   \item
     % Summary:
-    $\edgesnm: N \to \bools$ is a summary-labeling for nodes. A node is a summary node if it can be used to represent more than one concrete node.
+    $\sigma: N \to \bools$ is a summary-labeling for nodes. A node is a summary node if it can be used to represent more than one concrete node.
   \end{enumerate}
   %
   We denote the class of all heap patterns as $\heappats =
@@ -426,4 +426,10 @@ $\heapnm \in \heaps$, if $\patnm_0 \entails \patnm_1$ and $\heapnm
 \subsection{Pattern Entailment Algorithm}
 \label{sec:entailment-algorithm}
 
-The entailment algorithm is based on simulation checks, and is very similar. It is described here.
+TODO: The entailment algorithm is based on simulation checks, and is very similar. It is described here.
+
+% Describe program modeling for heap programs
+\subsection{Modeling Heap Programs}
+\label{sec:modeling-heap-programs}
+
+TODO: This section ties up the description of heap patterns back to the program modeling discussion in \autoref{sec:modeling-programs}.
