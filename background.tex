@@ -40,6 +40,33 @@ That is, the $i$-th element of the interpolant is a formula over the common voca
 
 \subsection{Program Unwindings}
 
+We now give a definition of a program unwinding, and describe an algorithm to construct a complete unwinding using interpolants. For two vertices $v$ and $w$ of a tree, we will write $w \sqsubset v$ when $w$ is a proper ancestor of $v$.
+
+% define program unwinding
+\begin{defn}
+  \label{defn:prog-unwinding}
+  An unwinding of a program $\mathcal{A} = (\Lambda, \Delta, l_i, l_f)$ is a quadruple $(V, E, M_v, M_e)$, where $(V, E)$ is a directed tree rooted at $\epsilon$, $M_v : V \rightarrow \Lambda$ is the vertex map, and $M_e : E \rightarrow \Delta$ is the edge map, such that:
+
+  \begin{itemize}
+    \item $M_v(\epsilon) = l_i$
+    \item for every non-leaf vertex $v \in V$, for every action $(M_v(v), T, m) \in \Delta$, there exists an edge $(v,w) \in E$ such that $M_v(w) = m$ and $M_e(v,w) = T$
+  \end{itemize}
+\end{defn}
+
+% define labeled program unwinding
+\begin{defn}
+  \label{defn:labeled-prog-unwinding}
+  A labeled unwinding of a program $\mathcal{A} = (\Lambda, \Delta, l_i, l_f)$ is a triple $(U, \psi, \rhd)$, where
+
+  \begin{itemize}
+    \item $U = (V, E, M_v, M_e)$ is an unwinding of $\mathcal{A}$
+    \item $\psi : V \rightarrow \mathcal{L}(S)$ is called the vertex labeling, and
+    \item $\rhd \subseteq V \times V$ is called the covering relation
+  \end{itemize}
+
+  A vertex $v \in V$ is said to be covered iff there exists $(w,x) \in \rhd$ such that $w \sqsubseteq v$. The unwinding is said to be safe iff, for all $v \in V$, $M_v(v) = l_f$ implies $\psi(v) \equiv \false$. It is complete iff every leaf $v \in V$ is covered.
+\end{defn}
+
 %%% Local Variables:
 %%% mode: latex
 %%% TeX-master: "p"
