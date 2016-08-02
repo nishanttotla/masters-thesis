@@ -2,7 +2,9 @@
 \section{Background}
 \label{sec:background}
 
-TODO
+In this section, we define the formalize requirements for lazy interpolation-based model checking, based on ~\cite{mcmillan06}. We will use standard first-order logic (FOL) and the notation $\mathcal{L}(\Sigma)$ to denote the set of well-formed formulas (\textit{wffs}) of FOL over a vocabulary $\Sigma$ of non-logical symbols. For a given formula or set of formulas $\phi$ we will use $\mathcal{L}(\phi)$ to denote \textit{wffs} over the vocabulary of $\phi$.
+
+For every non-logical symbol $s$, we presume the existence of a unique symbol $s'$ (that is, $s$ with one prime added). We think of $s$ with $n$ primes added as representing the value of $s$ at $n$ time units in the future. For any formula or term $\phi$, we will use the notation $\phi^{\langle n \rangle}$ to denote the addition of $n$ primes to every symbol in $\phi$ (meaning $\phi$ at $n$ time units in the future). For any set $\Sigma$ of symbols, let $\Sigma'$ denote $\{ s' | s \in \Sigma \}$ and $\Sigma^{\langle n \rangle}$ denote $\{ s^{\langle n \rangle} | s \in \Sigma \}$.
 
 %%% Local Variables:
 %%% mode: latex
