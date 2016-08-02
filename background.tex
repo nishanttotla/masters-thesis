@@ -2,9 +2,43 @@
 \section{Background}
 \label{sec:background}
 
-In this section, we define the formalize requirements for lazy interpolation-based model checking, based on ~\cite{mcmillan06}. We will use standard first-order logic (FOL) and the notation $\mathcal{L}(\Sigma)$ to denote the set of well-formed formulas (\textit{wffs}) of FOL over a vocabulary $\Sigma$ of non-logical symbols. For a given formula or set of formulas $\phi$ we will use $\mathcal{L}(\phi)$ to denote \textit{wffs} over the vocabulary of $\phi$.
+In this section, we define the formalize requirements for lazy interpolation-based model checking, based on ~\cite{mcmillan06}. This applies to the standard domain of model checking for data programs, and we'll extend it to heap-manipulating programs later.
+
+We will use standard first-order logic (FOL) and the notation $\mathcal{L}(\Sigma)$ to denote the set of well-formed formulas (\textit{wffs}) of FOL over a vocabulary $\Sigma$ of non-logical symbols. For a given formula or set of formulas $\phi$ we will use $\mathcal{L}(\phi)$ to denote \textit{wffs} over the vocabulary of $\phi$.
 
 For every non-logical symbol $s$, we presume the existence of a unique symbol $s'$ (that is, $s$ with one prime added). We think of $s$ with $n$ primes added as representing the value of $s$ at $n$ time units in the future. For any formula or term $\phi$, we will use the notation $\phi^{\langle n \rangle}$ to denote the addition of $n$ primes to every symbol in $\phi$ (meaning $\phi$ at $n$ time units in the future). For any set $\Sigma$ of symbols, let $\Sigma'$ denote $\{ s' | s \in \Sigma \}$ and $\Sigma^{\langle n \rangle}$ denote $\{ s^{\langle n \rangle} | s \in \Sigma \}$.
+
+\subsection{Modeling Programs}
+
+We use FOL formulas to characterize programs. To this end, let $S$, the state vocabulary, be a set of individual variables and uninterpreted $n$-ary functional and propositional constants. A \textit{state formula} is a formula in $\mathcal{L}(S)$ (which may also include various interpreted symbols, such as $=$ and $+$). A \textit{transition formula} is a formula in $\mathcal{L}(S \cup S')$.
+
+For our purposes, a \textit{program} is a tuple $(\Lambda, \Delta, l_i, l_f)$, where $\Lambda$ is a finite set of program locations, $\Delta$ is a set of $actions$, $l_i \in \Lambda$ is the initial location and $l_f \in \Lambda$ is the error location. An $action$ is a triple $(l, T, m)$, where $l,m \in \Lambda$ are respectively the entry and exit locations of the action, and $G$ is a transition formula. A $path$ $\pi$ of a program is a sequence of transitions of the form $(l_0, T_0, l_1)(l_1, T_1, l_2) \cdots (l_{n-1}, T_{n-1}, l_n)$. The path is an \textit{error path} when $l_0 = l_1$ and $l_n = l_f$. The unfolding $\mathcal{U}(\pi)$ of path $\pi$ is the sequence of formulas $T_0^{\langle 0 \rangle}, \cdots, T_{n-1}^{\langle n-1 \rangle}$, that is, the sequence of transition formulas $T_0, \cdots, T_{n-1}$, with each $T_i$ shifted $i$ time units into the future.
+
+We will say that path $\pi$ is $feasible$ when $\bigwedge \mathcal{U}(\pi)$ is consistent. We can think of a model of $\bigwedge \mathcal{U}(\pi)$ as a concrete program execution, assigning a value ot every program variable at every time $0, \cdots, n-1$. A program is said to be $safe$ when every error path of the program is infeasible. An \textit{inductive invariant} of a program is a map $I : \Lambda \rightarrow \mathcal{L}(S)$, such that $I(l_i) \equiv \true$ and for every action $(l, T, m) \in \Delta$, $I(l) \wedge T$ implies $I(m)'$. A \textit{safety invariant} of a program is an inductive invariant such that $I(l_f) \equiv \false$. Existence of a safety invariant of a program implies that the program is safe.
+
+To simplify the presentation of algorithms, we will assume that every location has at least one outgoing action. This can be made true without affecting program safety by adding self-loops.
+
+\subsection{Interpolants from Proofs}
+
+Given a pair of formulas $(A,B)$, such that $A \wedge B$ is inconsistent, an \textit{interpolant} for $(A,B)$ is a formula $\hat{A}$ with the following properties:
+
+\begin{itemize}
+  \item $A$ implies $\hat{A}$
+  \item $\hat{A} \wedge B$ is unsatisfiable, and
+  \item $\hat{A} \in \mathcal{L}(A) \cap \mathcal{L}(B)$
+\end{itemize}
+
+The Craig Interpolation lemma <insert ref here> states that an interpolant always exists for inconsistent formulas in FOL. To handle program paths, this idea can be generalized to sequences of formulas. That is, given a sequence of formulas $\Gamma = A_1, \cdots , A_n$, we say that $\hat{A_0},\cdots, \hat{A_n}$ is an \textit{interpolant} for $\Gamma$ when
+
+\begin{itemize}
+  \item $\hat{A_0} = \true$ and $\hat{A_n} = \false$ and,
+  \item for all $1 \leq i \leq n, \hat{A_{i-1}} \wedge A_i$ implies $\hat{A_i}$ and
+  \item for all $1 \leq i < n, \hat{A_i} \in (\mathcal{L}(A_1 \cdots A_i) \cap \mathcal{L}(A_{i+1}\cdots A_n))$
+\end{itemize}
+
+That is, the $i$-th element of the interpolant is a formula over the common vocabulary of the prefix $A_1 \cdots A_i$ and the suffix $A_{i+1} \cdots A_n$, and each interpolant implies the next, with $A_i$. If $\Gamma$ is quantifier-free, we can derive a quantifier-free interpolant for $\Gamma$ from a refutation of $\Gamma$, in certain interpreted theories <insert ref here>.
+
+\subsection{Program Unwindings}
 
 %%% Local Variables:
 %%% mode: latex
