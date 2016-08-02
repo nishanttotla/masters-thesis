@@ -43,7 +43,7 @@ This section describes the Impact algorithm from ~\cite{mcmillan06}, including t
           \For{$i = 0 \cdots n$}{
           let $\phi = \hat{A}_i^{\langle -i \rangle}$ \\
           \If{$\psi(v_i) \nvDash \phi$}{
-            remove all pairs $(\cdot, v_i)$ from $\Delta$; \\
+            remove all pairs $(\cdot, v_i)$ from $\rhd$; \\
             set $\psi(v_i) \leftarrow \psi(v_i) \land \phi$;
           }
         }
@@ -69,8 +69,8 @@ This section describes the Impact algorithm from ~\cite{mcmillan06}, including t
     %
     \If{$v$ is uncovered and $M_v(v) = M_v(w)$ and $v \nvDash w$}{
       \If{$\psi(v) \vDash \psi(w)$}{
-        add $(v,w)$ to $\Delta$; \\
-        delete all $(x,y) \in \Delta$, s.t. $v \sqsubseteq y$;
+        add $(v,w)$ to $\rhd$; \\
+        delete all $(x,y) \in \rhd$, s.t. $v \sqsubseteq y$;
       }
     }
   }
