@@ -3,18 +3,24 @@
 \section{Heap Patterns}
 \label{sec:heap-patterns}
 %
-In this section, we define a standard language that performs low-level
+
+To extend the Impact algorithm to heaps, we first define a framework for representing and reasoning about heaps.
+
+
+In this section, we first define a standard language that performs low-level
 memory operations to update linked data structures
 (\autoref{sec:lang}).
 %
 We then review definitions of three-valued structures introduced in
-previous work~\cite{sagiv02}, which we use to formulate patterns over
+previous work \cite{sagiv02}, which we use to formulate patterns over
 program heaps (\autoref{sec:patterns}).
 
 % Define a toy imperative language.
 \subsection{Language Definition}
 \label{sec:lang}
 %
+TODO : This subsection might end up being redundant later, if we choose to not use this \lang formalism, but it's here for now. We might later just choose to keep the heap and pattern definitions from this section.
+
 In this section, we define the syntax (\autoref{sec:syntax}) and
 semantics (\autoref{sec:semantics}) of our subject language \lang.
 
