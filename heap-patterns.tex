@@ -412,6 +412,13 @@ $\heapnm$.
   non-alternating heaps.
 \end{ex}
 
+\begin{defn}
+  \label{ex:pat-entails-defn}
+  Given two heap patterns $P_1$ and $P_2$, we say that $P_1 \entails P_2$ ($P_1$ entails $P_2$) if every heap represented by $P_1$ is also represented by $P_2$.
+\end{defn}
+
+The algorithm for checking entailment is described in \autoref{sec:entailment-algorithm}
+
 % Define matching.
 The entailment relation over heap patterns formulates under both (1)
 under what conditions a heap pattern describes a heap and (2) under
@@ -468,3 +475,9 @@ $\heapnm \in \heaps$, if $\patnm_0 \entails \patnm_1$ and $\heapnm
   A matching from $A_1$ to $\patnm$ is depicted as dotted arrows from
   the nodes of $A_1$ to the nodes of $\patnm$.
 \end{defn}
+
+% Describe the entailment algorithm.
+\subsection{Pattern Entailment Algorithm}
+\label{sec:entailment-algorithm}
+
+The entailment algorithm is based on simulation checks, and is very similar. It is described here.
