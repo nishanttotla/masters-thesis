@@ -67,6 +67,28 @@ We now give a definition of a program unwinding, and describe an algorithm to co
   A vertex $v \in V$ is said to be covered iff there exists $(w,x) \in \rhd$ such that $w \sqsubseteq v$. The unwinding is said to be safe iff, for all $v \in V$, $M_v(v) = l_f$ implies $\psi(v) \equiv \false$. It is complete iff every leaf $v \in V$ is covered.
 \end{defn}
 
+% define well-labeled program unwinding
+\begin{defn}
+  \label{defn:well-labeled-prog-unwinding}
+  A labeled unwinding $(U, \psi, \rhd)$ of a program $\mathcal{A} = (\Lambda, \Delta, l_i, l_f)$, where $U = (V, E, M_v, M_e)$, is said to be well-labeled iff:
+
+  \begin{itemize}
+    \item $\psi(\epsilon) \equiv \true$, and
+    \item for every edge $(v,w) \in E$, $\psi(v) \wedge M_e(v,w)$ implies $\psi(w)'$, and
+    \item for all $(v,w) \in \rhd$, $\psi(v) \Rightarrow \psi(w)$, and $w$ is not covered
+  \end{itemize}
+
+  A vertex $v \in V$ is said to be covered iff there exists $(w,x) \in \rhd$ such that $w \sqsubseteq v$. The unwinding is said to be safe iff, for all $v \in V$, $M_v(v) = l_f$ implies $\psi(v) \equiv \false$. It is complete iff every leaf $v \in V$ is covered.
+\end{defn}
+
+Notice that, if a vertex is covered, all its descendants are also covered. Moreover, we do not allow a covered vertex to cover another vertex.
+
+\begin{thm}
+  If there exists a safe, complete, well-labeled unwinding of program $\mathcal{A}$, then $\mathcal{A}$ is safe.
+\end{thm}
+
+This is Theorem 1 from \cite{mcmillan06}.
+
 %%% Local Variables:
 %%% mode: latex
 %%% TeX-master: "p"
