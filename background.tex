@@ -2,7 +2,7 @@
 \section{Background}
 \label{sec:background}
 
-In this section, we define the formalize requirements for lazy interpolation-based model checking, based on ~\cite{mcmillan06}. This applies to the standard domain of model checking for data programs, and we'll extend it to heap-manipulating programs later.
+In this section, we define the formalize requirements for lazy interpolation-based model checking, based on \cite{mcmillan06}. This applies to the standard domain of model checking for data programs, and we'll extend it to heap-manipulating programs later.
 
 We will use standard first-order logic (FOL) and the notation $\mathcal{L}(\Sigma)$ to denote the set of well-formed formulas (\textit{wffs}) of FOL over a vocabulary $\Sigma$ of non-logical symbols. For a given formula or set of formulas $\phi$ we will use $\mathcal{L}(\phi)$ to denote \textit{wffs} over the vocabulary of $\phi$.
 
@@ -28,7 +28,7 @@ Given a pair of formulas $(A,B)$, such that $A \wedge B$ is inconsistent, an \te
   \item $\hat{A} \in \mathcal{L}(A) \cap \mathcal{L}(B)$
 \end{itemize}
 
-The Craig Interpolation lemma <insert ref here> states that an interpolant always exists for inconsistent formulas in FOL. To handle program paths, this idea can be generalized to sequences of formulas. That is, given a sequence of formulas $\Gamma = A_1, \cdots , A_n$, we say that $\hat{A_0},\cdots, \hat{A_n}$ is an \textit{interpolant} for $\Gamma$ when
+The Craig Interpolation lemma \cite{craig1957} states that an interpolant always exists for inconsistent formulas in FOL. To handle program paths, this idea can be generalized to sequences of formulas. That is, given a sequence of formulas $\Gamma = A_1, \cdots , A_n$, we say that $\hat{A_0},\cdots, \hat{A_n}$ is an \textit{interpolant} for $\Gamma$ when
 
 \begin{itemize}
   \item $\hat{A_0} = \true$ and $\hat{A_n} = \false$ and,
@@ -36,7 +36,7 @@ The Craig Interpolation lemma <insert ref here> states that an interpolant alway
   \item for all $1 \leq i < n, \hat{A_i} \in (\mathcal{L}(A_1 \cdots A_i) \cap \mathcal{L}(A_{i+1}\cdots A_n))$
 \end{itemize}
 
-That is, the $i$-th element of the interpolant is a formula over the common vocabulary of the prefix $A_1 \cdots A_i$ and the suffix $A_{i+1} \cdots A_n$, and each interpolant implies the next, with $A_i$. If $\Gamma$ is quantifier-free, we can derive a quantifier-free interpolant for $\Gamma$ from a refutation of $\Gamma$, in certain interpreted theories <insert ref here>.
+That is, the $i$-th element of the interpolant is a formula over the common vocabulary of the prefix $A_1 \cdots A_i$ and the suffix $A_{i+1} \cdots A_n$, and each interpolant implies the next, with $A_i$. If $\Gamma$ is quantifier-free, we can derive a quantifier-free interpolant for $\Gamma$ from a refutation of $\Gamma$, in certain interpreted theories \cite{mcmillan05}.
 
 \subsection{Program Unwindings}
 
