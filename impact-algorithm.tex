@@ -3,7 +3,21 @@
 \label{sec:impact-algorithm}
 %
 
-This section describes the Impact algorithm from ~\cite{mcmillan06}, including the background and how it works, skipping some of the nuances.
+This section describes a semi-algorithm from \cite{mcmillan06}, for building a complete, safe, well-labeled unwinding of a program. The algorithm terminates if the program is unsafe, but may not terminate if it is safe (which is expected, since program safety is undecidable). A non-deterministic procedure with three basic steps is outlined here. The three steps are
+
+\begin{itemize}
+  \item \expand, which generates the successors of a leaf vertex (\autoref{alg:expand})
+  \item \refine, which refines the labels along a path, labeling an error vertex $\false$ (\autoref{alg:refine})
+  \item \cover, which expands the covering relation (\autoref{alg:cover})
+\end{itemize}
+
+The interpoland in \refine can be generated from a refutation of $\mathcal{U}(\pi)$ by the method of \cite{mcmillan05}. Each of the three steps preserves well-labeledness of the unwinding. To make the unwinding safe, we have to only apply \refine to every error vertex. When none of the three steps can produce any change, the unwinding is both safe and complete, so we know that the original program is safe.
+To build a well-labeled unwinding, a strategy is required, for applying the three unwinding rules. The most difficult question is when to apply \cover. Covering one vertex can result in uncovering others. Thurs, applying \cover non-deterministically may not terminate.
+
+\subsection{Termination}
+TODO
+
+Some discussion here about termination and and the UNWIND procedure
 
 \begin{algorithm}[ht]
   % Declare functions
