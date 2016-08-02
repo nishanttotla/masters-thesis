@@ -105,11 +105,6 @@ loads a heap cell into a pointer variable (\autoref{line:load}),
 or stores a heap cell as a child of a cell in a pointer variable
 (\autoref{line:store}).
 
-% Define the control-flow graph.
-For each program $P \in \lang$, the control-flow graph of $P$,
-$\cfg_P \subseteq \locs \times \instrs \times \locs$, is defined in
-the standard way.
-
 % Define the semantics.
 \subsubsection{Semantics}
 \label{sec:semantics}
@@ -118,83 +113,8 @@ A \lang program updates a state, which consists of a control location,
 evaluation of predicate variables, and a heap, which is a graph with
 labeled edges.
 %
-\begin{defn}
-  \label{defn:states}
-  % Define space of heaps.
-  A \lang \emph{heap} is a triple $(\cellsnm, \heapvarnm,
-  \fieldmapnm)$, where
-  %
-  \begin{enumerate}
-  \item
-    % Space of cells.
-    For the countable universe of heap cells, denoted $\celluni$,
-    $\cellsnm \subseteq \celluni$ is a finite set of cells that contains
-    a distinguished cell $\nil \in \celluni$.
-  \item
-    % Heap-variable labeling:
-    $\heapvarnm: \heapvars \to \cellsnm$ maps each heap variable to
-    the cell that it stores.
-    %
-    We denote the space of evaluations of heap variables as
-    $\heapevals = \heapvars \to \celluni$.
-  \item
-    % Field mapping:
-    $\fieldmapnm: \cellsnm \times \fields \to \cellsnm$ maps each cell
-    $c \in \cellsnm$ and field $\code{f} \in \fields$ to the child of
-    $c$ at $\code{f}$.
-    %
-    We denote the space of field maps as $\fieldmaps = \celluni \times
-    \fields \to \celluni$.
 
-  \item
-    % Predicate labeling:
-    $\predlabel: \cellsnm \to 2^{\predvars}$ maps each cell
-    $c \in \cellsnm$ to an assignment of Boolean values to $\predvars$.
-    %
-    We denote the space of predicate labeling functions as
-    $\predlabelfns = \celluni \to 2^{|\predvars|}$.
-
-  \end{enumerate}
-  %
-  We denote the space of heaps as $\heaps = \pset(\celluni) \times
-  \heapevals \times \fieldmaps \times \predlabelfns$, and the space of
-  characteristic functions of languages of heaps as $\chars = \heaps
-  \to \bools$.
-
-  % Define states.
-  A \lang \emph{state} is a triple $(\locnm, \predevalnm, \heapnm)$,
-  where
-  \begin{enumerate}
-  \item
-    % Location:
-    $\locnm \in \locs$ is a control location.
-  \item
-    % Predicate evaluation:
-    $\predevalnm: \predvars \to \bools$ is an evaluation of predicate
-    variables.
-    %
-    We denote the space of evaluations of predicate variables as
-    $\predevals = \predvars \to \bools$.
-  \item
-    % Heap:
-    $\heapnm \in \heaps$ is a heap.
-  \end{enumerate}
-  %
-  We denote the space of states as $\states = \locs \times \predevals
-  \times \heaps$.
-\end{defn}
-
-% Give an example of a state in lang.
-\begin{ex}
-  \label{ex:lang-state}
-  The C-like program \altlist (\autoref{sec:ex-program}) corresponds
-  directly to a \lang program.
-  %
-  An example of a reachable state of \altlist line 5 is, for the
-  alternating heap $A_0$ given in \autoref{sec:ex-patterns},
-  \autoref{fig:alt-pattern}, the state $(\texttt{L5}, [\datavarnm
-  \mapsto \true], A_0)$.
-\end{ex}
+Also refer to \autoref{fig:semantics}.
 
 % Transfer functions for each instruction.
 \begin{figure*}
@@ -247,34 +167,54 @@ labeled edges.
   \label{fig:semantics}
 \end{figure*}
 
-% Define transition relations over heaps.
-In each run, each program $\prognm \in \lang$ updates its state by
-traversing control locations, executing the instruction $\cc{i}$ at
-each control location to update its state according to the
-\emph{program transition relation} $\step_{\prognm} \subseteq \states
-\times \states$, where $\step_{\prognm}$ is defined by a transition
-relation $\heapstep \subseteq \heaps \times \heapinstr \times \heaps$
-over heaps and heap-update instructions (\autoref{fig:semantics}).
-%
-The definition of $\step_{\prognm}$ from $\heapstep$ is standard, and
-thus we omit a complete description.
-
-% Define program runs.
-A run of a program $\prognm$ is a sequence of states in which each
-pair of successive states are in $\prognm$'s transition relation.
-%
-\begin{defn}
-  \label{defn:trans-rels}
-  % Define runs of a program:
-  For each program $\prognm \in \lang$, a \emph{run} of $\prognm$ is a
-  sequence of states $q_0, q_1, \ldots, q_n$ such that for each $0
-  \leq i < n$, $q_i \step_{\prognm} q_{i + 1}$.
-\end{defn}
-
-
 % Define the language of patterns.
 \subsection{Heap-pattern Language}
 \label{sec:patterns}
+
+\begin{defn}
+  \label{defn:states}
+  % Define space of heaps.
+  A \lang \emph{heap} is a triple $(\cellsnm, \heapvarnm,
+  \fieldmapnm)$, where
+  %
+  \begin{enumerate}
+  \item
+    % Space of cells.
+    For the countable universe of heap cells, denoted $\celluni$,
+    $\cellsnm \subseteq \celluni$ is a finite set of cells that contains
+    a distinguished cell $\nil \in \celluni$.
+  \item
+    % Heap-variable labeling:
+    $\heapvarnm: \heapvars \to \cellsnm$ maps each heap variable to
+    the cell that it stores.
+    %
+    We denote the space of evaluations of heap variables as
+    $\heapevals = \heapvars \to \celluni$.
+  \item
+    % Field mapping:
+    $\fieldmapnm: \cellsnm \times \fields \to \cellsnm$ maps each cell
+    $c \in \cellsnm$ and field $\code{f} \in \fields$ to the child of
+    $c$ at $\code{f}$.
+    %
+    We denote the space of field maps as $\fieldmaps = \celluni \times
+    \fields \to \celluni$.
+
+  \item
+    % Predicate labeling:
+    $\predlabel: \cellsnm \to 2^{\predvars}$ maps each cell
+    $c \in \cellsnm$ to an assignment of Boolean values to $\predvars$.
+    %
+    We denote the space of predicate labeling functions as
+    $\predlabelfns = \celluni \to 2^{|\predvars|}$.
+
+  \end{enumerate}
+  %
+  We denote the space of heaps as $\heaps = \pset(\celluni) \times
+  \heapevals \times \fieldmaps \times \predlabelfns$, and the space of
+  characteristic functions of languages of heaps as $\chars = \heaps
+  \to \bools$.
+\end{defn}
+
 % Define patterns, matching.
 A heap pattern is a labeled graph whose nodes and edges model the
 cells and fields of potentially-many heaps.
