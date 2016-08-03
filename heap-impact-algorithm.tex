@@ -94,4 +94,27 @@ The formal rules for computing $\post$ for each individual action are presented 
 
 \subsection{Learning Invariants from Positive and Negative Examples}
 
-We note in \autoref{alg:heap-refine} the procedure \seplearner, which is the core component of making \impact work for heap-manipulating programs.
+We note in \autoref{alg:heap-refine} the procedure \seplearner is used, which is the core component of making \impact work for heap-manipulating programs. In this section, we describe this algorithm.
+
+We defined the notion of interpolants in \autoref{sec:interpolants-from-proofs}, and the same applies to \seplearner, which is described in \autoref{alg:invlearner}.
+
+\begin{algorithm}[ht]
+  % Declare functions
+  \SetKwFunction{procinvlearner}{INVLEARNER}
+
+  % Declare sub-program markers.
+  \SetKwProg{myproc}{Procedure}{}{}
+
+  % expand
+  \myproc{\procinvlearner{$\mathcal{U}(\pi)$}:}{
+    %
+    \If{$v$ is uncovered and $M_v(v) = M_v(w)$ and $v \nvDash w$}{
+      \If{$\psi(v) \vDash \psi(w)$}{
+        add $(v,w)$ to $\rhd$; \\
+        delete all $(x,y) \in \rhd$, s.t. $v \sqsubseteq y$;
+      }
+    }
+  }
+  \caption{$\seplearner$: takes as input an unfolding $\mathcal{U}(\pi)$ of path $\pi$ and attempts to find an invariant for it.}
+  \label{alg:invlearner}
+\end{algorithm}
