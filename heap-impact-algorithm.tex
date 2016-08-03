@@ -108,15 +108,17 @@ We defined the notion of interpolants in \autoref{sec:interpolants-from-proofs},
   % expand
   \myproc{\procinvlearner{$\mathcal{U}(\pi)$}:}{
     %
-    \If{$v$ is uncovered and $M_v(v) = M_v(w)$ and $v \nvDash w$}{
-      \If{$\psi(v) \vDash \psi(w)$}{
-        add $(v,w)$ to $\rhd$; \\
-        delete all $(x,y) \in \rhd$, s.t. $v \sqsubseteq y$;
-      }
+    Let $\pi = (l_0, T_0, l_1)(l_1, T_1, l_2) \cdots (l_{n-1}, T_{n-1}, l_n)$ \\
+    Set $\psi(l_0) = 1_D, \psi(l_n) = 0_D$ \\
+
+    \While{$\psi(l_0), \psi(l_1), \cdots, \psi(l_n)$ is not an interpolant}{
+      pick $i \in \{1,2,\cdots, n-1\}$
+      $\psi(l_i) := \newcandidate(\psi, \mathcal{U}(\pi))$
     }
+    \Return $\psi(l_0), \psi(l_1), \cdots, \psi(l_n)$
   }
   \caption{$\seplearner$: takes as input an unfolding $\mathcal{U}(\pi)$ of path $\pi$ and attempts to find an invariant for it.}
   \label{alg:invlearner}
 \end{algorithm}
 
-While \seplearner is the higher level procedure to find an interpolant, it uses a sub-procedure called <NAME TODO> as a feedback loop with the Oracle, to accept candidate heap patterns that can be used to construct an interpolant.
+While \seplearner is the higher level procedure to find an interpolant, it uses a sub-procedure called \newcandidate as a feedback loop with the Oracle, to accept candidate heap patterns that can be used to construct an interpolant.
