@@ -5,7 +5,7 @@
 \label{sec:heap-impact-algorithm}
 %
 
-Building on top of the framework defined in \autoref{sec:background}, \autoref{sec:impact-algorithm}, and \autoref{sec:heap-patterns}, we can now modify the \impact algorithm to work for heap-manipulating programs.
+Building on top of the framework defined in \autoref{sec:background}, \autoref{sec:impact-algorithm}, and \autoref{sec:heap-patterns}, we can now modify the \impact algorithm to work for heap-manipulating programs. In this section, we first define the three steps of \impact, that is \expand, \cover, and \refine. Then we describe an invariant-learning procedure that retrieves patterns from an Oracle, thereby completing the description of the algorithm.
 
 \begin{algorithm}[ht]
   % Declare functions
@@ -20,7 +20,7 @@ Building on top of the framework defined in \autoref{sec:background}, \autoref{s
     \If{$v$ is an uncovered leaf}{
         \ForEach{action $(M_v(v),T,m) \in \Delta$}{
         add a new vertex $w$ to $V$ and a new edge $(v,w)$ to $E$; \\
-        set $M_v(w) \leftarrow m$ and $\psi(w) \leftarrow (\true, 1_D)$; \\
+        set $M_v(w) \leftarrow m$ and $\psi(w) \leftarrow 1_D$; \\
         set $M_e(v,w) \leftarrow T$;
       }
     }
@@ -80,3 +80,18 @@ Building on top of the framework defined in \autoref{sec:background}, \autoref{s
   \caption{$\cover$: takes as input vertices $v, w \in V$ and attempts to cover $v$ with $w$.}
   \label{alg:heap-cover}
 \end{algorithm}
+
+\subsection{Postcondition Transforms for Heap Operations}
+TODO: This section needs to be completed.
+
+% define labeled program unwinding
+\begin{defn}
+  \label{defn:heap-post-transforms}
+  We define the operator $\post$, which computes the strongest postcondition for a given heap pattern, and action. That is $\post : \heappats \times \mathcal{T} \to \heappats$, where $\mathcal{T}$ is the set of all actions.
+\end{defn}
+
+The formal rules for computing $\post$ for each individual action are presented in \autoref{fig:post-transforms}. (TODO)
+
+\subsection{Learning Invariants from Positive and Negative Examples}
+
+We note in \autoref{alg:heap-refine} the procedure \seplearner, which is the core component of making \impact work for heap-manipulating programs.

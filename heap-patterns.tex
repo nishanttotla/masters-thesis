@@ -168,7 +168,7 @@ Also refer to \autoref{fig:semantics}.
 \end{figure*}
 
 % Define the language of patterns.
-\subsection{Heap-pattern Language}
+\subsection{Heap pattern Language}
 \label{sec:patterns}
 
 \begin{defn}
@@ -432,4 +432,18 @@ TODO: The entailment algorithm is based on simulation checks, and is very simila
 \subsection{Modeling Heap Programs}
 \label{sec:modeling-heap-programs}
 
-TODO: This section ties up the description of heap patterns back to the program modeling discussion in \autoref{sec:modeling-programs}.
+TODO: This section ties up the description of heap patterns back to the program modeling discussion in \autoref{sec:modeling-programs}. In short, the formalism differs in the following way
+
+% define labeled program unwinding
+\begin{defn}
+  \label{defn:labeled-heap-prog-unwinding}
+  A labeled unwinding of a program $\mathcal{A} = (\Lambda, \Delta, l_i, l_f)$ is a triple $(U, \psi, \rhd)$, where
+
+  \begin{itemize}
+    \item $U = (V, E, M_v, M_e)$ is an unwinding of $\mathcal{A}$
+    \item $\psi : V \to \heappats$ is called the vertex labeling, and
+    \item $\rhd \subseteq V \times V$ is called the covering relation
+  \end{itemize}
+
+  Note that the major difference is that now vertices $v \in V$ contain a heap pattern, instead of an FOL formula.
+\end{defn}
