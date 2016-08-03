@@ -111,7 +111,7 @@ We defined the notion of interpolants in \autoref{sec:interpolants-from-proofs},
     Let $\pi = (l_0, T_0, l_1)(l_1, T_1, l_2) \cdots (l_{n-1}, T_{n-1}, l_n)$ \\
     Set $\psi(l_0) = 1_D, \psi(l_n) = 0_D$ \\
 
-    \While{$\psi(l_0), \psi(l_1), \cdots, \psi(l_n)$ is not an interpolant}{
+    \While{$\neg$\isinterpolant($\psi,\mathcal{U}(\pi)$)}{
       pick $i \in \{1,2,\cdots, n-1\}$
       $\psi(l_i) := \newcandidate(\psi, \mathcal{U}(\pi))$
     }
@@ -119,6 +119,26 @@ We defined the notion of interpolants in \autoref{sec:interpolants-from-proofs},
   }
   \caption{$\seplearner$: takes as input an unfolding $\mathcal{U}(\pi)$ of path $\pi$ and attempts to find an invariant for it.}
   \label{alg:invlearner}
+\end{algorithm}
+
+\begin{algorithm}[ht]
+  % Declare functions
+  \SetKwFunction{procisinterpolant}{ISINTERPOLANT}
+
+  % Declare sub-program markers.
+  \SetKwProg{myproc}{Procedure}{}{}
+
+  % expand
+  \myproc{\procisinterpolant{$\psi, \mathcal{U}(\pi)$}:}{
+    %
+    Let $\pi = (l_0, T_0, l_1)(l_1, T_1, l_2) \cdots (l_{n-1}, T_{n-1}, l_n)$ \\
+    \If{$\psi(l_0), \psi(l_1), \cdots, \psi(l_n)$ is an interpolant for $\mathcal{U}(\pi)$}{
+      \Return $\true$
+    }
+    \Return $\false$
+  }
+  \caption{$\isinterpolant$: takes as input a map $\psi$ and unfolding $\mathcal{U}(\pi)$ of path $\pi$, and checks if $\psi$ represents an interpolant for the unfolding.}
+  \label{alg:isinterpolant}
 \end{algorithm}
 
 While \seplearner is the higher level procedure to find an interpolant, it uses a sub-procedure called \newcandidate as a feedback loop with the Oracle, to accept candidate heap patterns that can be used to construct an interpolant.
