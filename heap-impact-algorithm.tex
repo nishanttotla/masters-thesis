@@ -118,3 +118,5 @@ We defined the notion of interpolants in \autoref{sec:interpolants-from-proofs},
   \caption{$\seplearner$: takes as input an unfolding $\mathcal{U}(\pi)$ of path $\pi$ and attempts to find an invariant for it.}
   \label{alg:invlearner}
 \end{algorithm}
+
+While \seplearner is the higher level procedure to find an interpolant, it uses a sub-procedure called <NAME TODO> as a feedback loop with the Oracle, to accept candidate heap patterns that can be used to construct an interpolant.

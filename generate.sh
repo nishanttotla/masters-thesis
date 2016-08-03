@@ -9,3 +9,6 @@ bibtex p.aux
 # now run pdflatex twice (latex is weird)
 pdflatex p.tex
 pdflatex p.tex
+
+# copy generated PDF to Dropbox for easy sharing
+cp p.pdf ~/Dropbox
