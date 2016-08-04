@@ -113,7 +113,7 @@ We defined the notion of interpolants in \autoref{sec:interpolants-from-proofs},
 
     \While{$\neg$\isinterpolant($\psi,\mathcal{U}(\pi)$)}{
       pick $i \in \{1,2,\cdots, n-1\}$
-      $\psi(l_i) := \newcandidate(\psi, \mathcal{U}(\pi))$
+      $\psi(l_i) := \newcandidate(l_i, \psi, \mathcal{U}(\pi))$
     }
     \Return $\psi(l_0), \psi(l_1), \cdots, \psi(l_n)$
   }
@@ -139,6 +139,23 @@ We defined the notion of interpolants in \autoref{sec:interpolants-from-proofs},
   }
   \caption{$\isinterpolant$: takes as input a map $\psi$ and unfolding $\mathcal{U}(\pi)$ of path $\pi$, and checks if $\psi$ represents an interpolant for the unfolding.}
   \label{alg:isinterpolant}
+\end{algorithm}
+
+\begin{algorithm}[ht]
+  % Declare functions
+  \SetKwFunction{procnewcandidate}{NEWCANDIDATE}
+
+  % Declare sub-program markers.
+  \SetKwProg{myproc}{Procedure}{}{}
+
+  % expand
+  \myproc{\procnewcandidate{$l_i, \psi, \mathcal{U}(\pi)$}:}{
+    %
+    Let $\pi = (l_0, T_0, l_1)(l_1, T_1, l_2) \cdots (l_{n-1}, T_{n-1}, l_n)$ \\
+    $\mathcal{C} = \mathcal{O}(H_i^{+}, H_i^{-})$
+  }
+  \caption{$\newcandidate$: takes as input a program location $l_i$, map $\psi$, and unfolding $\mathcal{U}(\pi)$ of path $\pi$, and interacts with the Oracle $\mathcal{O}$ to find a new candidate for $l_i$ using a set of positive ($H_i^{+}$) and negative ($H_i^{-}$) examples.}
+  \label{alg:newcandidate}
 \end{algorithm}
 
 While \seplearner is the higher level procedure to find an interpolant, it uses a sub-procedure called \newcandidate as a feedback loop with the Oracle, to accept candidate heap patterns that can be used to construct an interpolant.
