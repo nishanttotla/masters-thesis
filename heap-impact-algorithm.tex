@@ -109,13 +109,15 @@ We defined the notion of interpolants in \autoref{sec:interpolants-from-proofs},
   \myproc{\procinvlearner{$\mathcal{U}(\pi)$}:}{
     %
     Let $\pi = (l_0, T_0, l_1)(l_1, T_1, l_2) \cdots (l_{n-1}, T_{n-1}, l_n)$ \\
-    Set $\psi(l_0) = 1_D, \psi(l_n) = 0_D$ \\
+    Set $\hat{A_i} = 1_D, 0 \leq i < n, \hat{A_n} = 0_D$ \\
+    Set $H_i^{+} = \{\}, 0 \leq i \leq n$ \\
+    Set $H_i^{-} = \{\}, 0 \leq i \leq n$ \\
 
-    \While{$\neg$\isinterpolant($\psi,\mathcal{U}(\pi)$)}{
+    \While{$\neg$\isinterpolant($\hat{A},\mathcal{U}(\pi)$)}{
       pick $i \in \{1,2,\cdots, n-1\}$
-      $\psi(l_i) := \newcandidate(l_i, \psi, \mathcal{U}(\pi))$
+      $\hat{A_i} = \newcandidate(l_i, \hat{A}, H^{+}, H^{-}, \psi, \mathcal{U}(\pi))$
     }
-    \Return $\psi(l_0), \psi(l_1), \cdots, \psi(l_n)$
+    \Return $\hat{A_0}, \hat{A_1}, \cdots, \hat{A_n}$
   }
   \caption{$\seplearner$: takes as input an unfolding $\mathcal{U}(\pi)$ of path $\pi$ and attempts to find an invariant for it.}
   \label{alg:invlearner}
@@ -129,15 +131,14 @@ We defined the notion of interpolants in \autoref{sec:interpolants-from-proofs},
   \SetKwProg{myproc}{Procedure}{}{}
 
   % expand
-  \myproc{\procisinterpolant{$\psi, \mathcal{U}(\pi)$}:}{
+  \myproc{\procisinterpolant{$\hat{A}, \mathcal{U}(\pi)$}:}{
     %
-    Let $\pi = (l_0, T_0, l_1)(l_1, T_1, l_2) \cdots (l_{n-1}, T_{n-1}, l_n)$ \\
-    \If{$\psi(l_0), \psi(l_1), \cdots, \psi(l_n)$ is an interpolant for $\mathcal{U}(\pi)$}{
+    \If{$\hat{A_0}, \hat{A_1}, \cdots, \hat{A_n}$ is an interpolant for $\mathcal{U}(\pi)$}{
       \Return $\true$
     }
     \Return $\false$
   }
-  \caption{$\isinterpolant$: takes as input a map $\psi$ and unfolding $\mathcal{U}(\pi)$ of path $\pi$, and checks if $\psi$ represents an interpolant for the unfolding.}
+  \caption{$\isinterpolant$: takes as input candidates $\hat{A}$ and unfolding $\mathcal{U}(\pi)$ of path $\pi$, and checks if $\hat{A}$ represents an interpolant for the unfolding.}
   \label{alg:isinterpolant}
 \end{algorithm}
 
@@ -149,7 +150,7 @@ We defined the notion of interpolants in \autoref{sec:interpolants-from-proofs},
   \SetKwProg{myproc}{Procedure}{}{}
 
   % expand
-  \myproc{\procnewcandidate{$l_i, \psi, \mathcal{U}(\pi)$}:}{
+  \myproc{\procnewcandidate{$l_i, \hat{A}, H^{+}, H^{-}, \psi, \mathcal{U}(\pi)$}:}{
     %
     Let $\pi = (l_0, T_0, l_1)(l_1, T_1, l_2) \cdots (l_{n-1}, T_{n-1}, l_n)$ \\
     $\mathcal{C} = \mathcal{O}(H_i^{+}, H_i^{-})$
