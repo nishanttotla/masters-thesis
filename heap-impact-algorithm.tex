@@ -88,6 +88,8 @@ TODO: This section needs to be completed.
 \begin{defn}
   \label{defn:heap-post-transforms}
   We define the operator $\post$, which computes the strongest postcondition for a given heap pattern, and action. That is $\post : \heappats \times \mathcal{T} \to \heappats$, where $\mathcal{T}$ is the set of all actions.
+
+  The $\post*$ operator can be defined as a repeated application of $\post$ along a given path. More formally, it is $\post* : \heappats \times V \times V \to \heappats$, where $V$ is the set of vertices in the unwinding. This is only applicable to pairs of vertices that have a direct ancestor-successor relationship.
 \end{defn}
 
 The formal rules for computing $\post$ for each individual action are presented in \autoref{fig:post-transforms}. (TODO)
