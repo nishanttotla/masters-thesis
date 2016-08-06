@@ -1,0 +1,46 @@
+\begin{tabular}{llllllllc}
+\toprule
+\textbf{Target} & \textbf{DS} & \textbf{Hash}
+  & \textbf{Insert} & \textbf{Lookup} & \textbf{Hash function} 
+  & \textbf{$a_1$} & \textbf{$a_2$}
+  & \textbf{Leak} \\
+\midrule
+\multirow{2}{*}{Kernel}
+  & \multirow{2}{*}{\cc{inode}}
+  & \multirow{2}{*}{\cc{inode\_hash()}}
+  & \multirow{2}{*}{\cc{insert\_inode\_locked()}}
+  & \multirow{2}{*}{\cc{iget\_locked()}}
+  & \smaller$t = (a_1 \times a_2) \wedge ((c_1 + a_1) / c_2)$ 
+  & \multirow{2}{*}{\cc{sb}} 
+  & \multirow{2}{*}{\cc{ino}}
+  & \cc{sb}'s
+\\
+&&&&&
+    \smaller$i = t \oplus ((t \wedge c_1) \gg c_3)$
+  &&& address
+\\\midrule
+\multirow{2}{*}{Kernel}
+  & \multirow{2}{*}{\cc{dentry}}
+  & \multirow{2}{*}{\cc{d\_hash()}} 
+  & \multirow{2}{*}{\cc{d\_rehash()}}
+  & \multirow{2}{*}{\cc{d\_lookup()}}
+  & \smaller$t = (i_1 + i_2)$
+  & \multirow{2}{*}{\cc{parent}}
+  & \multirow{2}{*}{\cc{ino}}
+  & File
+\\
+&&&&&
+    \smaller$i = (t + t \gg c_1) \& c_3$
+  &&& name
+\\\midrule
+\multirow{1}{*}{WebKit}
+  & \multirow{1}{*}{\cc{PropertyMap}}
+  & \multirow{1}{*}{\cc{m\_hashAndFlags}} 
+  & \multirow{1}{*}{\cc{StringImpl()}}
+  & \multirow{1}{*}{\cc{findEmptyIndex()}}
+  & \smaller$i = h_1(a_1) + c_1 \times h_2(a_1)$
+  & \multirow{1}{*}{\cc{id}}
+  & \multirow{1}{*}{\cc{-}}
+  & address
+\\\bottomrule
+\end{tabular}
