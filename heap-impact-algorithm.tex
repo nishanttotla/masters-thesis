@@ -89,7 +89,7 @@ TODO: This section needs to be completed.
   \label{defn:heap-post-transforms}
   We define the operator $\post$, which computes the strongest postcondition for a given heap pattern, and action. That is $\post : \heappats \times \mathcal{T} \to \heappats$, where $\mathcal{T}$ is the set of all actions.
 
-  The $\post*$ operator can be defined as a repeated application of $\post$ along a given path. More formally, it is $\post* : \heappats \times V \times V \to \heappats$, where $V$ is the set of vertices in the unwinding. This is only applicable to pairs of vertices that have a direct ancestor-successor relationship.
+  The $\post{*}$ operator can be defined as a repeated application of $\post$ along a given path. More formally, it is $\post{*} : \heappats \times \mathcal{P} \to \heappats$, where $\mathcal{P}$ is a path in the unwinding.
 \end{defn}
 
 The formal rules for computing $\post$ for each individual action are presented in \autoref{fig:post-transforms}. (TODO)
@@ -155,9 +155,24 @@ We defined the notion of interpolants in \autoref{sec:interpolants-from-proofs},
   \myproc{\procnewcandidate{$l_i, \hat{A}, H^{+}, H^{-}, \psi, \mathcal{U}(\pi)$}:}{
     %
     Let $\pi = (l_0, T_0, l_1)(l_1, T_1, l_2) \cdots (l_{n-1}, T_{n-1}, l_n)$ \\
-    $\mathcal{C} = \mathcal{O}(H_i^{+}, H_i^{-})$
+    Set $S = \post^{*}(1_D, \pi_{0,i})$ \\
+    Set $C = 1_D$
+    \While{$\true$}{
+      $\mathcal{C} = \mathcal{O}(H_i^{+}, H_i^{-})$ \\
+      \If{$S \not \entails C$}{
+        $H_i^{+} = \{h\} \cup H_i^{+}$ where $h \in S, h \not \in C$ \\
+        continue
+      }
+      \If{$TODO$}{
+        // TODO case add negative example
+        $H_i^{-} = \{h\} \cup H_i^{-}$ where $h \cdots$ \\
+        continue
+      }
+      break
+    }
+    \Return $C$
   }
-  \caption{$\newcandidate$: takes as input a program location $l_i$, map $\psi$, and unfolding $\mathcal{U}(\pi)$ of path $\pi$, and interacts with the Oracle $\mathcal{O}$ to find a new candidate for $l_i$ using a set of positive ($H_i^{+}$) and negative ($H_i^{-}$) examples.}
+  \caption{$\newcandidate$: takes as input a program location $l_i$, current set of candidates $\hat{A}$, sets of positive and negative examples for each location ($H^{+}, H^{-}$ respectively), map $\psi$, and unfolding $\mathcal{U}(\pi)$ of path $\pi$, and interacts with the Oracle $\mathcal{O}$ to find a new candidate for $l_i$.}
   \label{alg:newcandidate}
 \end{algorithm}
 
