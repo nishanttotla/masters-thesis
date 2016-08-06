@@ -1,0 +1,18 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8}]
+\PY{k+kt}{void} \PY{n+nf}{alt\PYZus{}list}\PY{p}{(}\PY{p}{)} \PY{p}{\PYZob{}}
+  \PY{k+kt}{bool} \PY{n}{d} \PY{o}{=} \PY{n}{TRUE}\PY{p}{;}
+  \PY{n}{List} \PY{n}{l} \PY{o}{=} \PY{n}{cons}\PY{p}{(}\PY{n}{d}\PY{p}{,} \PY{n}{NIL}\PY{p}{)}\PY{p}{;}
+  \PY{c+c1}{// LOOP\PYZhy{}CONS: build a list with alternating Boolean values.}
+  \PY{k}{while} \PY{p}{(}\PY{n}{non\PYZus{}det}\PY{p}{(}\PY{p}{)}\PY{p}{)} \PY{p}{\PYZob{}}
+    \PY{n}{d} \PY{o}{=} \PY{o}{!}\PY{n}{d}\PY{p}{;}
+    \PY{n}{l} \PY{o}{=} \PY{n}{cons}\PY{p}{(}\PY{n}{d}\PY{p}{,} \PY{n}{l}\PY{p}{)}\PY{p}{;}
+  \PY{p}{\PYZcb{}}
+  \PY{c+c1}{// LOOP\PYZhy{}CHK: check that the Boolean values alternate.}
+  \PY{k}{while} \PY{p}{(}\PY{n}{l} \PY{o}{!}\PY{o}{=} \PY{n}{NIL}\PY{p}{)} \PY{p}{\PYZob{}}
+    \PY{n}{assert}\PY{p}{(}\PY{n}{l}\PY{o}{\PYZhy{}}\PY{o}{\PYZgt{}}\PY{n}{data} \PY{o}{=}\PY{o}{=} \PY{n}{d}\PY{p}{)}\PY{p}{;}
+    \PY{n}{d} \PY{o}{=} \PY{o}{!}\PY{n}{d}\PY{p}{;}
+    \PY{n}{l} \PY{o}{=} \PY{n}{l}\PY{o}{\PYZhy{}}\PY{o}{\PYZgt{}}\PY{n}{next}\PY{p}{;}
+  \PY{p}{\PYZcb{}}
+  \PY{k}{return}\PY{p}{;}
+\PY{p}{\PYZcb{}}
+\end{Verbatim}

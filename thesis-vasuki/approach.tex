@@ -1,0 +1,1047 @@
+% technical approach: technical details of our approach
+\section{Technical Approach}
+\label{sec:approach}
+%
+In this section, we give the design (\autoref{sec:technique}) and key
+correctness properties (\autoref{sec:properties}) of a \reachprob
+verifier, \verifier.
+
+% Give the design of the verifier.
+\subsection{\verifier Design}
+\label{sec:technique}
+In this section, we give the design of \verifier.
+%
+For a given program $\prognm$, \verifier attempts to derive inductive
+invariants that prove the correctness of $\prognm$ that are
+represented as heap shapes, using operations given in
+\autoref{sec:shapes-defn}.
+%
+In particular, \verifier attempts to construct a proof represented as
+a partial unrolling of the control paths of $\prognm$, annotated with
+heap shapes as invariants (\autoref{sec:unwindings}).
+%
+To construct an unwinding tree that represents a valid proof of the
+safety of $\prognm$ (\autoref{sec:core}), \verifier uses an operation
+\refine (\autoref{sec:refine}), which refines candidate invariants of
+$\prognm$.
+
+% Define shape domains, give examples.
+\subsection{Shape Domains}
+%
+In this section, we define \emph{shape domains} as an abstract space
+equipped with operations needed by our analysis
+(\autoref{sec:shapes-defn}).
+%
+We then describe abstractions for shape analysis presented in previous
+work can be viewed as shape domains (\autoref{sec:shape-instances}).
+%
+\subsubsection{Definition of shape domains}
+\label{sec:shapes-defn}
+%
+A shape domain is a space in which each element describes a set of
+program heaps.
+% Define shape domains:
+\begin{defn}
+  \label{defn:shape-domain}
+  %
+  A shape domain is a tuple $(\shapes, \in, \noheaps, \allheaps,
+  \chksubsumes, \abspost, \optimal)$, where:
+  %
+  \begin{itemize}
+  \item
+    % Space of shapes.
+    $\shapes$ is the space of heap \emph{shapes}.
+  \item
+    % Membership:
+    $\in \subseteq \heaps \times \shapes$ is the \emph{membership}
+    relation.
+    %
+    For each shape $S \in \shapes$, we denote the set of shapes that
+    are members of $S$ (i.e., the \emph{language} of $S$) as
+    $\languageof(S)$.
+  \item
+    % No heaps:
+    $\noheaps \in \shapes$ is the \emph{empty} shape.
+    %
+    For each heap $h \in \heaps$, $h \notin \noheaps$.
+  \item
+    % All heaps:
+    $\allheaps \in \shapes$ is the \emph{universal} shape.
+    %
+    For each heap $h \in \heaps$, $h \in \allheaps$.
+  \item
+    % Subsumption:
+    Let $S_0, S_1 \in \shapes$ be shapes.
+    %
+    If for each heap $h \in \heaps$ such that $h \in S_0$ it holds
+    that $h \in S_1$, then $S_0$ is \emph{subsumed} by $S_1$, denoted
+    $S_0 \subsumedby S_1$.
+    %
+    If $S_0$ subsumes $S_1$ and $S_1$ subsumes $S_0$, then we say that
+    $S_0$ is \emph{equivalent} to $S_1$.
+
+    % Define the subsumption check.
+    $\chksubsumes: \shapes \times \shapes \partto
+    \add{\heaps}{\isvalid}$ is an effective procedure such that for
+    all shapes $S_0, S_1 \in \shapes$, if $S_0 \subsumedby S_1$, then
+    $\chksubsumes(S_0, S_1) = \isvalid$;
+    %
+    otherwise, $\chksubsumes(S_0, S_1) = h \in \heaps$ such that $h
+    \in S_0$ and $h \notin S_1$.
+  \item
+    % Transformers:
+    $\abspost: \instrs \to \shapes \to \shapes$ maps each instruction
+    to an abstract forward transformer over shapes.
+    %
+    For each instruction $\code{i} \in \instrs$, heap $h \in \heaps$,
+    and shape $S \in \shapes$, if $h \in S$, then
+    $\post[\code{i}](h) \in \abspost[\code{i}](S)$.
+  \item
+    % Optimality:
+    $\optimal \subseteq \shapes \times \shapes$ is the
+    \emph{optimality} partial ordering over shapes.
+    %
+    For all shapes $S_0, S_1 \in \shapes$, we denote the fact that
+    $S_0$ is \emph{more optimal} than $S_1$ as $S_0 \optimal S_1$.
+  \end{itemize}
+\end{defn}
+
+\subsubsection{Instances}
+\label{sec:shape-instances}
+%
+Previous work on shape analysis has presented several abstract domains
+that can be extended to form shape domains.
+%
+\paragraph{Three-valued structures}
+%
+Three-valued Logic Analysis (TVLA) represents sets of program states
+as three-valued structures~\cite{sagiv02}.
+%
+TVLA uses a domain of shapes that are three-valued structures,
+extended with a bottom element, which serves as an empty element.
+%
+Both the membership function and subsumption procedures are
+defined using an embedding relation from two-valued structures, which
+represent memory heaps, and three-valued structures to tree-valued
+structures.
+%
+Abstract transformers are represented as predicate transformers
+specified as first-order logical formulas.
+
+% Optimality:
+While previous work on TVLA does not explicitly define optimality
+orderings over shapes, orderings that naturally describe the
+properties of interest for a shape analysis include the subsumption
+relation and minimality over equivalent patterns.
+
+\paragraph{Classes of graph automata}
+%
+Automata for various classes of graphs can represent sets of heaps.
+%
+In particular, word automata can be naturally extended to represent
+heaps that are bounded tuples of lists, and tree automata can be
+naturally extended to represent heaps that are bounded tuples of
+trees.
+%
+Membership and subsumption can be implemented for such domains with
+standard operations over automata, and abstract transforms can also be
+defined.
+
+% Optimality.
+One natural optimality ordering over such shapes orders graph automata
+$A_0$ as more optimal than $A_1$ if $A_0$ contains fewer states than
+$A_1$.
+
+\subsubsection{Automatically-Learnable Shape Domains}
+%
+A shape domain $D$ is \emph{learnable} if there is an automatic
+procedure that for each language $L$ of graphs, can learn a shape in
+$D$ whose language is $L$ using access to only the characteristic
+function of $L$ and a function that validates elements in $D$ as
+having language $L$.
+% Define a learnable language.
+\begin{defn}
+  \label{defn:learnable}
+  %
+  A \emph{learnable shape domain} is a pair $(D, \shapelearner)$,
+  where:
+  %
+  \begin{itemize}
+  \item
+    % Shape domain:
+    $D$ is a shape domain.
+  \item
+    %
+    Let $\validatornm: \shapes \to \{ \isvalid \} \union \bools \times
+    \heaps$ be a \emph{validator} for $L$.
+    %
+    I.e., for each shape $S \in \shapes$, if $\languageof(S) = L$,
+    then $\validatornm(S) = \isvalid$;
+    %
+    otherwise, if $\languageof(S) \not\subseteq L$, then
+    $\validatornm(S) = (\true, h)$, where $h \in \languageof(S)$ and
+    $h \notin L$;
+    %
+    otherwise (if $L \not\subseteq \languageof(S)$), then
+    $\validatornm(S) = (\false, h)$, where $h \notin \languageof(S)$
+    and $h \in L$.
+    %
+    We denote the space of all validators for $D$ as $\validators_D =
+    \shapes_D \to \{ \isvalid \} \union \bools \times \heaps$.
+
+    % Define the learner.
+    The \emph{shape learner} $\shapelearner: \chars \times
+    \validators_D \to \shapes_D$ is such that for each language $L
+    \subseteq \heaps$, if $\charnm_L \in \chars$ is a characteristic
+    function for $L$ and $\validatornm_L \in \validators_D$ is a
+    validator for $L$, then $\shapelearner(\charnm_L, \validatornm_L)$
+    is an optimal shape in $\shapes_D$ with language $L$.
+  \end{itemize}
+\end{defn}
+
+% Instances.
+\paragraph{Instances}
+% We know how to do it for graph automata.
+The shape domains of deterministic word and tree automata ordered by
+minimality of size can be extended to learnable shape domains, using
+algorithms presented for learning regular languages of
+words~\cite{angluin87} and trees~\cite{besombes07}.
+
+% But not three-valued structures.
+However, there are no known results that provide active learners for
+three-valued structures.
+
+% Define oracles for learning under partial information.
+\subsection{Learning Oracles}
+%
+We will present two shape analyses, each of which attempts to prove
+the safety of a given program by querying an oracle for a learning
+problem over heaps and shapes.
+%
+To define the queries answered by oracles in both classes, it will be
+useful to first define a relevant inference problem over shape
+domains.
+% Define partial characterization function, valid refinement.
+\begin{defn}
+  % Define partial characterization functions.
+  A \emph{partial characterization} function is a function $\partchar:
+  \heaps \to \add{\bools}{\unknown}$.
+  %
+  We denote the space of all partial characterization functions as
+  $\partchars = \heaps \to \add{\bools}{\unknown}$.
+
+  % Define valid refinement.
+  For shape domain $D$, a \emph{valid refinement} of $\partchar$ is a
+  shape $S \in \shapes_D$ such that for each heap $h \in \heaps$,
+  \begin{itemize}
+  \item
+    % Positive matches:
+    If $\partchar(h) = \true$, then $h \in S$.
+  \item
+    % Negative matches:
+    If $\partchar(h) = \false$, then $h \notin S$.
+  \end{itemize}
+
+  % Define the inference problem.
+  A solution to the \emph{optimal refinement inference problem}
+  $\optrefine(\partchar, D)$ is a shape $S \in \shapes_D$ such that:
+  %
+  \begin{enumerate}
+  \item $S$ is a valid refinement of $\partchar$.
+  \item $S$ is at least as optimal as all valid refinements of
+    $\partchar$ in $D$.
+  \end{enumerate}
+\end{defn}
+
+% Define synthesizer oracle.
+A synthesizing oracle for shape domain $D$ takes a partial
+characterization function $\chi$ over heaps and directly solves the
+optimal refinement inference problem defined by $\chi$.
+%
+\begin{defn}
+  \label{defn:syn-oracle}
+  For each shape domain $D \in \shapedomains$, a
+  \emph{shape-synthesizing oracle} is a function $O: \partchars \to
+  D$ such that for each partial characterization function $\chi
+  \in \partchars$, $O(\chi)$ is a solution to $\optrefine(\chi, D)$.
+  %
+  We denote the space of all synthesis oracles for $D$ as
+  $\synoracles_D = \partchars \to D$.
+\end{defn}
+
+% Define characterizing oracle.
+For shape domain $D$, a shape characterization oracles takes a partial
+characterization function $\chi$ and implements the characteristic
+function of a solution to the optimal refinement inference problem
+defined by $\chi$.
+%
+\begin{defn}
+  \label{defn:char-oracle}
+  %
+  For each shape domain $D \in \shapedomains$, a
+  \emph{characterization oracle} is a function $O: \partchars \to
+  \chars$ such that for each partial characterization function $\chi
+  \in \partchars$, $O(\chi)$ is the characteristic function of a
+  solution to $\optrefine(\chi, D)$.
+  %
+  We denote the space of all characterization oracles for $D$ as
+  $\charoracles_D = \partchars \to \chars$.
+\end{defn}
+
+% Define unwinding trees, give key proof properties.
+\subsection{Unwinding Trees}
+\label{sec:unwindings}
+%
+\verifier models a program as a tree of program paths annotated with
+heap shapes as invariants of heaps reached by all runs of the path.
+\begin{defn}
+  \label{defn:shape-tree}
+  %
+  For a fixed shape domain $D$, a \emph{shape tree} is a four-tuple
+  $(\nodesnm, \edgesnm, \shapesnm, \covernm)$, where:
+  %
+  \begin{enumerate}
+  \item
+    % Nodes.
+    For the countable universe of tree nodes $\nodeuni$, $\nodesnm
+    \subseteq \nodeuni$ is the set of \emph{nodes}.
+  \item
+    % Tree edges.
+    $\edgesnm \subseteq \nodesnm \times \nodesnm$ is the set of
+    \emph{edges}, where the graph $(\nodesnm, \edgesnm)$ is a tree.
+    %
+    We denote the ancestor relation over nodes in $\nodesnm$ as $\anc
+    \subseteq \nodesnm \times \nodesnm$.
+  \item
+    % Patterns.
+    $\shapesnm: \nodesnm \to \shapes_D$ maps each node to an invariant
+    represented as a heap shape (\autoref{defn:shape-domain}).
+  \item
+    % Define the cover relation.
+    $\covernm \subseteq \nodesnm \times \nodesnm$ is the \emph{cover}
+    relation.
+    %
+    For all nodes $m, n \in \nodesnm$, if $(m, n) \in \covernm$, then
+    $m$ is a leaf and $\shapesnm(m) \matchedby \shapesnm(n)$.
+    %
+    In such a case, we say that $m$ is \emph{covered}.
+    %
+    A tree is \emph{complete} if all of its leaves are covered.
+  \end{enumerate}
+  % Define space of shape trees.
+  We denote the space of shape trees as $\shapetrees = \pset(\nodeuni)
+  \times (\nodeuni \times \nodeuni) \times (\nodesnm \to \shapes_D)
+  \times (\nodeuni \times \nodeuni)$.
+\end{defn}
+% Notation for projecting components of an unwinding tree.
+For unwinding tree $\treenm$, we denote the components of $\treenm$ as
+$\nodesnm_{\treenm}$, $\edgesnm_{\treenm}$, $\shapesnm_{\treenm}$, and
+$\covernm_{\treenm}$.
+% Example: call back to the shape tree for altlist.
+\begin{ex}
+  \label{ex:pat-tree-defn}
+  %
+  \autoref{sec:ex-tree}, \autoref{fig:alt-unwinding} depicts a shape
+  tree $(\nodesnm, \edgesnm, \shapesnm, \covernm)$ that models some
+  executions of \altlist (formulated precisely below).
+  %
+  The nodes $\nodesnm$ are depicted as circles, and the edges
+  $\edgesnm$ between nodes are depicted as solid edges.
+  %
+  For each node $n \in \nodesnm$, the shape $\shapesnm(\nodenm)$ is
+  provided as an annotation.
+  %
+  The only cover edge in $\covernm$ is depicted as a dashed edge from
+  node $6$ to node $5$.
+\end{ex}
+
+% Define unwindings of a program: unwinding tree with maps to program
+% objects.
+Unwinding trees model the possible runs of programs.
+\begin{defn}
+  \label{defn:unwinding-tree}
+  For program $\prognm \in \lang$, an \emph{unwinding tree} is a pair
+  $(\pattreenm, \locmapnm)$, where:
+  %
+  \begin{itemize}
+  \item
+    % Pattern tree.
+    $\pattreenm = (\nodesnm, \edgesnm, \shapesnm, \covernm) \in
+    \shapetrees$ is a shape tree (\autoref{defn:shape-tree}).
+  \item
+    % Location map.
+    $\locmapnm: \nodesnm \to \locs$ is a map from each node of
+    $\pattreenm$ to a control location such that for each uncovered
+    node $n \in \nodesnm$ and each control-flow edge $(\locmapnm(n),
+    \instrnm, \locnm') \in \edgesnm$, there is some tree edge $(n, n')
+    \in \edgesnm$ such that $\post[\instrnm](\shapesnm(n)) \matchedby
+    \shapesnm(n')$.
+    %
+    We denote the space of location maps as $\locmaps = \nodesnm \to
+    \locs$.
+  \end{itemize}
+  %
+  We denote the space of unwinding trees as $\unwindtrees =
+  \shapetrees \times \locmaps$.
+\end{defn}
+
+% Describe the roles of unwinding trees
+Unwinding trees constructed by \verifier to attempt to prove that a
+given error location is unreachable in a given program.
+%
+In particular, for each program $\prognm$ with unwinding tree $\treenm
+= ((\nodesnm, \edgesnm, \shapesnm, \covernm), \locmapnm)$ and error
+control location $\errloc \in \locs$, let $\treenm$ be \emph{safe} if
+for each node $\nodenm \in \nodesnm$ such that $\locmapnm(\nodenm) =
+\errloc$ (i.e., each node $\nodenm$ that \emph{models} $\errloc$), the
+$\patnm(\nodesnm)$ is not matched by any heap.
+%
+If $\prognm$ has a complete and safe unwinding tree, then $\locnm$ is
+not reachable in any run of $\prognm$ (this fact is established and
+used in the proof of soundness of \verifier, given in
+\autoref{sec:soundness}).
+
+% Example: shape tree from the overview as an unwinding tree of
+% altlist.
+\begin{ex}
+  \label{ex:altlist-unwinding}
+  The unwinding tree $\treenm$ depicted in \autoref{sec:ex-tree},
+  \autoref{fig:alt-unwinding} is an unwinding tree for $\prognm$, with
+  a location map from nodes $0$, $2$, $4$, and $6$ to line 5 of
+  \altlist, and from nodes $1$, $3$, and $5$ to line $9$ of \altlist.
+  %
+  $\treenm$ is not complete, because only the leaf node $6$ is
+  covered.
+\end{ex}
+
+% Give the core algorithm for the verifier.
+\subsection{\verifier Core}
+%
+\label{sec:core}
+% Core algorithm.
+\begin{algorithm}[ht]
+  % Declare IO markers.
+  \SetKwInOut{Input}{Input}
+  %
+  \SetKwInOut{Output}{Output}
+
+  % addcover: add a cover relation to a tree
+  \SetKwFunction{addcover}{UpdCover}
+  % freshnode: create a fresh node.
+  \SetKwFunction{freshnode}{FreshNode}
+  % initloc: the initial location of a program
+  \SetKwFunction{initloc}{init}
+  % uncoverleaves: collect the uncovered leaves in a tree
+  \SetKwFunction{uncoveredleaves}{UncoveredLeaves}
+  % unwind: unwind
+  \SetKwFunction{unwind}{Unwind}
+
+  % Declare sub-program markers (procedure).
+  \SetKwProg{myproc}{Procedure}{}{}
+
+  % Declare inputs:
+  \Input{$\prognm$: a program; $\errloc$: an error location}
+  %
+  \Output{A decision as to whether $\errloc$ is unreachable in
+    $\prognm$.}
+
+  % Core-rec: case: frontier is empty
+  \myproc{$\verifier$
+    {$((\treenm, \locmapnm)$, $\emptyseq)$}}{
+    \label{line:empty-frontier}
+    \Return{$\true$} \label{line:return-safe}
+  }
+
+  % Core-rec: case: frontier is non-empty:
+  \myproc{$\verifier'${$((\treenm, \locmapnm)$,
+      %
+      $\cons{\nodenm}{\frontiernm})$}}{
+    \label{line:non-empty-frontier}
+    % If n does not model the error location:
+    \eIf{$\locmapnm(\nodenm) \not= \errloc$}{ \label{line:unwind-case}
+      % Recurse on the updated tree and frontier.
+      $\treenm' \assign \unwind(\treenm, \nodenm)$
+      %
+      \label{line:unwind-tree} \;
+      % Update the frontier:
+      $\frontiernm' \assign \frontiernm \union (\nodesnm_{\treenm'}
+      \setminus \nodesnm_{\treenm})$ \label{line:unwind-frontier} \;
+      % Recurse.
+      \Return{$\verifier'(\treenm', \frontiernm')$}
+      %
+      \label{line:unwind-recurse} \;
+      %
+    }
+    % If n is mapped to the error location:
+    { \label{line:refine-case}
+      % Case split: refinement of tree:
+      \Switch{$\refine(\treenm, \errloc)$}{
+        % Case: tree has no safe refinement.
+        \lCase{$\unsafe$}{
+          \label{line:bug-case}
+          % then return that program is not safe.
+          \Return{$\unsafe$} \label{line:bug-return}
+        }
+        % Case: tree has no safe refinement.
+        \Case{$\treenm'$}{ \label{line:refinement-case}
+          % update the tree
+          $\treenm' \assign \addcover(\treenm)$
+          %
+          \label{line:refinement-tree} \;
+          % update the frontier
+          $\frontiernm' \assign \uncoveredleaves(\treenm')$
+          %
+          \label{line:refinement-frontier} \;
+          %
+          \Return{$\verifier'(\treenm', \frontiernm')$}
+          %
+          \label{line:refinement-return} \;
+          %
+        }
+        %
+      }
+      %
+    }
+    %
+  }
+  % Allocate a fresh node.
+  $\nodenm \assign \freshnode()$ \;
+  % Construct the initial tree.
+  $\treenm_0 \assign
+  %
+  ((\singleton{\nodenm}, \emptyset,
+  %
+  [\nodenm \mapsto \patuni], \emptyset),
+  [ \nodenm \mapsto \initloc(\prognm) ])$ \label{line:tree-init} \;
+  % Construct the initial frontier.
+  $\frontiernm_0 \assign [ \nodenm ]$ \label{line:frontier-init} \;
+  % Call recursive algorithm on tree with a single node.
+  \Return{$\verifier'(\treenm_0, \frontiernm_0)$ }
+  %
+  \label{line:base-call} \;
+  \caption{$\verifier$: the core verification algorithm.
+    %
+    $\verifier$ takes as input (1) a \lang program
+    $\prognm$ and (2) an error control location $\errloc$, and
+    determines if $\errloc$ is reachable in $\prognm$.}
+\label{alg:core}
+\end{algorithm}
+% Give overview.
+In this section, we describe the core \verifier algorithm, given in
+\autoref{alg:core}.
+%
+$\verifier$ takes as input a program $\prognm$ and an error
+control location $\errloc$, and attempts to determine if $\errloc$ is
+unreachable in $\prognm$.
+% Describe the recursive algorithm.
+$\verifier$ runs a recursive procedure $\verifier'$, which maintains
+an unwinding tree $\treenm$ of $\prognm$ and a \emph{frontier} of
+uncovered tree nodes to analyze in order to extend $\treenm$ to be a
+complete unwinding tree.
+% Describe the base case: empty frontier.
+If the set of frontier nodes is empty (\autoref{line:empty-frontier}),
+then $\verifier$ determines that $\treenm$ is a complete
+unwinding, and determines $\errloc$ is unreachable in $\prognm$
+(\autoref{line:return-safe}).
+
+% Give the inductive case of the recursive algorithm.
+If the set of frontier nodes is non-empty, then $\verifier$
+chooses a node $\nodenm \in \frontiernm$
+(\autoref{line:non-empty-frontier}).
+% Case: n is not at the error location.
+If $\nodenm$ does not model the error location $\errloc$
+(\autoref{line:unwind-case}), then $\verifier$ extends
+$\treenm$ with a node that models each control successor of the
+control location of $\nodenm$ to form a new unwinding tree $\treenm'$,
+by invoking a procedure $\unwind$ (\autoref{line:unwind-tree}), adds
+each new node in $\treenm_U$ to the remaining frontier nodes
+$\frontiernm$ to construct a new frontier $\frontiernm'$
+(\autoref{line:unwind-frontier}), and invokes itself recursively on
+$\treenm_U$ and $\frontiernm'$ (\autoref{line:unwind-recurse}).
+
+% Case: n is at the error location.
+If $\nodenm$ models the error control location $\errloc$
+(\autoref{line:refine-case}), then $\verifier$ invokes the procedure
+$\refine$ (described in \autoref{sec:refine}) on $\treenm$ and
+$\errloc$.
+%
+If $\refine$ returns the value $\unsafe$
+(\autoref{line:bug-case}), then $\verifier$ determines
+that $\errloc$ is reachable in $\prognm$ (\autoref{line:bug-return}).
+%
+Otherwise, if $\refine$ returns an unwinding tree $\treenm'$ whose
+invariants refute all paths to $\nodenm$
+(\autoref{line:refinement-case}), then $\verifier$ updates the cover
+relation of $\treenm$ to form an unwinding tree $\treenm'$ by invoking
+a procedure $\updcover$ (\autoref{line:refinement-tree}; $\updcover$
+is described below),
+%
+collects the set of uncovered leaves $\frontiernm'$ in $\treenm'$ by
+invoking a procedure $\uncoveredleaves$
+(\autoref{line:refinement-frontier}), and invokes itself recursively
+on $\treenm'$ and $\frontiernm'$ (\autoref{line:refinement-return}).
+
+% Give the base application of the recursive algorithm.
+$\verifier$ constructs an initial unwinding tree $\treenm_0$
+consisting of a single node $\nodenm$ that models the initial control
+location of $\prognm$ (\autoref{line:tree-init}), constructs an
+initial frontier containing only $\nodenm$
+(\autoref{line:frontier-init}), and invokes $\verifier'$ on
+$\treenm_0$ and $\frontiernm_0$ (\autoref{line:base-call}).
+
+% Give the function for updating the cover relation.
+\paragraph{Design of $\updcover$}
+%
+The procedure $\updcover$ takes an unwinding tree $\treenm$ as input
+and updates the cover relation of $\treenm$.
+%
+In particular, $\updcover$ performs a pre-order traversal of
+$\treenm$.
+%
+At each node $\nodenm \in \nodesnm_{\treenm}$, $\updcover$ checks if
+there is an uncovered non-descendant $\nodenm' \in \nodesnm_{\treenm}$
+of $\nodenm$ such that (1) $\nodenm$ and $\nodenm'$ model the same
+control location of $\prognm$ and (2) the invariant of $\nodenm$
+entails the invariant of $\nodenm'$.
+%
+If so, $\updcover$ adds a cover edge from $\nodenm$ to $\nodenm'$ and
+does not traverse any subtree of $\nodenm$.
+
+% refine: give the refine operation.
+\subsubsection{\refine}
+\label{sec:refine}
+% Present our implementation of getting trace invariants from users.
+\begin{algorithm}[ht]
+  % Declare data.
+
+  % errheap:
+  \SetKwData{errheap}{e}
+  % errrestnm: the rest of the error leaves.
+  \SetKwData{errrestnm}{errrest}
+
+  % Declare functions
+  \SetKwFunction{children}{Children}
+  %
+  \SetKwFunction{consunwind}{ConsUnwind}
+  %
+  \SetKwFunction{instrof}{Instr}
+  %
+  \SetKwFunction{leafrec}{ErrLeavesPat}
+  %
+  \SetKwFunction{leavesof}{Leaves}
+  %
+  \SetKwFunction{parentof}{Parent}
+  %
+  \SetKwFunction{refineroot}{RefineRoot}
+  %
+  \SetKwFunction{refinetree}{RefineTree}
+  %
+  \SetKwFunction{rootof}{Root}
+
+  % Declare IO markers.
+  \SetKwInOut{Input}{Input}
+  %
+  \SetKwInOut{Output}{Output}
+
+  % Declare sub-program markers.
+  \SetKwProg{myproc}{Procedure}{}{}
+
+  % Inputs: unwinding tree, error location.
+  \Input{$(\treenm, \locmapnm)$: an unwinding tree
+    %
+  }
+  % Output: inductive invariants.
+  \Output{$\treenm$, updated with safe inductive invariants.}
+  % refine-tree: refine a tree rooted at a node.
+  \myproc{\refinetree{$\treenm$, $\reachshape$}}{
+    %
+    $\rootnm \assign \rootof(\treenm)$ \label{line:get-root} \;
+    % Get the shape for the current node.
+    $\rootshape \assign \seplearner(T, \rootnm, \reachshape)$
+    %
+    \label{line:root-shape} \;
+    % Refine each child of the root.
+    \ForEach{$\childnm \in \children(r)$}{
+      %
+      \label{line:child-enum}
+      % Cons shape for post-image.
+      $\childshape \assign \abspost_D[\instrof(\rootnm, \childnm)]
+      %
+      (\rootshape)$
+      \label{line:child-post} \;
+      %
+      $\refinedchild_c \assign
+      %
+      \refinetree(\restrict{\treenm}{\childnm}, \childshape)$
+      %
+      \label{line:child-refine} \;
+      %
+    }
+    % Return the final tree constructed.
+    \Return{$\consunwind(
+      %
+      \rootnm, \rootshape, \{ \refinedchild_c \}_{c})$}
+    %
+    \label{line:cons-unwind} \;
+    %
+  }
+  % Refine the entire tree.
+  \Return{$\refinetree(\treenm, \allheaps)$}
+  %
+  \label{line:refine-tree-base} \;
+  %
+  \caption{$\refine$: takes as input an unwinding tree $T$ and updates
+    the invariants in $T$ to refute all paths to nodes that model the
+    error location $\errloc$.}
+  \label{alg:refine}
+\end{algorithm}
+
+% Describe the refine operation: interface through query.
+$\refine$ takes as input an unwinding tree $\treenm$ and updates the
+invariants of $\treenm$ to refute any path to a node that models the
+error location $\errloc$.
+% Define refinetree.
+$\refine$ uses a procedure $\refinetree$
+(\autoref{line:get-root}--\autoref{line:cons-unwind}), which takes as
+input an unwinding tree $\treenm$ and a heap shape $\reachshape$ and
+updates the invariants of $\treenm$ to be safe inductive invariants
+such that $\reachshape$ entails the invariant of the root of the tree.
+%
+$\refinetree$ invokes a \emph{invariant learner} $\seplearner$ on $T$,
+the root of $T$, and $\reachshape$ (\autoref{line:root-shape};
+possible implementations of $\seplearner$ are described in
+\autoref{sec:sep-learners}).
+%
+For each child $\childnm$ of the root of $T$
+(\autoref{line:child-enum}), $\refinetree$ constructs the abstract
+post-image of $S_n$ for the instruction connecting $r$ to $c$, denoted
+$\childshape$ (\autoref{line:child-post}), and then invokes itself
+recursively on $T$ restricted to $c$ and $\childshape$
+(\autoref{line:child-refine}).
+%
+$\refinetree$ returns the unwinding tree constructed from the root
+node, the shape $\rootshape$, and the refined children of $\rootnm$
+(\autoref{line:cons-unwind}).
+
+% Discuss how refine calls refinetree.
+$\refine$ invokes $\refinetree$ on the input unwinding tree $\treenm$
+and the universal shape $\allheaps$ for $D$
+(\autoref{line:refine-tree-base}).
+
+% Give separator-learning algorithms.
+\subsection{Invariant learners}
+\label{sec:sep-learners}
+%
+In this section, we define two procedures that can be used to
+implement \seplearner, which is used in the definition of \refine.
+%
+We first define a partial characterization function
+(\autoref{sec:tree-part-char}) and validator
+(\autoref{sec:tree-validator}) from a fixed unwinding tree and node,
+which we use in the definition of both procedures.
+%
+We then define the two procedures: one queries a shape-synthesizer
+oracle (\autoref{sec:syn-sep-learner}) and the other queries a
+shape-characterization oracle (\autoref{sec:syn-char-learner}).
+%
+We then compare practical issues of implementing each invariant
+learner, in terms of requiring an end-user to serve as its
+corresponding oracle (\autoref{sec:practical-oracles}).
+
+% Define partial characterization function from a tree node
+\subsubsection{A partial characterization for an unwinding tree}
+\label{sec:tree-part-char}
+
+\begin{algorithm}[ht]
+  % Declare IO markers.
+  \SetKwInOut{Input}{Input}
+  %
+  \SetKwInOut{Output}{Output}
+  % Declare sub-program markers.
+  \SetKwProg{myproc}{Procedure}{}{}
+  % Inputs: unwinding tree, error location.
+  \Input{A heap $h \in \heaps$.}
+  % Output: inductive invariants.
+  \Output{For fixed unwinding tree $T$, node $n \in \nodesnm_T$ with
+    strongest valid invariant $S \in \shapes_D$, returns either (1) a
+    Boolean value denoting a decision as to whether $h$ must be in the
+    language of the invariant for $n$ or (2) the value $\unknown$.}
+  % mustin: h must be in the separator if its in the post-image of the
+  % separator for S_m.
+  \lIf{$h \in S$}
+  %
+  {
+    \Return{$\true$} \label{line:ret-true}
+  }
+  %
+  \lIf{$\biglor \{ \post^{*}[n', e](h) \not= \undef
+  | \locnm(e) = \errloc, n' \step^{*} e \}$}
+  %
+  {
+    \Return{$\false$} \label{line:ret-false}
+  }
+  %
+  \Return{$\unknown$} \label{line:ret-unknown}
+  %
+  \caption{$\treepartchar_{T, n, S}$: defines a partial
+    characterization function for a fixed unwinding tree $T$, node $n
+    \in \nodesnm_T$, and strongest valid invariant $S$ for $n$.}
+  \label{alg:tree-part-char}
+\end{algorithm}
+
+% Walk through the partial characterization.
+\autoref{alg:tree-part-char} contains pseudocode for an algorithm
+$\treepartchar_{T, n, S}$ that, for fixed unwinding tree $T$ with node
+$n \in \nodesnm_T$ and strongest valid invariant $S \in \shapes$ for
+$n$, decides whether a given heap $h \in \heaps$ must be in the
+invariant for $n$.
+%
+$\treepartchar_{T, n, S}$ checks if $h$ is in $S$, and if so, returns
+$\true$ (\autoref{line:ret-true}).
+%
+$\treepartchar_{T, n, S}$ then checks if, for some node $e$ that
+models the error location $\errloc$, $h$ transitions to some heap on
+the sequence of instructions on the control path from $n$ to $e$, and
+if so, returns $\false$ (\autoref{line:ret-false}).
+%
+Otherwise, $\treepartchar_{T, n, S}$ returns $\unknown$
+(\autoref{line:ret-unknown}).
+
+% Define a validator of shapes from an unwinding tree.
+\subsubsection{A shape validator for an unwinding tree}
+\label{sec:tree-validator}
+%
+\begin{algorithm}[ht]
+  % Declare IO markers.
+  \SetKwInOut{Input}{Input}
+  %
+  \SetKwInOut{Output}{Output}
+  % Inputs: unwinding tree, error location.
+  \Input{For shape domain $D$, a candidate shape $C \in \shapes_D$.
+  }
+  % Output:
+  \Output{One of:
+    %
+    (1) a value $\isvalid$ denoting that $C$ is a valid invariant for
+    $n$,
+    %
+    (2) $\true$ paired with a heap that must be accepted by any
+    invariant for $n$ but is not accepted by $C$, or
+    %
+    (3) $\false$ paired with a heap that must not be accepted by any
+    invariant for $n$ but is accepted by $C$.
+    %
+  }
+  % Try to get a positive counter-model from the shape for m.
+  \Switch{$\chksubsumes(S, C)$}{
+    %
+    \lCase{$h \in \heaps$:}
+    %
+    {\Return{$(\true, h)$}
+      %
+      \label{line:add-ind-pos}
+      %
+    }
+    %
+  }
+  % Collect a set of negative counter-heaps.
+  $\negcounters \assign \emptyset$ \label{line:init-negs} \;
+  %
+  \ForEach{$\{ e\ |\ \locnm(e) = \errloc, n \step^{*} e \}$
+    %
+    \label{line:enum-errs}}
+  {
+    % Case-split on the result of the subsumption check.
+    \Switch{$\chksubsumes(\abspost^{*}[n', e](C), \noheaps_D)$}{
+      \lCase{$h \in \heaps$:}
+      %
+      {\Return{$(\false, h)$}
+        %
+        \label{line:return-neg}
+        %
+      }
+      %
+    }
+    %
+  }
+  \Return{$\isvalid$} \label{line:ret-valid} \;
+  %
+  \caption{$\treevalidate_{T, n, S}$: for a fixed unwinding tree $T$,
+    control node $n \in \nodesnm_T$, and the strongest valid
+    invariant $S$ for $n$, defines a validator for candidate shapes at
+    $n$.
+    %
+  }
+  \label{alg:validate-tree-shape}
+\end{algorithm}
+
+% Walk through the validator.
+\autoref{alg:validate-tree-shape} contains pseudocode for a procedure
+$\treevalidate_{T, n, S}$ that, for fixed unwinding tree $T$, node $n
+\in \nodesnm_T$, and strongest valid invariant $S \in \shapes$ for
+$n$, validates an input candidate invariant $C \in \shapes$.
+% Check subsumption with strongest inductive shape.
+$\treevalidate_{T, n, S}$ first checks that $S$ is subsumed by $C$
+and, if not, returns a heap that is accepted by $S$ but is not
+accepted by $C$ (\autoref{line:add-ind-pos}).
+%
+$\treevalidate_{T, n, S}$ then enumerates over the set of error nodes
+that are reachable from $n$ in $T$ (\autoref{line:enum-errs}).
+%
+For each such error node $e$, if the abstract post-image of $C$ along
+the control path from $n$ to $e$ does not subsume $\noheaps_D$, then
+$\treevalidate_{T, n, S}$ returns a heap $h$ accepted by the
+post-image (\autoref{line:return-neg}).
+%
+Otherwise, $\treevalidate_{T, n, S}$ returns that $C$ is a valid
+invariant for $n$ (\autoref{line:ret-valid}).
+
+% Define a separation learner that uses a synthesizer oracle.
+\subsubsection{An invariant learner using a synthesizer oracle}
+\label{sec:syn-sep-learner}
+% Give an overview of the definition.
+Given access to a shape-\emph{synthesizing} oracle $O$ for shape
+domain $D$, we can learn an optimal invariant for $n$ by running $O$
+on the partial characteristic function for the current unwinding tree
+and $n$.
+
+% Give the exact definition.
+I.e., let $O \in \synoracles_D$ be a synthesizer oracle for domain
+shape domain $D$.
+%
+For each unwinding tree $T$, node $n \in \nodesnm_T$, and strongest
+valid invariant $S \in \shapes$ for $n$:
+%
+\[
+\seplearner(T, n, S) = O(\treepartchar_{T, n, S})
+\]
+
+% Define a separation learner that uses a synthesizer oracle.
+\subsubsection{An invariant learner using a characterization oracle}
+\label{sec:syn-char-learner}
+%
+Given access to a shape-\emph{characterizing} oracle $O$ for an
+automatically learnable shape domain $D$, we can learn an invariant for
+node $n$ in unwinding tree $T$ by running a learning procedure $P$ for
+$D$.
+%
+The \emph{total} characteristic function given to $P$ is implemented
+by running $O$ with access to the \emph{partial} characteristic
+function defined by $T$ and $n$ (\autoref{sec:tree-part-char}).
+%
+The \emph{validator} given to $P$ is implemented using the validator
+defined by $T$ and $n$ (\autoref{sec:tree-validator}).
+
+% Give the exact definition.
+I.e., let $\shapelearner \in \shapelearners_D$ be a learning algorithm
+for $D$ and let $O \in \charoracles_D$ by a characterization oracle
+for $D$.
+%
+For each unwinding tree $T$ and node $n \in \nodesnm_T$ with strongest
+valid invariant $S$:
+%
+\[
+\seplearner(T, n, S) =
+%
+\shapelearner(O(\treepartchar_{T, n, S}), \treevalidate_{T, n, S})
+\]
+
+% Talk about practical issues in implementing each separator learner.
+\subsubsection{Implementing invariant learners with end-users}
+\label{sec:practical-oracles}
+%
+\paragraph{Validating the results of an oracles} Both synthesizing
+oracles are characterizing oracles are defined as functions that
+always generate (the characteristic functions of) solutions of given
+optimal refinement inference problems.
+%
+In practice, an end user serving as a synthesizing oracle may generate
+a shape that is not a valid refinement of a given partial
+characteristic function, or may not be optimal.
+%
+We can extend the given implementations of invariant learners to
+validate the shapes provided by a user by invoking $\treevalidate_{T,
+  n, S}$, and rejecting shapes that are not valid refinements.
+%
+Extending the invariant learner to validate that a shape provided by
+a user is optimal over all valid refinements depends on the optimality
+ordering of the particular shape domain, and may not always be
+feasible.
+
+% Characteristic oracle.
+We can extend the invariant learner that uses a characterizing oracle
+to check if a given heap $h$ is defined by $\treepartchar$ before
+passing $h$ to the user, precluding the possibility that the user will
+provide an unsound answer, and saving effort for the user.
+
+\paragraph{Advantages of using synthesizing oracles}
+%
+There are several potential advantages to developing an analysis that
+uses a synthesizing oracle:
+%
+\begin{enumerate}
+\item
+  The shape domain used by the analysis does not necessarily need
+  to be automatically learnable.
+\item
+  It may be the case for some analysis problems that it is easier for
+  a user to write a single shape that describes their solution, rather
+  than serving as a characteristic function for their solution.
+  %
+  In particular, this seems feasible if the analysis queries the user
+  on the membership of large heaps.
+\end{enumerate}
+
+\paragraph{Advantages of using characterizing oracles}
+%
+Conversely, there are several potential advantages to developing an
+analysis that uses a characterizing oracle:
+%
+\begin{enumerate}
+\item
+  A user serving as a characterizing oracle does not need to formally
+  understand a shape domain: they only need to accept or reject
+  example concrete shapes.
+\item
+  Responses to Boolean queries can be more easily aggregated and
+  weighted than across multiple users: an analysis that uses multiple
+  users to serve as an oracle can simply ask all users to decide
+  membership of a heap, and take its final result to be the result of
+  a vote among all users.
+  %
+  Combining multiple shapes provided by users as synthesizers may be
+  feasible for some domains, but would likely be more complex.
+\end{enumerate}
+
+% Give the properties of the verifier.
+\subsection{\verifier Properties}
+\label{sec:properties}
+%
+In this section, we give the correctness properties of \verifier,
+namely its soundness (\autoref{sec:soundness}) and relative
+completeness (\autoref{sec:completeness}).
+%
+Proofs of all theorems will be given in an extended version of this
+paper.
+
+% Claim that proveit is sound.
+\subsubsection{Soundness}
+\label{sec:soundness}
+%
+\BH{soundness: verifier is sound, even when using unsound oracles}
+
+% Claim that proveit is complete.
+\subsubsection{Relative Completeness}
+\label{sec:completeness}
+% Overview of claim:
+\BH{give result relating optimality ordering over shapes and
+  invariants}
+
+\subsubsection{Relativization of Proofs}
+\label{sec:relativization}
+\BH{Somesh: complete}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "p"
+%%% End:
