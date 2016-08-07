@@ -1,11 +1,11 @@
 % describe the modification of the Impact algorithm for heaps
 
 % describe the standard Impact algorithm
-\section{Heap Impact Algorithm}
-\label{sec:heap-impact-algorithm}
+% \section{Heap Impact Algorithm}
+\label{ch:heap-impact-algorithm}
 %
 
-Building on top of the framework defined in \autoref{sec:background}, \autoref{sec:impact-algorithm}, and \autoref{sec:heap-patterns}, we can now modify the \impact algorithm to work for heap-manipulating programs. In this section, we first define the three steps of \impact, that is \expand, \cover, and \refine. Then we describe an invariant-learning procedure that retrieves patterns from an Oracle, thereby completing the description of the algorithm.
+Building on top of the framework defined in \autoref{ch:background}, \autoref{ch:impact-algorithm}, and \autoref{ch:heap-patterns}, we can now modify the \impact algorithm to work for heap-manipulating programs. In this section, we first define the three steps of \impact, that is \expand, \cover, and \refine. Then we describe an invariant-learning procedure that retrieves patterns from an Oracle, thereby completing the description of the algorithm.
 
 \begin{algorithm}[ht]
   % Declare functions
@@ -81,7 +81,7 @@ Building on top of the framework defined in \autoref{sec:background}, \autoref{s
   \label{alg:heap-cover}
 \end{algorithm}
 
-\subsection{Postcondition Transforms for Heap Operations}
+\section{Postcondition Transforms for Heap Operations}
 TODO: This section needs to be completed.
 
 % define labeled program unwinding
@@ -94,7 +94,7 @@ TODO: This section needs to be completed.
 
 The formal rules for computing $\post$ for each individual action are presented in \autoref{fig:post-transforms}. (TODO)
 
-\subsection{Learning Invariants from Positive and Negative Examples}
+\section{Learning Invariants from Positive and Negative Examples}
 
 We note in \autoref{alg:heap-refine} the procedure \seplearner is used, which is the core component of making \impact work for heap-manipulating programs. In this section, we describe this algorithm.
 

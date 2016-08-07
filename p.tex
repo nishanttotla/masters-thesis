@@ -1,14 +1,14 @@
-\documentclass[onecolumn]{article}
+\documentclass[12pt, letterpaper]{report}
 
 % Define to fix sigplanconf.
 % \doi{}
-
-\setlength{\paperheight}{11in}
-\setlength{\paperwidth}{8.5in}
-\usepackage[
-  pass,% keep layout unchanged
-  % showframe,% show the layout
-]{geometry}
+\pagestyle{empty}
+\topmargin -0.60in
+\oddsidemargin 0.0625in
+\textheight 9.00in
+\textwidth 6.50in
+\renewcommand{\baselinestretch}{1.4}
+\parskip 0.20in
 
 % Breaks sigplanconf.
 % \usepackage[square,comma,numbers,sort&compress]{natbib}
@@ -65,11 +65,42 @@
 \input{rev}
 
 \begin{document}
-
-% hdr: header
-\input{hdr}
-\date{}
-\maketitle
+\large
+\begin{center}
+\rule[.1in]{6.5in}{.01in}\\
+{\bf Oracle-Guided Heap Invariant Synthesis}\\
+by Nishant Rajgopal Totla\\
+\rule[.1in]{6.5in}{.01in}\\
+{\bf Research Project}\\
+\noindent
+\end{center}
+\normalsize
+Submitted to the Department of Electrical Engineering and Computer
+Sciences, University of California at Berkeley, in partial satisfaction
+of the requirements for the degree of {\bf Master of Science, Plan II}.
+\\
+\\
+\noindent
+Approval for the Report and Comprehensive Examination:
+\begin{center}
+{\bf Committee:}\\
+\vspace{9.5 mm}
+\rule{3.5in}{.01in}\\
+Sanjit Seshia\\
+Research Advisor\\
+\vspace{9.5 mm}
+\rule{3.5in}{.01in}\\
+Date\\
+\vspace{7 mm}
+* * * * * *\\
+\vspace{9.5 mm}
+\rule{3.5in}{.01in}\\
+Bj{\"o}rn Hartmann\\
+Second Reader\\
+\vspace{9.5 mm}
+\rule{3.5in}{.01in}\\
+Date\\
+\end{center}
 
 % abstract: DEP
 % \input{abstract}
@@ -77,16 +108,26 @@
 TODO
 \end{abstract}
 
+\tableofcontents
+\listoffigures
+\listoftables
+
+\chapter{Introduction}
 \input{introduction}
 
+\chapter{Background}
 \input{background}
 
+\chapter{Impact Algorithm}
 \input{impact-algorithm}
 
+\chapter{Heap Patterms}
 \input{heap-patterns}
 
+\chapter{Heat Impact Algorithm}
 \input{heap-impact-algorithm}
 
+\chapter{Example}
 \input{example}
 
 % \input{overview}

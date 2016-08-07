@@ -1,7 +1,7 @@
 % Describe heap patterns
 
-\section{Heap Patterns}
-\label{sec:heap-patterns}
+% \section{Heap Patterns}
+\label{ch:heap-patterns}
 %
 
 To extend the \impact algorithm to heaps, we first define a framework for representing and reasoning about heaps.
@@ -16,7 +16,7 @@ previous work \cite{sagiv02}, which we use to formulate patterns over
 program heaps (\autoref{sec:patterns}).
 
 % Define a toy imperative language.
-\subsection{Language Definition}
+\section{Language Definition}
 \label{sec:lang}
 %
 TODO : This subsection might end up being redundant later, if we choose to not use this \lang formalism, but it's here for now. We might later just choose to keep the heap and pattern definitions from this section.
@@ -25,7 +25,7 @@ In this section, we define the syntax (\autoref{sec:syntax}) and
 semantics (\autoref{sec:semantics}) of our subject language \lang.
 
 % Define the language syntax.
-\subsubsection{Syntax}
+\section{Syntax}
 \label{sec:syntax}
 % Define the syntax of a program.
 \begin{figure}
@@ -106,7 +106,7 @@ or stores a heap cell as a child of a cell in a pointer variable
 (\autoref{line:store}).
 
 % Define the semantics.
-\subsubsection{Semantics}
+\section{Semantics}
 \label{sec:semantics}
 %
 A \lang program updates a state, which consists of a control location,
@@ -168,7 +168,7 @@ Also refer to \autoref{fig:semantics}.
 \end{figure*}
 
 % Define the language of patterns.
-\subsection{Heap pattern Language}
+\section{Heap pattern Language}
 \label{sec:patterns}
 
 \begin{defn}
@@ -423,13 +423,13 @@ $\heapnm \in \heaps$, if $\patnm_0 \entails \patnm_1$ and $\heapnm
 \end{defn}
 
 % Describe the entailment algorithm.
-\subsection{Pattern Entailment Algorithm}
+\section{Pattern Entailment Algorithm}
 \label{sec:entailment-algorithm}
 
 TODO: The entailment algorithm is based on simulation checks, and is very similar. It is described here.
 
 % Describe program modeling for heap programs
-\subsection{Modeling Heap Programs}
+\section{Modeling Heap Programs}
 \label{sec:modeling-heap-programs}
 
 TODO: This section ties up the description of heap patterns back to the program modeling discussion in \autoref{sec:modeling-programs}. In short, the formalism differs in the following way
