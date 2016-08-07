@@ -1,0 +1,179 @@
+% describe the modification of the Impact algorithm for heaps
+
+% describe the standard Impact algorithm
+% \section{Heap Impact Algorithm}
+\label{ch:heap-impact-algorithm}
+%
+
+Building on top of the framework defined in \autoref{ch:background}, \autoref{ch:impact-algorithm}, and \autoref{ch:heap-patterns}, we can now modify the \impact algorithm to work for heap-manipulating programs. In this section, we first define the three steps of \impact, that is \expand, \cover, and \refine. Then we describe an invariant-learning procedure that retrieves patterns from an Oracle, thereby completing the description of the algorithm.
+
+\begin{algorithm}[ht]
+  % Declare functions
+  \SetKwFunction{procexpand}{EXPAND}
+
+  % Declare sub-program markers.
+  \SetKwProg{myproc}{Procedure}{}{}
+
+  % expand
+  \myproc{\procexpand{$v \in V$}:}{
+    %
+    \If{$v$ is an uncovered leaf}{
+        \ForEach{action $(M_v(v),T,m) \in \Delta$}{
+        add a new vertex $w$ to $V$ and a new edge $(v,w)$ to $E$; \\
+        set $M_v(w) \leftarrow m$ and $\psi(w) \leftarrow 1_D$; \\
+        set $M_e(v,w) \leftarrow T$;
+      }
+    }
+  }
+  \caption{$\expand$: takes as input a vertex $v \in V$ and expands the control flow graph based on all actions available at that vertex.}
+  \label{alg:heap-expand}
+\end{algorithm}
+
+\begin{algorithm}[ht]
+  % Declare functions
+  \SetKwFunction{procrefine}{REFINE}
+
+  % Declare sub-program markers.
+  \SetKwProg{myproc}{Procedure}{}{}
+
+  % expand
+  \myproc{\procrefine{$v \in V$}:}{
+    %
+    \If{$M_v(v) = l_f$ and $\psi(v) \not\equiv (\false, 0_D)$}{
+      let $\pi = (v_0, T_0, v_1) \cdots (v_{n-1}, T_{n-1}, v_n)$ be the unique path from $\epsilon$ to $v$ \\
+      let $\hat{A_0},\cdots,\hat{A_n}$ = \seplearner($\mathcal{U}(\pi)$) \\
+      \eIf{$\hat{A_0},\cdots,\hat{A_n}$ is a valid interpolant}{
+          \For{$i = 0 \cdots n$}{
+          let $\phi = \hat{A}_i^{\langle -i \rangle}$ \\
+          \If{$\psi(v_i) \nvDash \phi$}{
+            remove all pairs $(\cdot, v_i)$ from $\rhd$; \\
+            set $\psi(v_i) \leftarrow \psi(v_i) \land \phi$;
+          }
+        }
+      }
+      {
+        abort (program is unsafe)
+      }
+    }
+  }
+  \caption{$\refine$: takes as input a vertex $v \in V$ at an error location and tags the path from root to $v$ with invariants.}
+  \label{alg:heap-refine}
+\end{algorithm}
+
+\begin{algorithm}[ht]
+  % Declare functions
+  \SetKwFunction{proccover}{COVER}
+
+  % Declare sub-program markers.
+  \SetKwProg{myproc}{Procedure}{}{}
+
+  % expand
+  \myproc{\proccover{$v, w \in V$}:}{
+    %
+    \If{$v$ is uncovered and $M_v(v) = M_v(w)$ and $v \nvDash w$}{
+      \If{$\psi(v) \vDash \psi(w)$}{
+        add $(v,w)$ to $\rhd$; \\
+        delete all $(x,y) \in \rhd$, s.t. $v \sqsubseteq y$;
+      }
+    }
+  }
+  \caption{$\cover$: takes as input vertices $v, w \in V$ and attempts to cover $v$ with $w$.}
+  \label{alg:heap-cover}
+\end{algorithm}
+
+\section{Postcondition Transforms for Heap Operations}
+TODO: This section needs to be completed.
+
+% define labeled program unwinding
+\begin{defn}
+  \label{defn:heap-post-transforms}
+  We define the operator $\post$, which computes the strongest postcondition for a given heap pattern, and action. That is $\post : \heappats \times \mathcal{T} \to \heappats$, where $\mathcal{T}$ is the set of all actions.
+
+  The $\post{*}$ operator can be defined as a repeated application of $\post$ along a given path. More formally, it is $\post{*} : \heappats \times \mathcal{P} \to \heappats$, where $\mathcal{P}$ is a path in the unwinding.
+\end{defn}
+
+The formal rules for computing $\post$ for each individual action are presented in \autoref{fig:post-transforms}. (TODO)
+
+\section{Learning Invariants from Positive and Negative Examples}
+
+We note in \autoref{alg:heap-refine} the procedure \seplearner is used, which is the core component of making \impact work for heap-manipulating programs. In this section, we describe this algorithm.
+
+We defined the notion of interpolants in \autoref{sec:interpolants-from-proofs}, and the same applies to \seplearner, which is described in \autoref{alg:invlearner}.
+
+\begin{algorithm}[ht]
+  % Declare functions
+  \SetKwFunction{procinvlearner}{INVLEARNER}
+
+  % Declare sub-program markers.
+  \SetKwProg{myproc}{Procedure}{}{}
+
+  % expand
+  \myproc{\procinvlearner{$\mathcal{U}(\pi)$}:}{
+    %
+    Let $\pi = (l_0, T_0, l_1)(l_1, T_1, l_2) \cdots (l_{n-1}, T_{n-1}, l_n)$ \\
+    Set $\hat{A_i} = 1_D, 0 \leq i < n, \hat{A_n} = 0_D$ \\
+    Set $H_i^{+} = \{\}, 0 \leq i \leq n$ \\
+    Set $H_i^{-} = \{\}, 0 \leq i \leq n$ \\
+
+    \While{$\neg$\isinterpolant($\hat{A},\mathcal{U}(\pi)$)}{
+      pick $i \in \{1,2,\cdots, n-1\}$
+      $\hat{A_i} = \newcandidate(l_i, \hat{A}, H^{+}, H^{-}, \psi, \mathcal{U}(\pi))$
+    }
+    \Return $\hat{A_0}, \hat{A_1}, \cdots, \hat{A_n}$
+  }
+  \caption{$\seplearner$: takes as input an unfolding $\mathcal{U}(\pi)$ of path $\pi$ and attempts to find an invariant for it.}
+  \label{alg:invlearner}
+\end{algorithm}
+
+\begin{algorithm}[ht]
+  % Declare functions
+  \SetKwFunction{procisinterpolant}{ISINTERPOLANT}
+
+  % Declare sub-program markers.
+  \SetKwProg{myproc}{Procedure}{}{}
+
+  % expand
+  \myproc{\procisinterpolant{$\hat{A}, \mathcal{U}(\pi)$}:}{
+    %
+    \If{$\hat{A_0}, \hat{A_1}, \cdots, \hat{A_n}$ is an interpolant for $\mathcal{U}(\pi)$}{
+      \Return $\true$
+    }
+    \Return $\false$
+  }
+  \caption{$\isinterpolant$: takes as input candidates $\hat{A}$ and unfolding $\mathcal{U}(\pi)$ of path $\pi$, and checks if $\hat{A}$ represents an interpolant for the unfolding.}
+  \label{alg:isinterpolant}
+\end{algorithm}
+
+\begin{algorithm}[ht]
+  % Declare functions
+  \SetKwFunction{procnewcandidate}{NEWCANDIDATE}
+
+  % Declare sub-program markers.
+  \SetKwProg{myproc}{Procedure}{}{}
+
+  % expand
+  \myproc{\procnewcandidate{$l_i, \hat{A}, H^{+}, H^{-}, \psi, \mathcal{U}(\pi)$}:}{
+    %
+    Let $\pi = (l_0, T_0, l_1)(l_1, T_1, l_2) \cdots (l_{n-1}, T_{n-1}, l_n)$ \\
+    Set $S = \post^{*}(1_D, \pi_{0,i})$ \\
+    Set $C = 1_D$
+    \While{$\true$}{
+      $\mathcal{C} = \mathcal{O}(H_i^{+}, H_i^{-})$ \\
+      \If{$S \not \entails C$}{
+        $H_i^{+} = \{h\} \cup H_i^{+}$ where $h \in S, h \not \in C$ \\
+        continue
+      }
+      \If{$TODO$}{
+        // TODO case add negative example
+        $H_i^{-} = \{h\} \cup H_i^{-}$ where $h \cdots$ \\
+        continue
+      }
+      break
+    }
+    \Return $C$
+  }
+  \caption{$\newcandidate$: takes as input a program location $l_i$, current set of candidates $\hat{A}$, sets of positive and negative examples for each location ($H^{+}, H^{-}$ respectively), map $\psi$, and unfolding $\mathcal{U}(\pi)$ of path $\pi$, and interacts with the Oracle $\mathcal{O}$ to find a new candidate for $l_i$.}
+  \label{alg:newcandidate}
+\end{algorithm}
+
+While \seplearner is the higher level procedure to find an interpolant, it uses a sub-procedure called \newcandidate as a feedback loop with the Oracle, to accept candidate heap patterns that can be used to construct an interpolant.
