@@ -432,7 +432,7 @@ TODO: The entailment algorithm is based on simulation checks, and is very simila
 \section{Modeling Heap Programs}
 \label{sec:modeling-heap-programs}
 
-TODO: This section ties up the description of heap patterns back to the program modeling discussion in \autoref{sec:modeling-programs}. In short, the formalism differs in the following way
+We can now use the heap patterns described in \autoref{defn:pattern} to model programs for our modified \impact algorithm for heap-manipulating programs. Heap programs are modeled similarly to other programs, as described in \autoref{sec:modeling-programs}. For the purposes of the \impact algorithm, the key difference is in how program unwindings are constructed. Instead of labeling vertices of the unwinding with FOL formulas, we use heap patterns.
 
 % define labeled program unwinding
 \begin{defn}
