@@ -82,12 +82,12 @@ Building on top of the framework defined in \autoref{ch:background}, \autoref{ch
 \end{algorithm}
 
 \section{Postcondition Transforms for Heap Operations}
-TODO: This section needs to be completed.
+We first define the operator $\post$, which will be used for generating examples to interact with the Oracle.
 
 % define labeled program unwinding
 \begin{defn}
   \label{defn:heap-post-transforms}
-  We define the operator $\post$, which computes the strongest postcondition for a given heap pattern, and action. That is $\post : \heappats \times \mathcal{T} \to \heappats$, where $\mathcal{T}$ is the set of all actions.
+  The operator $\post$, which computes the strongest postcondition for a given heap pattern, and action. That is $\post : \heappats \times \mathcal{T} \to \heappats$, where $\mathcal{T}$ is the set of all actions.
 
   The $\post{*}$ operator can be defined as a repeated application of $\post$ along a given path. More formally, it is $\post{*} : \heappats \times \mathcal{P} \to \heappats$, where $\mathcal{P}$ is a path in the unwinding.
 \end{defn}
