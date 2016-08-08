@@ -271,6 +271,8 @@ previous work on shape analysis~\cite{sagiv02}.
   \pset(\nodeuni) \times \varlbls \times \predvarlbls \times \lbledges$.
 \end{defn}
 
+Additionally, we define the universal and empty patterns ($1_D$ and $0_D$ respectively). These are analogous to $\true$ and $\false$.
+
 % Example: the heap patterns for altlist.
 Program in a language with low-level memory updates, such as \altlist
 (\autoref{sec:ex-program}), can be modeled as \lang programs if a
@@ -428,6 +430,13 @@ $\heapnm \in \heaps$, if $\patnm_0 \entails \patnm_1$ and $\heapnm
 
 TODO: The entailment algorithm is based on simulation checks, and is very similar. It is described here.
 
+By definition, every pattern $P \neq 0_D$ satisfies the following properties:
+\begin{itemize}
+  \item $P \entails 1_D$
+  \item $P \not \entails 0_D$
+  \item $0_D \entails P$
+\end{itemize}
+
 % Describe program modeling for heap programs
 \section{Modeling Heap Programs}
 \label{sec:modeling-heap-programs}
@@ -447,3 +456,5 @@ We can now use the heap patterns described in \autoref{defn:pattern} to model pr
 
   Note that the major difference is that now vertices $v \in V$ contain a heap pattern, instead of an FOL formula.
 \end{defn}
+
+Each heap pattern contains a special node \nilconst, which is used to represent the location of pointers that aren't allocated to a specific node.
