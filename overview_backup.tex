@@ -1,9 +1,9 @@
 % overview: walk through the approach by example
-% \section{Overview}
+\chapter{Overview}
 \label{ch:overview}
 % Outline the section.
-In this chapter, we give an informal overview of the approach that we
-propose in this thesis.
+In this section, we give an informal overview of the approach that we
+propose in this paper.
 %
 In \autoref{sec:ex-program}, we introduce an example program \altlist,
 based on a benchmark in the SV-COMP~\cite{sv-comp} benchmark suite,
@@ -86,7 +86,7 @@ Otherwise, if \lsnm stores \nilconst, then \altlist returns
 successfully (line 15).
 
 % Problem statement, at an informal level.
-The problem that we address in this thesis is to determine if a given
+The problem that we address in this paper is to determine if a given
 low-level heap program, such as \altlist, always satisfies each of its
 assertions, such as the assertion on line 11, which checks that the
 list stored in \lsnm is alternating.
@@ -317,6 +317,7 @@ $\instrs_l$.
 % Define heap games.
 \subsection{Learning heap patterns as a game}
 \label{sec:ex-heap-games}
+\BH{this section needs to be updated to match the new formulation}
 % Summary:
 The key observation behind the design of \verifier is that any pair of
 disjoint sets of heaps $\posheaps$ and $\negheaps$ defines a natural
@@ -445,7 +446,7 @@ heap-learning games described in \autoref{sec:ex-heap-games}.
 \end{ex}
 
 % State our main result in formally.
-The main result that we present in this thesis is that for a given
+The main result that we present in this paper is that for a given
 program $\prognm$, if our program verifier \verifier has access to an
 inductive pattern synthesizer that wins a game defined analogously to
 the game $\gamenm_5$ defined for line 5 of \autoref{fig:alt-list}
