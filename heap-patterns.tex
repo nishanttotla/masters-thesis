@@ -257,14 +257,14 @@ previous work on shape analysis~\cite{sagiv02}.
     \nodeuni \times \predvars \to \threevals$.
   \item
     % Edges:
-    $\edgesnm: N \times \fields \times N \to \threevals$ is a set of
+    $\edgesnm: \nodesnm \times \fields \times \nodesnm \to \threevals$ is a set of
     labeled \emph{edges}.
     %
     We denote the space of labeled edges as $\lbledges = \nodeuni
     \times \fields \times \nodeuni$.
   \item
     % Summary:
-    $\sigma: N \to \bools$ is a summary-labeling for nodes. A node is a summary node if it can be used to represent more than one concrete node.
+    $\sigma: \nodesnm \to \bools$ is a summary-labeling for nodes. A node is a summary node if it can be used to represent more than one concrete node.
   \end{enumerate}
   %
   We denote the class of all heap patterns as $\heappats =
