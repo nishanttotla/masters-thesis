@@ -197,16 +197,16 @@ We defined the notion of interpolants in \autoref{sec:interpolants-from-proofs},
     %
     Let $\pi = (l_0, T_0, l_1)(l_1, T_1, l_2) \cdots (l_{n-1}, T_{n-1}, l_n)$ \\
     Set $S = \post^{*}(1_D, \pi_{0,i})$ \\
-    Set $C = 1_D$
+    Set $C = 1_D$ \\
     \While{$\true$}{
-      $\mathcal{C} = \mathcal{O}(H_i^{+}, H_i^{-})$ \\
+      $C = \mathcal{O}(H_i^{+}, H_i^{-})$ \\
       \If{$S \not \entails C$}{
         $H_i^{+} = \{h\} \cup H_i^{+}$ where $h \in S, h \not \in C$ \\
         continue
       }
-      \If{$TODO$}{
-        // TODO case add negative example
-        $H_i^{-} = \{h\} \cup H_i^{-}$ where $h \cdots$ \\
+      \If{$\post(C, T_i) \not \entails \hat{A}_{i+1}$}{
+        $\exists h \cdot h \matchedby C \wedge \post(h, T_i) \not \matchedby \hat{A}_{i+1}$ \\
+        $H_i^{-} = \{h\} \cup H_i^{-}$ \\
         continue
       }
       break
