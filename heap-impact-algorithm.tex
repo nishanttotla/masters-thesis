@@ -109,7 +109,15 @@ The formal rules for computing $\post$ for each individual action are presented 
     - $\predlblnm' = \predlblnm$ \\
     - $\edgesnm = \edgesnm'$ \\
     - $\sigma' = \sigma$
-  \item \textbf{LOAD} ($v1 := v2 \select f$):
+  \item \textbf{LOAD} ($v1 := v2 \select f$): \\
+    - $\nodesnm' = \nodesnm$ \\
+    - $\varlblnm'$ updates $\varlblnm$ as follows: \\
+      \hspace*{1em} Let $S = \{n \in \nodesnm : \varlblnm(n, v2) = \true \vee \varlblnm(n, v2) = \maybe\}$ \\
+      \hspace*{1em} Let $T = \{n \in \nodesnm : \exists s \in S \cdot \edgesnm(s, f, n) = \true \vee \edgesnm(s, f, n) = \maybe\}$ \\
+      \hspace*{1em} if $T = \{t\}$ (singleton), then $\varlblnm'(t, v1) = \true$, otherwise $\forall t \in T, \varlblnm'(t, v1) = \maybe$ \\
+    - $\predlblnm' = \predlblnm$ \\
+    - $\edgesnm = \edgesnm'$ \\
+    - $\sigma' = \sigma$
   \item \textbf{STORE} ($v1 \select f := v2$):
 \end{itemize}
 
