@@ -118,7 +118,15 @@ The formal rules for computing $\post$ for each individual action are presented 
     - $\predlblnm' = \predlblnm$ \\
     - $\edgesnm = \edgesnm'$ \\
     - $\sigma' = \sigma$
-  \item \textbf{STORE} ($v1 \select f := v2$):
+  \item \textbf{STORE} ($v1 \select f := v2$): \\
+    - $\nodesnm' = \nodesnm$ \\
+    - $\varlblnm' = \varlblnm$ \\
+    - $\predlblnm' = \predlblnm$ \\
+    - $\edgesnm$ updates $\edgesnm'$ as follows: \\
+      \hspace*{1em} Let $S = \{n \in \nodesnm : \varlblnm(n, v1) = \true \vee \varlblnm(n, v1) = \maybe\}$ \\
+      \hspace*{1em} Let $T = \{n \in \nodesnm : \varlblnm(n, v2) = \true \vee \varlblnm(n, v2) = \maybe\}$ \\
+      \hspace*{1em} $\forall s \in S, t \in T, \edgesnm'(s,f,t) = \maybe$ (and $\true$ if both $S$ and $T$ are singletons) \\
+    - $\sigma' = \sigma$
 \end{itemize}
 
 \section{Learning Invariants from Positive and Negative Examples}
