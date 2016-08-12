@@ -127,6 +127,12 @@ The formal rules for computing $\post$ for each individual action are presented 
       \hspace*{1em} Let $T = \{n \in \nodesnm : \varlblnm(n, v2) = \true \vee \varlblnm(n, v2) = \maybe\}$ \\
       \hspace*{1em} $\forall s \in S, t \in T, \edgesnm'(s,f,t) = \maybe$ (and $\true$ if both $S$ and $T$ are singletons) \\
     - $\sigma' = \sigma$
+  \item \textbf{PREDICATE} ($\predinstr$): \\
+    - $\nodesnm' = \nodesnm$ \\
+    - $\varlblnm' = \varlblnm$ \\
+    - $\forall n \in \nodesnm, p \in \predvars, \predlblnm'(n,p) = post(p, \predlblnm(n,p), \predinstr)$, where $post$ is a postcondition operator for three-valued predicates \\
+    - $\edgesnm = \edgesnm'$ \\
+    - $\sigma' = \sigma$
 \end{itemize}
 
 \section{Learning Invariants from Positive and Negative Examples}
