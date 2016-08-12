@@ -103,7 +103,12 @@ The formal rules for computing $\post$ for each individual action are presented 
     - $\predlblnm'$ updates $\predlblnm$ such that $\forall p, \predlblnm'(n, p) = \maybe$ \\
     - $\edgesnm$ updates $\edgesnm'$ such that $\edgesnm'(n,f,m) = \false$, and $\edgesnm'(m,f,n) = \false$ for all fields $f$ and nodes $m \neq n$ \\
     - $\sigma'$ updates $\sigma$ such that $\sigma'(n) = \true$
-  \item \textbf{COPY} ($v1 := v2$):
+  \item \textbf{COPY} ($v1 := v2$): \\
+    - $\nodesnm' = \nodesnm$ \\
+    - $\varlblnm'$ updates $\varlblnm$ such that $\forall n \in \nodesnm, \varlblnm'(v1, n) = \varlblnm(v2, n)$ \\
+    - $\predlblnm' = \predlblnm$ \\
+    - $\edgesnm = \edgesnm'$ \\
+    - $\sigma' = \sigma$
   \item \textbf{LOAD} ($v1 := v2 \select f$):
   \item \textbf{STORE} ($v1 \select f := v2$):
 \end{itemize}
