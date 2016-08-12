@@ -173,8 +173,8 @@ Also refer to \autoref{fig:semantics}.
 \begin{defn}
   \label{defn:states}
   % Define space of heaps.
-  A \lang \emph{heap} is a triple $(\cellsnm, \heapvarnm,
-  \fieldmapnm)$, where
+  A \lang \emph{heap} is a tuple $(\cellsnm, \heapvarnm,
+  \fieldmapnm, \predlabel)$, where
   %
   \begin{enumerate}
   \item
@@ -200,11 +200,11 @@ Also refer to \autoref{fig:semantics}.
 
   \item
     % Predicate labeling:
-    $\predlabel: \cellsnm \to 2^{\predvars}$ maps each cell
-    $c \in \cellsnm$ to an assignment of Boolean values to $\predvars$.
+    $\predlabel: \cellsnm \times \predvars \to \bools$ defines an assignment for each cell
+    $c \in \cellsnm$ and predicate in $\predvars$ to $\true$ or $\false$.
     %
     We denote the space of predicate labeling functions as
-    $\predlabelfns = \celluni \to 2^{|\predvars|}$.
+    $\predlabelfns = \celluni \times \predvars \to \bools$.
 
   \end{enumerate}
   %
@@ -320,9 +320,9 @@ $\heapnm$.
 %
 \begin{defn}
   \label{defn:heap-pat}
-  For each heap $\heapnm = (\cellsnm, \heapvarnm, \fieldmapnm)$, the
+  For each heap $\heapnm = (\cellsnm, \heapvarnm, \fieldmapnm, \predlabel)$, the
   \emph{concrete pattern} of $\heapnm$ is $\heapgph_{\heapnm} =
-  (\nodesnm_{\heapnm}, \varlblnm_{\heapnm}, \edgesnm_{\heapnm})$,
+  (\nodesnm_{\heapnm}, \varlblnm_{\heapnm}, \predlblnm_{\heapnm}, \edgesnm_{\heapnm}, \sigma_{\heapnm})$,
   where:
   \begin{enumerate}
   \item
@@ -335,20 +335,26 @@ $\heapnm$.
     Each heap-variable binding in $\heapvarnm$ defines a node labeling
     in $\varlblnm_{\heapnm}$.
     %
-    I.e., for each node $c \in \cellsnm$ and heap variable $\cc{p} \in
+    i.e., for each node $c \in \cellsnm$ and heap variable $\cc{p} \in
     \heapvars$, if $\heapvarnm(\cc{p}) = c$, then
     $\varlblnm_{\heapnm}(c, \cc{p}) = \true$, and otherwise,
     $\varlblnm_{\heapnm}(c, \cc{p}) = \false$.
+  \item
+    % Predicate labeling:
+    The predicate labeling carries over directly, i.e. $\predlblnm_{\heapnm}(n, p) = \predlabel(c, p)$ where $p \in \predvars$, and $n \in \nodesnm_{\heapnm}$ corresponds to $c \in \cellsnm$.
   \item
     % Edges:
     Each field binding in $\fieldmapnm$ defines an edge in
     $\edgesnm_{\heapnm}$.
     %
-    I.e., for all cells $\cellnm, \cellnm' \in \cellsnm$ and each
+    i.e., for all cells $\cellnm, \cellnm' \in \cellsnm$ and each
     field $\fieldnm \in \fields$, if $\cellnm' = \fieldmapnm(\cellnm,
     \fieldnm)$, then $\edgesnm_{\heapnm}(\cellnm, \fieldnm, \cellnm')
     = \true$, and otherwise, $\edgesnm_{\heapnm}(\cellnm, \fieldnm,
     \cellnm') = \false$.
+  \item
+    % Summary:
+    $\sigma_{\heapnm}(n) = \false$ for every $n \in \nodesnm_{\heapnm}$.
   \end{enumerate}
 \end{defn}
 % Call back to a pattern for a concrete heap.
@@ -364,7 +370,7 @@ $\heapnm$.
   Given two heap patterns $P_1$ and $P_2$, we say that $P_1 \entails P_2$ ($P_1$ entails $P_2$) if every heap represented by $P_1$ is also represented by $P_2$.
 \end{defn}
 
-The algorithm for checking entailment is described in \autoref{sec:entailment-algorithm}
+Pattern entailment is further described in \autoref{sec:entailment-algorithm}.
 
 % Define matching.
 The entailment relation over heap patterns formulates under both (1)
@@ -381,8 +387,8 @@ described by another pattern.
 
   % Define entailment over heap patterns.
   For all heap patterns $\patnm, \patnm' \in \heappats$ with $\patnm =
-  (\nodesnm, \varlblnm, \edgesnm)$ and $\patnm' = (\nodesnm',
-  \varlblnm', \edgesnm')$, $\patnm$ \emph{entails} $\patnm'$, denoted
+  (\nodesnm, \varlblnm, \predlblnm, \edgesnm, \sigma)$ and $\patnm' = (\nodesnm',
+  \varlblnm', \predlblnm, \edgesnm', \sigma')$, $\patnm$ \emph{entails} $\patnm'$, denoted
   $\patnm \matchedby \patnm'$, if there is a map $\matchnm: \nodesnm
   \to \nodesnm'$ such that:
   %
@@ -391,13 +397,13 @@ described by another pattern.
     % Variable labelings are preserved.
     $\matchnm$ embeds heap-variable assignments.
     %
-    I.e., for each pattern node $\nodenm \in \nodesnm$,
+    i.e., for each pattern node $\nodenm \in \nodesnm$,
     $\varlblnm(\nodenm) \precord \varlblnm'(\matchnm(\nodenm))$.
   \item
     % Fields labelings are preserved.
     $\matchnm$ embeds field labelings.
     %
-    I.e., for all pattern nodes $\nodenm_0, \nodenm_1 \in \nodesnm$
+    i.e., for all pattern nodes $\nodenm_0, \nodenm_1 \in \nodesnm$
     and fields $\fieldnm \in \fields$, $\edgesnm(\nodenm_0, \fieldnm,
     \nodenm_1) \precord \edgesnm'(\matchnm(\nodenm_0), \fieldnm,
     \matchnm(\nodenm_1))$.
@@ -424,7 +430,7 @@ $\heapnm \in \heaps$, if $\patnm_0 \entails \patnm_1$ and $\heapnm
 \end{defn}
 
 % Describe the entailment algorithm.
-\section{Pattern Entailment Algorithm}
+\section{Pattern Entailment}
 \label{sec:entailment-algorithm}
 
 TODO: The entailment algorithm is based on simulation checks, and is very similar. It is described here.
