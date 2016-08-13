@@ -218,3 +218,20 @@ We defined the notion of interpolants in \autoref{sec:interpolants-from-proofs},
 \end{algorithm}
 
 While \seplearner is the higher level procedure to find an interpolant, it uses a sub-procedure called \newcandidate as a feedback loop with the Oracle, to accept candidate heap patterns that can be used to construct an interpolant.
+
+% describe user interface
+\section{Interface with the Oracle}
+\label{sec:interface-oracle}
+
+**CURRENTLY BEING UPDATED**
+
+In this section, we describe one implementation of the Oracle. In \autoref{alg:newcandidate}, the candidate is obtained as $C = \mathcal{O}(H_i^{+}, H_i^{-})$. The Oracle $\mathcal{O}$ considers two sets of concrete heaps $H_i^{+}$ and $H_i^{-}$, and returns a candidate pattern $C$ which is then evaluated. After the evaluation, it is either accepted, or needs to be further refined, in which case $H_i^{+}$ or $H_i^{-}$ are updated, and a new query is submitted to the Oracle. This process repeats until a suitable candidate is found for the current vertex in the program unwinding.
+
+\subsection{Human as an Oracle}
+The goal of the Oracle is to provide heap patterns that can be used to generate interpolants, which are then used to generate invariants for verification. Finding these invariants automatically is a difficult step in program verification, while checking a provided invariant for correctness is relatively easier to automate. Human beings are inherently good at finding patterns in spatial data, and our approach tries to make use of it to acquire heap patterns that can be used for in the verification of heap-manipulating programs. As a practical demonstration of the Oracle, we designed a web interface that shows examples of concrete heap to a human user. The interface allows them to provide construct a pattern graph using a graphical interface. The pattern graph should be such that it covers all positive examples, but doesn't cover any negative example.
+
+\subsection{Web Interface}
+We describe features of the web interface.
+
+\subsection{Example User Interaction}
+We describe the user's workflow while interacting with the interface.
