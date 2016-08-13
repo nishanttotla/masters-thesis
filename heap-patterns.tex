@@ -365,15 +365,11 @@ $\heapnm$.
   non-alternating heaps.
 \end{ex}
 
-\begin{defn}
-  \label{ex:pat-entails-defn}
-  Given two heap patterns $P_1$ and $P_2$, we say that $P_1 \entails P_2$ ($P_1$ entails $P_2$) if every heap represented by $P_1$ is also represented by $P_2$.
-\end{defn}
-
-Pattern entailment is further described in \autoref{sec:entailment-algorithm}.
-
+% Describe the entailment algorithm.
+\section{Pattern Entailment}
+\label{sec:entailment-algorithm}
 % Define matching.
-The entailment relation over heap patterns formulates under both (1)
+The entailment relation over heap patterns formulates both (1)
 under what conditions a heap pattern describes a heap and (2) under
 what conditions all of the heaps described by one heap pattern are
 described by another pattern.
@@ -389,7 +385,7 @@ described by another pattern.
   For all heap patterns $\patnm, \patnm' \in \heappats$ with $\patnm =
   (\nodesnm, \varlblnm, \predlblnm, \edgesnm, \sigma)$ and $\patnm' = (\nodesnm',
   \varlblnm', \predlblnm, \edgesnm', \sigma')$, $\patnm$ \emph{entails} $\patnm'$, denoted
-  $\patnm \matchedby \patnm'$, if there is a map $\matchnm: \nodesnm
+  $\patnm \entails \patnm'$, if there is a map $\matchnm: \nodesnm
   \to \nodesnm'$ such that:
   %
   \begin{itemize}
@@ -419,7 +415,7 @@ For any two heap patterns $\patnm_0, \patnm_1 \in \heappats$ and heap
 $\heapnm \in \heaps$, if $\patnm_0 \entails \patnm_1$ and $\heapnm
 \matchedby \patnm_0$, then $\heapnm \matchedby \patnm_1$.
 %
-\begin{defn}
+\begin{ex}
   \label{ex:pat-entails}
   In \autoref{sec:ex-patterns}, \autoref{fig:alt-pattern}, each of the
   patterns $A_0$, $A_1$, and $A_2$ for an alternating heap entails the
@@ -427,13 +423,7 @@ $\heapnm \in \heaps$, if $\patnm_0 \entails \patnm_1$ and $\heapnm
   %
   A matching from $A_1$ to $\patnm$ is depicted as dotted arrows from
   the nodes of $A_1$ to the nodes of $\patnm$.
-\end{defn}
-
-% Describe the entailment algorithm.
-\section{Pattern Entailment}
-\label{sec:entailment-algorithm}
-
-TODO: The entailment algorithm is based on simulation checks, and is very similar. It is described here.
+\end{ex}
 
 By definition, every pattern $P \neq 0_D$ satisfies the following properties:
 \begin{itemize}
