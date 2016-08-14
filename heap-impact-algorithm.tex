@@ -421,7 +421,7 @@ At this point, we get a new concrete heap back from the verifier (\autoref{fig:n
 
 Now is the first time the user needs to think of a non-trivial pattern, because the two heaps we have in $H^{+}$ are very different. At this point, the user makes two attempts, a wrong one and a right one, and we describe what happens in each case in \autoref{fig:pattern-attempts}. The right pattern uses a summary node, because summary nodes can abstract out zero or more concrete nodes. Similarly, $\maybe$ edges are used to indicate that the edge may or may not actually exist in a concrete pattern represented by the heap pattern.
 
-% Some positive examples.
+% Some candidates.
 \begin{figure}
   \centering
   \includegraphics[width=7cm]{fig/candidate3.pdf}
@@ -430,7 +430,7 @@ Now is the first time the user needs to think of a non-trivial pattern, because 
   \label{fig:pattern-attempts}
 \end{figure}
 
-After several back and forth interactions with the verifier, we might end up in a state where we have several positive examples, as showin in \autoref{fig:several-positive-examples}. The user now begins to get an idea of what the program might actually be doing at this program location. It looks like the program constructs ``alternating'' linked lists that always start with a node where the predicate is $\true$. The heap variable $x$ acts as the head of the list.
+After several back and forth interactions with the verifier, we might end up in a state where we have several positive examples, as shown in in \autoref{fig:several-positive-examples}. The user now begins to get an idea of what the program might actually be doing at this program location. It looks like the program constructs ``alternating'' linked lists that always start with a node where the predicate is $\true$. The heap variable $x$ acts as the head of the list.
 
 % Some positive examples.
 \begin{figure}
@@ -442,4 +442,22 @@ After several back and forth interactions with the verifier, we might end up in 
   \includegraphics[width=5cm]{fig/positive5.pdf}
   \caption{The set $H^{+}$ of positive examples, after a few back and forth interactions between the user and the verifier. Note that a suitable candidate has still not been found, and $H^{-}$ is still empty.}
   \label{fig:several-positive-examples}
+\end{figure}
+
+After seeing all these examples, the user submits the pattern in \autoref{fig:almost-right-pattern}, hoping that it would be accepted by the verifier. It might well be, depending on what state the verifier is in. But in our example, the pattern provided by the user turns out to be too general, and the verifier returns a negative example for the first time. Finally, $H^{-}$ is non-empty, as looks as shown in \autoref{fig:negative-example}. Picking up on this, the user makes a correction, submitting the pattern in \autoref{fig:right-pattern}, which is finally accepted by the verifier.
+
+% Almost right pattern.
+\begin{figure}
+  \centering
+  \includegraphics[width=7cm]{fig/candidate5.pdf}
+  \caption{The set $H^{+}$ of positive examples, after a few back and forth interactions between the user and the verifier. Note that a suitable candidate has still not been found, and $H^{-}$ is still empty.}
+  \label{fig:almost-right-pattern}
+\end{figure}
+
+% Final right pattern.
+\begin{figure}
+  \centering
+  \includegraphics[width=7cm]{fig/candidate6.pdf}
+  \caption{The set $H^{+}$ of positive examples, after a few back and forth interactions between the user and the verifier. Note that a suitable candidate has still not been found, and $H^{-}$ is still empty.}
+  \label{fig:right-pattern}
 \end{figure}
