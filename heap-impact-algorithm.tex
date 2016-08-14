@@ -383,4 +383,12 @@ The summary function $\sigma: \nodesnm \to \bools$ indicates where a node is a s
 \end{figure}
 
 \subsection{User Interaction}
-We describe the user's workflow while interacting with the interface.
+The generated patterns are used by the \verifier algorithm as candidates for annotating vertices in the program unwinding tree.
+
+\begin{enumerate}
+  \item At any point, interaction with the Oracle (human user) is limited to requested patterns for a single vertex of the program unwinding tree.
+  \item Start with $H^{+} = H^{-} = \{\}$. At this point, the user can provide an arbitrary pattern to begin with.
+  \item If the pattern (we call it $C$) is such that $\forall h \in H^{+}, h \matchedby C$ and $\forall h \in H^{-}, h \matchedby C$, then C is sent to the verifier. If it isn't, then the heaps for which these conditions are not satisfied are highlighted to the user.
+  \item If the pattern is accepted in \autoref{alg:newcandidate}, then no more input is requested from the user.
+  \item If the pattern is not accepted, one or both of $H^{+}$ or $H^{-}$ are updated, and the user needs to update the provided pattern. Return to Step 3.
+\end{enumerate}
