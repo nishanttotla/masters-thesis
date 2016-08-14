@@ -396,15 +396,27 @@ As described in \autoref{defn:heap-pat}, each individual heap can also be presen
 \subsubsection{Illustrating User Interaction}
 We note that all heaps have a special \nilconst node, which represents the \nullconst address. \nilconst nodes cannot be summary nodes, and have no outgoing edges. In this example, we assume that a program is creating a list with some properties, that the user doesn't really need to know. The user will only be presented with examples, and the user insight is expected based solely on those.
 
-We start with $H^{+} = H^{-} = \{\}$, at which point the user can't provide any insight. It might be worthwhile to have a default candidate be provided by the interface itself at this point, but we still leave it to the user just in case they have additional insight about the program from other sources. Suppose the user just provides a pattern with a single node labeled \nilconst (\autoref{fig:nil-node}).
+In this example, we assume only a single predicate $p \in \predvars$ exists, so all node colors only refer to that single predicate. We start with $H^{+} = H^{-} = \{\}$, at which point the user can't provide any insight. It might be worthwhile to have a default candidate be provided by the interface itself at this point, but we still leave it to the user just in case they have additional insight about the program from other sources. Suppose the user just provides a pattern with a single node labeled \nilconst (\autoref{fig:nil-node}).
 
 % Just the nil node.
 \begin{figure}
   \centering
-  \includegraphics[width=7cm]{fig/just-nil.pdf}
-  \includegraphics[width=7cm]{fig/positive1.pdf}
-  \caption{On the left is the initial pattern candidate provided by the user. At this point, the user does not know what the program is doing, or what program location the candidate is being requested for. As a response, the verifier returns the concrete heap on the right as a positive example, indicating that the pattern provided by the user should be able to cover it.}
+  \includegraphics[width=5cm]{fig/just-nil.pdf}
+  \includegraphics[width=5cm]{fig/positive1.pdf}
+  \includegraphics[width=5cm]{fig/positive1.pdf}
+  \caption{On the left is the initial pattern candidate provided by the user. At this point, the user does not know what the program is doing, or what program location the candidate is being requested for. As a response, the verifier returns the concrete heap in the center as a positive example, indicating that the pattern provided by the user should be able to cover it. The user in response eagerly provides the same positive example as a candidate pattern.}
   \label{fig:nil-node}
 \end{figure}
 
-At this point, we get a new concrete heap back from the verifier (\autoref{fig:nil-node}).
+At this point, we get a new concrete heap back from the verifier (\autoref{fig:nil-node}). The user once again tries to respond in a simple way by providing the heap returned by the verifier as a pattern (\autoref{fig:nil-node}). In response to the pattern provided by the user, the verifier returns a new heap as part of $H^{+}$, shown in \autoref{fig:positive-examples}.
+
+% Some positive examples.
+\begin{figure}
+  \centering
+  \includegraphics[width=7cm]{fig/positive1.pdf}
+  \includegraphics[width=7cm]{fig/positive2.pdf}
+  \caption{The set $H^{+}$ after the user has provided two candidate patterns to the verifier.}
+  \label{fig:positive-examples}
+\end{figure}
+
+Now is the first time the user needs to think of a non-trivial pattern, because the two heaps we have in $H^{+}$ are very different. At this point, the user makes two attempts, a wrong one and a right one, and we describe what happens in each case in \autoref{fig:pattern-attempts}.
