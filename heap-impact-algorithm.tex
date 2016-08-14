@@ -402,6 +402,9 @@ We start with $H^{+} = H^{-} = \{\}$, at which point the user can't provide any 
 \begin{figure}
   \centering
   \includegraphics[width=7cm]{fig/just-nil.pdf}
-  \caption{The initial pattern candidate provided by the user. At this point, the user does not know what the program is doing, or what program location the candidate is being requested for.}
+  \includegraphics[width=7cm]{fig/positive1.pdf}
+  \caption{On the left is the initial pattern candidate provided by the user. At this point, the user does not know what the program is doing, or what program location the candidate is being requested for. As a response, the verifier returns the concrete heap on the right as a positive example, indicating that the pattern provided by the user should be able to cover it.}
   \label{fig:nil-node}
 \end{figure}
+
+At this point, we get a new concrete heap back from the verifier (\autoref{fig:nil-node}).
