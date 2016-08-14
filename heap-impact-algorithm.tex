@@ -429,3 +429,17 @@ Now is the first time the user needs to think of a non-trivial pattern, because 
   \caption{The user first provides the pattern on the left as a candidate. But we note that this pattern does not actually cover the first heap in $H^{+}$ in \autoref{fig:positive-examples}, so the interface highlights the first heap, and the user has to correct their input. After making one of the nodes a summary node (indicated by the larger size in the pattern on the right), the pattern starts to be entailed by both our heaps in $H^{+}$, and the interface passes it on to the verifier.}
   \label{fig:pattern-attempts}
 \end{figure}
+
+After several back and forth interactions with the verifier, we might end up in a state where we have several positive examples, as showin in \autoref{fig:several-positive-examples}. The user now begins to get an idea of what the program might actually be doing at this program location. It looks like the program constructs ``alternating'' linked lists that always start with a node where the predicate is $\true$. The heap variable $x$ acts as the head of the list.
+
+% Some positive examples.
+\begin{figure}
+  \centering
+  \includegraphics[width=5cm]{fig/positive1.pdf}
+  \includegraphics[width=5cm]{fig/positive2.pdf}
+  \includegraphics[width=5cm]{fig/positive3.pdf}
+  \includegraphics[width=5cm]{fig/positive4.pdf}
+  \includegraphics[width=5cm]{fig/positive5.pdf}
+  \caption{The set $H^{+}$ of positive examples, after a few back and forth interactions between the user and the verifier. Note that a suitable candidate has still not been found, and $H^{-}$ is still empty.}
+  \label{fig:several-positive-examples}
+\end{figure}
