@@ -270,7 +270,7 @@ A heap pattern is a labeled graph represented by the tuple $(\nodesnm, \varlblnm
 Interacting with nodes is very intuitive:
 \begin{itemize}
   \item Click anywhere on empty space to create a new node
-  \item Click on an existing node to select it. Selected nodes appear a lighter shade than unselected nodes. Only up to one node can be selected at a time.
+  \item Click on an existing node to select (or unselect) it. Selected nodes appear a lighter shade than unselected nodes. Only up to one node can be selected at a time.
   \item Press the backspace key after selecting a node to delete it. This deletes all edges and resets other attributes relevant to the node.
 \end{itemize}
 
@@ -312,7 +312,20 @@ We note that $\varlblnm$ is not allowed to have arbitrary assinments. For instan
 \end{figure}
 
 \subsubsection{Modifying the Predicate Variable Labeling}
-We briefly described the mechanism for updating the predicate variable labeling in \autoref{ex:basic-graph-interface}.
+We briefly described the mechanism for updating the predicate variable labeling in \autoref{ex:basic-graph-interface}. The interface itself is simple, as shown in \autoref{fig:basic-graph-interface}. In addition, there are some features that make it simpler to keep track of assignments.
+
+The predicate variable labeling is a map $\predlblnm: \nodesnm \times \predvars \to \threevals$, meaning that each pair of node and predicate variable must have a value. To indicate the current assignment, we use color coding for the nodes - $\predlblnm(n, p) = \true$ imples green, $\predlblnm(n, p) = \false$ imples red, and $\predlblnm(n, p) = \maybe$ implies light pink. Notice that the pattern graph can have multiple predicates available at a time, so the color coding depends on a predicate that is ``live'' at a given time. Predicates can be made live by simply selecting them in the interface shown in \autoref{fig:basic-graph-interface}.
+
+% Figure illustrating pred var modification.
+\begin{figure}
+  \centering
+  \includegraphics[width=7cm]{fig/predvar.pdf}
+  \includegraphics[width=7cm]{fig/predvar2.pdf}
+  \caption{On the left, predicate $p1$ is selected, and it has values $\true$, $\false$, and $\maybe$ in order of the arrows, indicated by the appropriate colors. Then we switch the ``live'' predicate to $p2$, which happens to be $\true$ for all nodes, so the color switches to green for each node.}
+  \label{fig:modifying-pred-vars}
+\end{figure}
+
+\autoref{fig:modifying-pred-vars} illustrates how predicate variable labeling looks.
 
 \subsubsection{Modifying Edges}
 
