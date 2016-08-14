@@ -251,7 +251,7 @@ In \autoref{fig:basic-graph-interface}, the user can select a node (say $n$) by 
 Similarly, picking a heap variable (say $x$) and setting a value (say $\maybe$) for it using the form would amount to setting $\varlblnm(n,x) = \maybe$ for the selected node $n$.
 \end{ex}
 
-% Figure with an annotated unwinding tree.
+% Figure with the basic pattern graph interface
 \begin{figure}
   \centering
   \includegraphics[width=7cm]{fig/predicate-heapvar-val.pdf}
@@ -266,6 +266,24 @@ We now dive deeper into all the features provided by the interface, and the user
 A heap pattern is a labeled graph represented by the tuple $(\nodesnm, \varlblnm, \predlblnm, \edgesnm, \sigma)$, respectively containing the set of nodes, heap variable labeling, predicate labeling, edges, and summary function. Our interface allows the user to modify the values of each of these attributes of the pattern. We now describe each of these in greater detail.
 
 \subsubsection{Modifying Nodes}
+Interacting with nodes is very intuitive
+\begin{itemize}
+  \item Click anywhere on empty space to create a new node
+  \item Click on an existing node to select it. Selected nodes appear a lighter shade than unselected nodes. Only up to one node can be selected at a time.
+  \item Press the backspace key after selecting a node to delete it. This deletes all edges and resets other attributes relevant to the node.
+\end{itemize}
+
+\autoref{fig:modifying-nodes} illustrates the above points clearly.
+
+% Figure with an annotated unwinding tree.
+\begin{figure}
+  \centering
+  \includegraphics[width=7cm]{fig/nodes-original.pdf}
+  \includegraphics[width=7cm]{fig/nodes-changed.pdf}
+  \caption{On the left, the original pattern graph has five nodes, with the middle node selected (indicated by the different color). Pressing the backspace key deletes the node, resulting in the graph on the right.
+  }
+  \label{fig:modifying-nodes}
+\end{figure}
 
 \subsubsection{Modifying the Heap Variable Labeling}
 
