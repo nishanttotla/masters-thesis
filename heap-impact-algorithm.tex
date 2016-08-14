@@ -261,5 +261,19 @@ Similarly, picking a heap variable (say $x$) and setting a value (say $\maybe$) 
   \label{fig:basic-graph-interface}
 \end{figure}
 
+We now dive deeper into all the features provided by the interface, and the user can easily provide a graph pattern matching the formalism described in \autoref{defn:pattern}. One of the important goals of this design is that the user should not have to understand or deal with the formalism itself, but just figures, so that someone with no knowledge of software verification or heap modeling can perform the function of an Oracle.
+
+A heap pattern is a labeled graph represented by the tuple $(\nodesnm, \varlblnm, \predlblnm, \edgesnm, \sigma)$, respectively containing the set of nodes, heap variable labeling, predicate labeling, edges, and summary function. Our interface allows the user to modify the values of each of these attributes of the pattern. We now describe each of these in greater detail.
+
+\subsubsection{Modifying Nodes}
+
+\subsubsection{Modifying the Heap Variable Labeling}
+
+\subsubsection{Modifying the Predicate Variable Labeling}
+
+\subsubsection{Modifying Edges}
+
+\subsubsection{Modifying the Summary Functions}
+
 \subsection{User Interaction}
 We describe the user's workflow while interacting with the interface.
