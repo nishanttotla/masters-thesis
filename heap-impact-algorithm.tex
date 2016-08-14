@@ -381,12 +381,27 @@ The summary function $\sigma: \nodesnm \to \bools$ indicates where a node is a s
 \end{figure}
 
 \subsection{User Interaction}
-The generated patterns are used by the \verifier algorithm as candidates for annotating vertices in the program unwinding tree.
+The generated patterns are used by the \verifier algorithm as candidates for annotating vertices in the program unwinding tree. The following steps describe how interaction with the user works. We will later elaborate the same with an example.
 
 \begin{enumerate}
   \item At any point, interaction with the Oracle (human user) is limited to requested patterns for a single vertex of the program unwinding tree.
   \item Start with $H^{+} = H^{-} = \{\}$. At this point, the user can provide an arbitrary pattern to begin with.
-  \item If the pattern (we call it $C$) is such that $\forall h \in H^{+}, h \matchedby C$ and $\forall h \in H^{-}, h \matchedby C$, then C is sent to the verifier. If it isn't, then the heaps for which these conditions are not satisfied are highlighted to the user.
+  \item If the pattern (we call it $C$) is such that $\forall h \in H^{+}, h \matchedby C$ and $\forall h \in H^{-}, h \matchedby C$, then C is sent to the verifier. If it isn't, then the heaps in the existing sets $H^{+}, H^{-}$ for which these conditions are not satisfied are highlighted to the user.
   \item If the pattern is accepted in \autoref{alg:newcandidate}, then no more input is requested from the user.
   \item If the pattern is not accepted, one or both of $H^{+}$ or $H^{-}$ are updated, and the user needs to update the provided pattern. Return to Step 3.
 \end{enumerate}
+
+As described in \autoref{defn:heap-pat}, each individual heap can also be presented as a pattern that represents exactly that heap. As a result, all the individual heaps in $H^{+}$ and $H^{-}$ are also patterns, but with limited properties and and no $\maybe$ assignments to variables and edges, and no summary nodes. We now present an example to illustrate how the above steps work.
+
+\subsubsection{Illustrating User Interaction}
+We note that all heaps have a special \nilconst node, which represents the \nullconst address. \nilconst nodes cannot be summary nodes, and have no outgoing edges. In this example, we assume that a program is creating a list with some properties, that the user doesn't really need to know. The user will only be presented with examples, and the user insight is expected based solely on those.
+
+We start with $H^{+} = H^{-} = \{\}$, at which point the user can't provide any insight. It might be worthwhile to have a default candidate be provided by the interface itself at this point, but we still leave it to the user just in case they have additional insight about the program from other sources. Suppose the user just provides a pattern with a single node labeled \nilconst (\autoref{fig:nil-node}).
+
+% Just the nil node.
+\begin{figure}
+  \centering
+  \includegraphics[width=7cm]{fig/just-nil.pdf}
+  \caption{The initial pattern candidate provided by the user. At this point, the user does not know what the program is doing, or what program location the candidate is being requested for.}
+  \label{fig:nil-node}
+\end{figure}
