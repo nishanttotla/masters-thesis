@@ -269,7 +269,7 @@ A heap pattern is a labeled graph represented by the tuple $(\nodesnm, \varlblnm
 \subsubsection{Modifying Nodes}
 Interacting with nodes is very intuitive:
 \begin{itemize}
-  \item Click anywhere on empty space to create a new node
+  \item Click anywhere on empty space to create a new node.
   \item Click on an existing node to select (or unselect) it. Selected nodes appear a lighter shade than unselected nodes. Only up to one node can be selected at a time.
   \item Press the backspace key after selecting a node to delete it. This deletes all edges and resets other attributes relevant to the node.
 \end{itemize}
@@ -291,7 +291,7 @@ We briefly described the mechanism for updating the heap variable labeling in \a
 
 The heap variable labeling is a map $\varlblnm: \nodesnm \times \heapvars \to \threevals$, meaning that each pair of node and heap variable must have a value. To indicate the current assignment, we label the node accordingly. For instance, if the current heap variables are $x, y, z$, and for node $n$, the values of $\varlblnm$ are $\varlblnm(n, x) = \maybe, \varlblnm(n, y) = \true, \varlblnm(n, z) = \false$, then the node will get labeled as $x?y$. The $?$ indicates a $\maybe$ value, the absence of a $?$ indicates $\true$, and absence of the variable altogether indicates $\false$. This keeps the labeling simple, preventing clutter from a large number of $\false$ values, while still making it simple to get a quick idea of the current assignments. Finally, a node with no variable assignments will simply have the label $-$.
 
-We note that $\varlblnm$ is not allowed to have arbitrary assinments. For instance, a variable $x$ cannot be $\true$ for more than one node at the same time. Our interface takes care of such constraints as follows:
+We note that $\varlblnm$ is not allowed to have arbitrary assignments. For instance, a variable $x$ cannot be $\true$ for more than one node at the same time. Our interface takes care of such constraints as follows:
 
 \begin{itemize}
   \item Setting a variable to $\true$ for a node sets it to $\false$ for all other nodes automatically.
@@ -328,8 +328,30 @@ The predicate variable labeling is a map $\predlblnm: \nodesnm \times \predvars 
 \autoref{fig:modifying-pred-vars} illustrates how predicate variable labeling looks.
 
 \subsubsection{Modifying Edges}
+Edges are represented by the map $\edgesnm: \nodesnm \times \fields \times \nodesnm \to \threevals$. For our case, since we're only dealing with a single field in the interface, the map can be simplified to $\edgesnm: \nodesnm \times \nodesnm \to \threevals$, meaning that each pair of nodes have an edge between them in either direction. For two nodes $m, n$, $\edgesnm(m, n) = \true$ implies that a green edge exists pointing from $m$ to $n$. $\edgesnm(m, n) = \maybe$ implies that the edge is light pink instead. If $\edgesnm(m, n) = \false$, then this is indicated by the absence of an edge. Once again, this is to make sure that the pattern graph isn't overly cluttered because of too many $\false$ edges. An edge is also a link for the force-directed graph in D3.
 
-\subsubsection{Modifying the Summary Functions}
+Interacting with edges is fairly simple:
+\begin{itemize}
+  \item Drag the mouse from a node to another to create an edge between them, in the direction of dragging.
+  \item Click on an existing edge to select (or unselect) it. Selected edges appear dotted, as opposed to solid for unselected edges. Only up to one edge can be selected at a time.
+  \item Press the backspace key after selecting a edge to delete it.
+  \item Pressing the M key for a selected edge toggles between $\true$ and $\maybe$ values for that edge (respectively green and light pink).
+  \item Pressing the R key for a selected node creates a self-loop on that node. Each node can have only one self-loop, and all edge interactions work for it just like other edges.
+\end{itemize}
+
+Edges are normally straight, but bidirectional edges are rounded for better visibility. \autoref{fig:modifying-edges} illustrates how the interface allows for interaction with edges.
+
+Just like $\varlblnm$, $\edgesnm$ is not allowed to have arbitrary assignments. For instance, a $\true$ edge going out from a node implies that there cannot be any other edge going out of the same node. Our interface takes care of such constraints as follows:
+
+\begin{itemize}
+  \item Setting an edge (from node $m$ to $n$) to $\true$ sets all outgoing edges from $m$ $\false$ automatically i.e. deletes them.
+  \item Setting an edge (from node $m$ to $n$) to $\maybe$ sets any $\true$ outgoing edge from $m$ to $\maybe$ automatically.
+\end{itemize}
+
+\autoref{fig:edge-constraints} illustrates how constraints on $\edgesnm$ are enforced by the interface.
+
+\subsubsection{Modifying the Summary Function}
+The summary function $\sigma: \nodesnm \to \bools$ indicates where a node is a summary node. Our interface indicates summary nodes by making them larger than other nodes. Selecting a node and pressing the S key toggles the value of $\sigma$ for that node. \autoref{fig:summary-nodes} illustrates an example of this.
 
 \subsection{User Interaction}
 We describe the user's workflow while interacting with the interface.
