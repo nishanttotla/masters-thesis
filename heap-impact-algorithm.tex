@@ -339,6 +339,16 @@ Interacting with edges is fairly simple:
   \item Pressing the R key for a selected node creates a self-loop on that node. Each node can have only one self-loop, and all edge interactions work for it just like other edges.
 \end{itemize}
 
+% Figure illustrating edge modification.
+\begin{figure}
+  \centering
+  \includegraphics[width=5cm]{fig/edges1.pdf}
+  \includegraphics[width=5cm]{fig/edges2.pdf}
+  \includegraphics[width=5cm]{fig/edges3.pdf}
+  \caption{The first pattern on the left has a node $n$ that is not connected to any other node. We drag from $n$ to another node to create a new edge, which is also selected in the second pattern (indicated by the dotted line). For the selected edge, we press the M key, which turns it into a $\true$ (green) edge, in the third pattern on the right.}
+  \label{fig:modifying-edges}
+\end{figure}
+
 Edges are normally straight, but bidirectional edges are rounded for better visibility. \autoref{fig:modifying-edges} illustrates how the interface allows for interaction with edges.
 
 Just like $\varlblnm$, $\edgesnm$ is not allowed to have arbitrary assignments. For instance, a $\true$ edge going out from a node implies that there cannot be any other edge going out of the same node. Our interface takes care of such constraints as follows:
@@ -347,6 +357,16 @@ Just like $\varlblnm$, $\edgesnm$ is not allowed to have arbitrary assignments. 
   \item Setting an edge (from node $m$ to $n$) to $\true$ sets all outgoing edges from $m$ $\false$ automatically i.e. deletes them.
   \item Setting an edge (from node $m$ to $n$) to $\maybe$ sets any $\true$ outgoing edge from $m$ to $\maybe$ automatically.
 \end{itemize}
+
+% Figure illustrating enforcement of edge constraints.
+\begin{figure}
+  \centering
+  \includegraphics[width=5cm]{fig/edges3.pdf}
+  \includegraphics[width=5cm]{fig/edge-constraints-1.pdf}
+  \includegraphics[width=5cm]{fig/edge-constraints-2.pdf}
+  \caption{The first figure on the left has a node $n$ with a $\true$ outgoing edge. We create another outgoing edge from $n$, which is a $\maybe$ edge by default, but it also turns the $\true$ edge to $\maybe$. In the third pattern on the right, we turn a $\maybe$ edge to $\true$, which results in the other $\maybe$ edge going out of it disappearing (becoming $\false$).}
+  \label{fig:edge-constraints}
+\end{figure}
 
 \autoref{fig:edge-constraints} illustrates how constraints on $\edgesnm$ are enforced by the interface.
 
