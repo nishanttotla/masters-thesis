@@ -246,6 +246,7 @@ The basic interface for drawing heap graphs is shown in \autoref{fig:basic-graph
 The form on the left allows the user to interact with the graph and set values for the heap and predicate labelings. The predicates and heap variables have been inferred by the program analysis already.
 
 \begin{ex}
+\label{ex:basic-graph-interface}
 In \autoref{fig:basic-graph-interface}, the user can select a node (say $n$) by clicking it, pick a predicate (say $p1$), pick a value (say $\true$), and click on "Set value". This would set the value for the the pair of selected node and predicate to $\true$. In our heap pattern formalism from \autoref{defn:pattern}, this would amount to setting $\predlblnm(n, p1) = \true$.
 
 Similarly, picking a heap variable (say $x$) and setting a value (say $\maybe$) for it using the form would amount to setting $\varlblnm(n,x) = \maybe$ for the selected node $n$.
@@ -266,7 +267,7 @@ We now dive deeper into all the features provided by the interface, and the user
 A heap pattern is a labeled graph represented by the tuple $(\nodesnm, \varlblnm, \predlblnm, \edgesnm, \sigma)$, respectively containing the set of nodes, heap variable labeling, predicate labeling, edges, and summary function. Our interface allows the user to modify the values of each of these attributes of the pattern. We now describe each of these in greater detail.
 
 \subsubsection{Modifying Nodes}
-Interacting with nodes is very intuitive
+Interacting with nodes is very intuitive:
 \begin{itemize}
   \item Click anywhere on empty space to create a new node
   \item Click on an existing node to select it. Selected nodes appear a lighter shade than unselected nodes. Only up to one node can be selected at a time.
@@ -275,7 +276,7 @@ Interacting with nodes is very intuitive
 
 \autoref{fig:modifying-nodes} illustrates the above points clearly.
 
-% Figure with an annotated unwinding tree.
+% Figure illustrating node modification.
 \begin{figure}
   \centering
   \includegraphics[width=7cm]{fig/nodes-original.pdf}
@@ -286,8 +287,32 @@ Interacting with nodes is very intuitive
 \end{figure}
 
 \subsubsection{Modifying the Heap Variable Labeling}
+We briefly described the mechanism for updating the heap variable labeling in \autoref{ex:basic-graph-interface}. The interface itself is simple, as shown in \autoref{fig:basic-graph-interface}. In addition, there are some features that make it simpler to keep track of assignments, while preventing user mistakes.
+
+The heap variable labeling is a map $\varlblnm: \nodesnm \times \heapvars \to \threevals$, meaning that each pair of node and heap variable must have a value. To indicate the current assignment, we label the node accordingly. For instance, if the current heap variables are $x, y, z$, and for node $n$, the values of $\varlblnm$ are $\varlblnm(n, x) = \maybe, \varlblnm(n, y) = \true, \varlblnm(n, z) = \false$, then the node will get labeled as $x?y$. The $?$ indicates a $\maybe$ value, the absence of a $?$ indicates $\true$, and absence of the variable altogether indicates $\false$. This keeps the labeling simple, preventing clutter from a large number of $\false$ values, while still making it simple to get a quick idea of the current assignments. Finally, a node with no variable assignments will simply have the label $-$.
+
+We note that $\varlblnm$ is not allowed to have arbitrary assinments. For instance, a variable $x$ cannot be $\true$ for more than one node at the same time. Our interface takes care of such constraints as follows:
+
+\begin{itemize}
+  \item Setting a variable to $\true$ for a node sets it to $\false$ for all other nodes automatically.
+  \item Setting a variable to $\maybe$ for a node sets it to $\maybe$ for the node where it might currently be $\true$.
+\end{itemize}
+
+\autoref{fig:modifying-heap-vars} further illustrates how heap variable labeling works.
+
+% Figure illustrating heap var labeling modification.
+\begin{figure}
+  \centering
+  \includegraphics[width=5cm]{fig/heap-var-labeling.pdf}
+  \includegraphics[width=5cm]{fig/heap-var-labeling-2.pdf}
+  \includegraphics[width=5cm]{fig/heap-var-labeling-3.pdf}
+  \caption{The first pattern on the left shows an existing heap variable labeling. We then set the value for $y$ and the node with the self-loop to $\maybe$, which automatically sets the value for $y$ and the selected node to $\maybe$, even though it was $\true$ earlier. Furthermore, in the second pattern, when $x$ is set to $\true$ for the starting node, the value of $x$ is unset for the node with the self-loop.
+  }
+  \label{fig:modifying-heap-vars}
+\end{figure}
 
 \subsubsection{Modifying the Predicate Variable Labeling}
+We briefly described the mechanism for updating the predicate variable labeling in \autoref{ex:basic-graph-interface}.
 
 \subsubsection{Modifying Edges}
 
