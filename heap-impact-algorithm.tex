@@ -223,8 +223,6 @@ While \seplearner is the higher level procedure to find an interpolant, it uses 
 \section{Interface with the Oracle}
 \label{sec:interface-oracle}
 
-**CURRENTLY BEING UPDATED**
-
 In this section, we describe one implementation of the Oracle. In \autoref{alg:newcandidate}, the candidate is obtained as $C = \mathcal{O}(H_i^{+}, H_i^{-})$. The Oracle $\mathcal{O}$ considers two sets of concrete heaps $H_i^{+}$ and $H_i^{-}$, and returns a candidate pattern $C$ which is then evaluated. After the evaluation, it is either accepted, or needs to be further refined, in which case $H_i^{+}$ or $H_i^{-}$ are updated, and a new query is submitted to the Oracle. This process repeats until a suitable candidate is found for the current vertex in the program unwinding.
 
 \subsection{Human as an Oracle}
