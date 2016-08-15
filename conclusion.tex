@@ -2,7 +2,7 @@
 
 In this chapter, we briefly describe existing verification approaches, how they differ from our Oracle-guided approach, and summarize the contributions in this thesis.
 \section{Related Work}
-\paragraph{Counter-example Guided Abstraction Refinement}
+\paragraph{Counterexample Guided Abstraction Refinement}
 % CEGAR:
 A broad class of verifiers of programs and transition systems have
 been proposed that implement \emph{counterexample-example guided
@@ -36,23 +36,28 @@ distinct from providing values to the analysis, namely an active
 learning problem over both positive \emph{and negative} example
 heap graphs.
 
+\paragraph{Predicate Abstraction}
+% Predicate Abstraction:
 -predicate abstraction: predicates in logic can't describe shapes
 \cite{ball01,henzinger02,henzinger04}
+% Us:
 
--interpolation: also builds an unwinding tree of invariants, but still
+\paragraph{Interpolation}
+% Interpolation
+also builds an unwinding tree of invariants, but still
 can't describe
 shapes\cite{albarghouthi12,heizmann10,mcmillan06,rummer13}
+% Us
 
--active learning, Mahdu's paper: only works on bounded tuples of
+\paragraph{Active Learning}
+% Active learning
+Mahdu's paper: only works on bounded tuples of
 lists~\cite{garg13}
+% Us
 
 \paragraph{Shape Analysis}
 
 -memory graphs: TVLA~\cite{sagiv02}, SMG's\cite{dudka13}
 
 -separation logic~\cite{calcagano11,reynolds02}
-
-%%% Local Variables:
-%%% mode: latex
-%%% TeX-master: "p"
-%%% End:
+% Us
