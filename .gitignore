@@ -20,6 +20,8 @@
 *.mtc
 *.mtc1
 *.out
+*.cb
+*.cb2
 *.synctex.gz
 .DS_Store
 p.pdf
