@@ -10,5 +10,9 @@ bibtex p.aux
 pdflatex p.tex
 pdflatex p.tex
 
-# copy generated PDF to Dropbox for easy sharing
-cp p.pdf ~/Dropbox
+if [ "$1" == "--dropbox" ]; then
+  # copy generated PDF to Dropbox for easy sharing
+  echo "Copying to Dropbox..."
+  cp p.pdf ~/Dropbox
+fi
+
