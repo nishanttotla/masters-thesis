@@ -1,8 +1,58 @@
-% conclusion:
-\section{Conclusion}
-\label{sec:conclusion}
+\label{ch:conclusion}
 
-%%% Local Variables: 
+In this chapter, we briefly describe existing verification approaches, how they differ from our Oracle-guided approach, and summarize the contributions in this thesis.
+\section{Related Work}
+\paragraph{Counter-example Guided Abstraction Refinement}
+% CEGAR:
+A broad class of verifiers of programs and transition systems have
+been proposed that implement \emph{counterexample-example guided
+  abstraction refinement (CEGAR)}~\cite{clarke03}.
+%
+The common structure of all of these analyses is that they maintain an
+approximate model of the possible runs of a system, and refine the
+model until it represents a proof of correctness by iteratively (1)
+choosing a path of execution $p$ allowed by the model that, if
+feasible, constitutes a property violation, (2) refuting the
+feasibility of $p$, and (3) using the refutation to refine the paths
+of execution allowed by the model.
+% Relative Completeness of Abstraction Refinement for Software Model
+% Checking: Oracle is really angelic non-determinism.
+The CEGAR-based analysis that is most closely related to the
+one proposed in this work is actually a \emph{theoretical} analysis
+that chooses program facts from which to construct a refutation by
+querying a \emph{widening Oracle}~\cite{ball02}.
+%
+The key property of the counterexample-guided analysis is that if there is
+sequence of widenings that the Oracle can possible choose to cause the
+analysis to verify a program, then the analysis will eventually verify
+the program successfully.
+%
+Because the Oracle does not solve a distinct problem, but instead
+provides values to the analysis, it can be viewed as an agent of
+\emph{angelic non-determinism}~\cite{bodik10}.
+% Us:
+While \verifier also queries an Oracle, the Oracle solves a problem
+distinct from providing values to the analysis, namely an active
+learning problem over both positive \emph{and negative} example
+heap graphs.
+
+-predicate abstraction: predicates in logic can't describe shapes
+\cite{ball01,henzinger02,henzinger04}
+
+-interpolation: also builds an unwinding tree of invariants, but still
+can't describe
+shapes\cite{albarghouthi12,heizmann10,mcmillan06,rummer13}
+
+-active learning, Mahdu's paper: only works on bounded tuples of
+lists~\cite{garg13}
+
+\paragraph{Shape Analysis}
+
+-memory graphs: TVLA~\cite{sagiv02}, SMG's\cite{dudka13}
+
+-separation logic~\cite{calcagano11,reynolds02}
+
+%%% Local Variables:
 %%% mode: latex
 %%% TeX-master: "p"
-%%% End: 
+%%% End:
