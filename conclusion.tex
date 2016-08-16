@@ -44,9 +44,7 @@ Predicate abstraction is an abstract interpretation technique in which the abstr
 
 \paragraph{Interpolation}
 % Interpolation
-also builds an unwinding tree of invariants, but still
-can't describe
-shapes\cite{albarghouthi12,heizmann10,mcmillan06,rummer13}
+Interpolants have been widely studied and used in model checking and software verification. In various contexts, interpolation can be used as a substitute for image computation, which involves quantifier elimination and is thus computationally expensive. The idea is to replace the image with a weaker approximation that is still strong enough to prove some property, helping to construct and inductive invariant. Interpolant based techniques typically examine symbolic executions (finite paths) through the program, explicitly enumerating paths and employing heuristics to avoid path explosion \cite{albarghouthi12,heizmann10,mcmillan06,rummer13}. Some of them use other optimizations to cover wider search spaces, or compute invariants more efficiently. \verifier also uses the notion of interpolants applied to sequences, but specifically for heap patterns. Existing techniques don't work for this case because they deal with formulas that cannot desribe heaps or shapes in memory.
 % Us
 
 \paragraph{Active Learning}
