@@ -38,9 +38,9 @@ heap graphs.
 
 \paragraph{Predicate Abstraction}
 % Predicate Abstraction:
--predicate abstraction: predicates in logic can't describe shapes
-\cite{ball01,henzinger02,henzinger04}
+Predicate abstraction is an abstract interpretation technique in which the abstract domain is constructed from a given set of predicates over program variables. The concrete states of a system are mapped to abstract states according to their evaluation under a finite set of predicates. Automatic predicate abstraction algorithms have been designed and implemented before for finite and for infinite state systems. Predicate abstraction is well established in the literature \cite{ball01,henzinger02,henzinger04}. The primary limitation with most of these techniques is that predicates in logic cannot describe shapes.
 % Us:
+\verifier uses predicates to annotate heap patterns, relying on other technique to infer these predicates beforehand. Predicate abstraction is useful to do that, although we need more investigation into how to use it to infer the right predicates for our technique in a directed way and efficiently.
 
 \paragraph{Interpolation}
 % Interpolation
