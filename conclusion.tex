@@ -59,3 +59,15 @@ structures with controlled sharing. Separation logic is quite expressive, but th
 
 In addition to the logic approach, memory graphs have been extensively explored for shape analysis. A parametric framework for shape analysis was presented in \cite{sagiv02}, which can be instantiated in different ways to create shape-analysis algorithms that provide varying degrees of efficiency and precision. It also proposed three-valued logic structures, an idea we extensively use to model heap patterns in our work. Symbolic Memory Graphs (SMGs) \cite{dudka13} are another effective approach, particularly for modeling extremely low-level operations. The heap patterns used in \verifier are partially inspired by SMGs, but work at a higher level that is more suitable for an external Oracle, and in an interpolation-based verification framework.
 % Us
+
+\section{Summary}
+Our work can be summarized using the following key ideas:
+
+\begin{enumerate}
+  \item We extended the interpolant-based verification algorithm from \cite{mcmillan06} to work for the domain of heap-manipulating programs.
+  \item We defined the heap pattern formalism for expressing sets of concrete heaps.
+  \item We introduced the idea of Oracle-guided verification, defining a framework which allows the verification algorithm to use an external Oracle for the generalization step.
+  \item We demonstrated one example of such an Oracle - a human user who is inherently good at generalizing shapes, and can provide valuable insight to help find heap invariants.
+\end{enumerate}
+
+Our framework is very general, in the sense that it allows for any kind of ``pattern'' formalism to be used alongside a domain expert Oracle. This provides two advantages. Firstly, it makes it very easy to try a simple interpolation-based verification algorithm for a new domain, where one might not have good automated techniques for generalization, but good ``intuitive'' understanding about it. Secondly, it simplifies plugging in different Oracles into an existing verification algorithm, allowing for broader possible insight into the analysis. It is easy to extend this to the case of allowing for multiple Oracles working side by side in a single analysis, providing complementary insight into a verification problem. In the future, a theoretical analysis of Oracle-guided verification algorithms would be an interesting direction.
