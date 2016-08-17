@@ -83,29 +83,18 @@ Otherwise, if \lsnm stores \nilconst, then \altlist returns
 successfully (line 15).
 
 % Problem statement, at an informal level.
-The problem that we address in this thesis is to determine if a given
-low-level heap program, such as \altlist, always satisfies each of its
-assertions, such as the assertion on line 11, which checks that the
-list stored in \lsnm is alternating.
+The problem that we address in this thesis is to determine if a given low-level heap program, such as \altlist, always satisfies each of its assertions, such as the assertion on line 11, which checks that the list stored in \lsnm is alternating.
 
 % Walk through graph patterns.
 \section{Representing sets of heaps with graph patterns}
 \label{sec:ex-patterns}
 % Describe heaps as graphs.
-In this work, we propose a verifier, \verifier, that represents sets
-of heaps as graph \emph{patterns}, which are directly analogous to
-three-valued structures introduced in previous work on shape
-analysis~\cite{sagiv02}.
+In this work, we propose a verifier, \verifier, that represents sets of heaps as graph \emph{patterns}, which are directly analogous to three-valued structures introduced in previous work on shape analysis~\cite{sagiv02}.
 %
-In this chapter, we review graph patterns as they have been presented
-in previous work, in particular how they are used to represent sets of
-program heaps.
+In this chapter, we review graph patterns as they have been presented in previous work, in particular how they are used to represent sets of program heaps.
 
 % Heap modeled by a graph:
-In our approach, each program heap is modeled as a labeled graph, in
-which each node models a heap cell, and is labeled with facts about
-its corresponding heap cell, such as variables in which the cell is
-stored.
+In our approach, each program heap is modeled as a labeled graph (we call it a heap graph), in which each node models a heap cell, and is labeled with facts about its corresponding heap cell, such as variables in which the cell is stored.
 %
 Each edge in the heap graph is labeled with a field name;
 %
