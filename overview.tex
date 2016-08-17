@@ -103,9 +103,9 @@ such labeled edges model which fields of cells point to other cells.
 \begin{figure}
   \centering
   \includegraphics[width=\linewidth]{fig/exs.pdf}
-  \caption{Sets of alternating heaps and non-alternating heaps of
+  \caption{Sets of alternating and non-alternating heaps of
     \altlist (\autoref{sec:ex-program}), depicted as graphs, and a
-    heap pattern that matches each of the alternating heaps and none
+    heap pattern that matches each of the alternating and none
     of the non-alternating heaps.
     %
     The labels of each node $n$ are written adjacent to the node in a heap
@@ -119,8 +119,7 @@ such labeled edges model which fields of cells point to other cells.
     indefinite node label is followed by a question mark, and each
     indefinite edge with an indefinite label is dashed.
     %
-    The dash-dotted lines from heap $A_1$ to $\patnm$ depict a matching
-    from $A_1$ to $\patnm$.
+    The dash-dotted lines from heap $A_1$ to $\patnm$ depict a matching from $A_1$ to $\patnm$.
     %
   }
   \label{fig:alt-pattern}
@@ -147,7 +146,7 @@ space of annotations as the labels on the nodes and edges of heap
 graphs.
 %
 However, a pattern graph may also contain \emph{summary nodes} and
-\emph{indefinite labelings}.
+\emph{definite} or \emph{indefinite} labelings. Informally, a definite label indicates a fixed value ($\true$ or $\false$), and an indefinite label indicates that either value is possible.
 %
 A heap graph $H$ is \emph{matched} by a pattern graph $P$ if there is
 a mapping $\matchnm$ from the nodes of $H$ to the nodes of $P$ such
@@ -214,8 +213,8 @@ always holds an alternating list.
 partial prefix-tree (i.e., an \emph{unwinding tree}) of the program's
 control paths~\cite{mcmillan06}.
 % Nodes:
-Each node in the tree models an occurrence of a control location in a
-program path, and each edge in the tree models a step of execution of
+Each node in the tree represents an occurrence of a control location in a
+program path, and each edge in the tree represents a step of execution of
 the program over a sequence of non-branching instructions.
 % Edges.
 Each node $n$ is thus identified by a sequence of instructions
@@ -240,13 +239,13 @@ is unreachable in any run of a program $\mathcal{A}$ if:
   invariant at $n$.
 \item
   % Condition on error nodes.
-  Each node in $T$ that models $\errloc$ is annotated with an
+  Each node in $T$ that represents $\errloc$ is annotated with an
   invariant that is not satisfied by any program state.
 \item
   % Covering.
-  Each leaf $l$ that models control location $\locnm$ of $T$ either
-  models a terminal control location of $P$, or is \emph{covered} by
-  another node of $T$ that models $\locnm$, and is annotated with a
+  Each leaf $l$ that represents control location $\locnm$ of $T$ either
+  represents a terminal control location of $P$, or is \emph{covered} by
+  another node of $T$ that represents $\locnm$, and is annotated with a
   weaker invariant than the invariant of $l$.
 \end{enumerate}
 %
