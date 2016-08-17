@@ -42,18 +42,15 @@ winning a set of the learning games described in
   \label{fig:alt-list}
 \end{figure}
 % Give an overview of altlist.
-\autoref{fig:alt-list} contains the source code for a program \altlist
-written in a C-like, low-level language.
+A low-level heap program is one that updates heap memory using low-level memory operations (such as allocating or deallocating memory, or modifying pointers). \autoref{fig:alt-list} contains the source code for a program \altlist, written in a C-like, low-level language.
 %
-For the states of \altlist, let a list be \emph{alternating} if (1)
-the data field of the head of the list is equal to the value stored in
-Boolean variable \datavarnm and (2) the data fields in successive
-cells of the list store alternating Boolean values.
+For the states of \altlist, let a list be \emph{alternating} if (1) the data field of the head of the list is equal to the value stored in Boolean variable \datavarnm and (2) the data fields in successive cells of the list store alternating Boolean values.
 %
-\altlist (1) iteratively constructs an alternating list of
-non-deterministic length and then
-%
-(2) checks that the constructed list is indeed alternating.
+\altlist does two things:
+\begin{enumerate}
+  \item \consloop: iteratively constructs an alternating list of non-deterministic length, and then
+  \item \chkloop: checks that the constructed list is indeed alternating
+\end{enumerate}
 
 % altlist initialization:
 \altlist initializes the list stored in \lsnm to consist of a single
