@@ -26,7 +26,7 @@ winning a set of the learning games described in
 \autoref{sec:ex-heap-games}.
 
 % Introduce an example program.
-\subsection{An example low-level heap program}
+\section{An example low-level heap program}
 \label{sec:ex-program}
 % Example that builds an alternating list.
 \begin{figure}
@@ -92,7 +92,7 @@ assertions, such as the assertion on line 11, which checks that the
 list stored in \lsnm is alternating.
 
 % Walk through graph patterns.
-\subsection{Representing sets of heaps with graph patterns}
+\section{Representing sets of heaps with graph patterns}
 \label{sec:ex-patterns}
 % Describe heaps as graphs.
 In this work, we propose a verifier, \verifier, that represents sets
@@ -211,7 +211,7 @@ that:
 \end{ex}
 
 % Walk through the proof structure for the example.
-\subsection{A proof structure for low-level heap programs}
+\section{A proof structure for low-level heap programs}
 \label{sec:ex-tree}
 % Walk through the example.
 \altlist demonstrates that proving that some programs satisfy each of
@@ -315,7 +315,7 @@ $\instrs_l$.
 \end{ex}
 
 % Define heap games.
-\subsection{Learning heap patterns as a game}
+\section{Learning heap patterns as a game}
 \label{sec:ex-heap-games}
 % Summary:
 The key observation behind the design of \verifier is that any pair of
@@ -375,7 +375,7 @@ patterns in $\negheaps$.
 \end{ex}
 
 % Walk through how we infer invariants for the example.
-\subsection{From game strategies to program proofs}
+\section{From game strategies to program proofs}
 \label{sec:ex-infer}
 %
 The main result of our work is that while the problem of verifying
