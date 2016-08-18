@@ -453,3 +453,6 @@ We can now use the heap patterns described in \autoref{defn:pattern} to model pr
 \end{defn}
 
 Each heap pattern contains a special node \nilconst, which is used to represent the location of pointers that aren't allocated to a specific node.
+
+\section*{Summary}
+In this chapter, we presented a language \lang for imperative programs that perform low-level heap operations. We defined a formal representation of a heap for \lang, and the idea of heap patterns which can be used to represent multiple heaps. We discussed the idea of pattern entailment, and the modeling of \lang programs for verification. The next chapter describes \verifier, our algorithm for verifying heap-manipulating programs.
