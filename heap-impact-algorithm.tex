@@ -218,3 +218,6 @@ We defined the notion of interpolants in \autoref{sec:interpolants-from-proofs},
 \end{algorithm}
 
 While \seplearner is the higher level procedure to find an interpolant, it uses a sub-procedure called \newcandidate as a feedback loop with the Oracle, to accept candidate heap patterns that can be used to construct an interpolant.
+
+\section*{Summary}
+This chapter presented \verifier, our algorithm for verifying heap-manipulating programs. \verifier uses an Oracle to perform the interpolation step, which helps in learning heap patterns from positive and negative concrete examples. The next chapter describes the implementation of an interface for one such Oracle - a human user.
