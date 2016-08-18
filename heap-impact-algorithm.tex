@@ -98,16 +98,16 @@ The formal rules for computing $\post$ for each individual action are presented 
 
 \begin{itemize}
   \item \textbf{ALLOC} ($v := alloc()$): \\
-    - $\nodesnm' = \nodesnm \cup \{n\}$ where $n \not \in \nodesnm$ \\
+    - $\nodesnm' = \nodesnm \cup \{n\}$ where $n \not \in \nodesnm$ is a new node allocated by $alloc()$ \\
     - $\varlblnm'$ updates $\varlblnm$ such that $\varlblnm'(n, v) = \true$ and $\forall m \neq n, \varlblnm'(m, v) = \false$ \\
     - $\predlblnm'$ updates $\predlblnm$ such that $\forall p, \predlblnm'(n, p) = \maybe$ \\
-    - $\edgesnm$ updates $\edgesnm'$ such that $\edgesnm'(n,f,m) = \false$, and $\edgesnm'(m,f,n) = \false$ for all fields $f$ and nodes $m \neq n$ \\
+    - $\edgesnm'$ updates $\edgesnm$ such that $\edgesnm'(n,f,m) = \false$, and $\edgesnm'(m,f,n) = \false$ for all fields $f$ and nodes $m \neq n$ \\
     - $\sigma'$ updates $\sigma$ such that $\sigma'(n) = \true$
   \item \textbf{COPY} ($v1 := v2$): \\
     - $\nodesnm' = \nodesnm$ \\
     - $\varlblnm'$ updates $\varlblnm$ such that $\forall n \in \nodesnm, \varlblnm'(v1, n) = \varlblnm(v2, n)$ \\
     - $\predlblnm' = \predlblnm$ \\
-    - $\edgesnm = \edgesnm'$ \\
+    - $\edgesnm' = \edgesnm$ \\
     - $\sigma' = \sigma$
   \item \textbf{LOAD} ($v1 := v2 \select f$): \\
     - $\nodesnm' = \nodesnm$ \\
@@ -116,13 +116,13 @@ The formal rules for computing $\post$ for each individual action are presented 
       \hspace*{1em} Let $T = \{n \in \nodesnm : \exists s \in S \cdot \edgesnm(s, f, n) = \true \vee \edgesnm(s, f, n) = \maybe\}$ \\
       \hspace*{1em} if $T = \{t\}$ (singleton), then $\varlblnm'(t, v1) = \true$, otherwise $\forall t \in T, \varlblnm'(t, v1) = \maybe$ \\
     - $\predlblnm' = \predlblnm$ \\
-    - $\edgesnm = \edgesnm'$ \\
+    - $\edgesnm' = \edgesnm$ \\
     - $\sigma' = \sigma$
   \item \textbf{STORE} ($v1 \select f := v2$): \\
     - $\nodesnm' = \nodesnm$ \\
     - $\varlblnm' = \varlblnm$ \\
     - $\predlblnm' = \predlblnm$ \\
-    - $\edgesnm$ updates $\edgesnm'$ as follows: \\
+    - $\edgesnm'$ updates $\edgesnm$ as follows: \\
       \hspace*{1em} Let $S = \{n \in \nodesnm : \varlblnm(n, v1) = \true \vee \varlblnm(n, v1) = \maybe\}$ \\
       \hspace*{1em} Let $T = \{n \in \nodesnm : \varlblnm(n, v2) = \true \vee \varlblnm(n, v2) = \maybe\}$ \\
       \hspace*{1em} $\forall s \in S, t \in T, \edgesnm'(s,f,t) = \maybe$ (and $\true$ if both $S$ and $T$ are singletons) \\
@@ -131,7 +131,7 @@ The formal rules for computing $\post$ for each individual action are presented 
     - $\nodesnm' = \nodesnm$ \\
     - $\varlblnm' = \varlblnm$ \\
     - $\forall n \in \nodesnm, p \in \predvars, \predlblnm'(n,p) = post(p, \predlblnm(n,p), \predinstr)$, where $post$ is a postcondition operator for three-valued predicates \\
-    - $\edgesnm = \edgesnm'$ \\
+    - $\edgesnm' = \edgesnm$ \\
     - $\sigma' = \sigma$
 \end{itemize}
 
