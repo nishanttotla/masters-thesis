@@ -77,6 +77,17 @@ The formal rules for computing $\post$ for each individual action are presented 
     - $\sigma' = \sigma$
 \end{itemize}
 
+\subsection{Interpolants for Heap Programs}
+\label{sec:heap-interpolants-from-proofs}
+Based on \autoref{sec:interpolants-from-proofs}, we can define heap pattern interpolants for a sequence of path formulas $\Gamma = A_1, \cdots , A_n$. We say that $\hat{P_0},\cdots, \hat{P_n}$ is an \textit{interpolant} for $\Gamma$ when
+
+\begin{itemize}
+  \item $\hat{P_0} = 1_D$ and $\hat{P_n} = 0_D$ and,
+  \item for all $1 \leq i \leq n, \post(\hat{P_{i-1}}, A_i) \entails \hat{P_i}$ and
+\end{itemize}
+
+This means that the the $\post$ transform (strongest postcondition) of $\hat{P_{i-1}}$ over $A_i$ entails $\hat{P_{i}}$.
+
 \section{\verifier}
 This section describes our algorithm for building a complete, safe, well-labeled unwinding of a heap-manipulating program. Our algorithm builds on top of the \impact algorithm defined in \autoref{sec:impact-algorithm}. Our algorithm may not terminate if the program is safe. If the program is unsafe, and our Oracle can help find the right interpolant, then our algorithm will terminate. A non-deterministic procedure with three basic steps is outlined here. The three steps are
 
