@@ -102,10 +102,6 @@ This section describes a semi-algorithm from \cite{mcmillan06}, for building a c
 \end{itemize}
 
 The interpolant in \refine can be generated from a refutation of $\mathcal{U}(\pi)$ by the method of \cite{mcmillan05}. Each of the three steps preserves well-labeledness of the unwinding. To make the unwinding safe, we have to only apply \refine to every error vertex. When none of the three steps can produce any change, the unwinding is both safe and complete, so we know that the original program is safe.
-To build a well-labeled unwinding, a strategy is required, for applying the three unwinding rules. The most difficult question is when to apply \cover. Covering one vertex can result in uncovering others. Thurs, applying \cover non-deterministically may not terminate.
-
-\subsection{Termination}
-The \impact algorithm works by repeated applications of \expand, \cover, and \refine. When any of the three procedures don't cause any change in the unwinding tree, the algorithm terminates. The order of application matters, and the \unwind algorithm in \cite{mcmillan06} describes a systematic way of applying the three procedures. Forced covering (calling \cover on all nodes of a path after a \refine step) also serves as an optimization. All of these ideas apply directly to the case of heap-manipulating programs.
 
 \begin{algorithm}[ht]
   % Declare functions
@@ -179,6 +175,11 @@ The \impact algorithm works by repeated applications of \expand, \cover, and \re
   \caption{$\cover$: takes as input vertices $v, w \in V$ and attempts to cover $v$ with $w$.}
   \label{alg:cover}
 \end{algorithm}
+
+To build a well-labeled unwinding, a strategy is required, for applying the three unwinding rules. The most difficult question is when to apply \cover. Covering one vertex can result in uncovering others. Thurs, applying \cover non-deterministically may not terminate.
+
+\subsection{Termination}
+The \impact algorithm works by repeated applications of \expand, \cover, and \refine. When any of the three procedures don't cause any change in the unwinding tree, the algorithm terminates. The order of application matters, and the \unwind algorithm in \cite{mcmillan06} describes a systematic way of applying the three procedures. Forced covering (calling \cover on all nodes of a path after a \refine step) also serves as an optimization. All of these ideas apply directly to the case of heap-manipulating programs.
 
 \section*{Summary}
 In this chapter, we presented a framework for modeling programs as state graphs, and an interpolant-based approach to verification that uses program unwindings to explore the state space. In the next chapter, we describe the formalism that allows us to represent and reason about heap memory. This will be useful for defining the verification algorithm for heap-manipulating programs.
