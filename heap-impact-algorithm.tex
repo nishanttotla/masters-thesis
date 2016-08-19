@@ -186,11 +186,18 @@ Since our Oracle cannot be guaranteed to definitely provide an interpolant, at t
   \label{alg:heap-cover}
 \end{algorithm}
 
-\section{Learning Invariants from Positive and Negative Examples}
+\subsection*{Learning Invariants from Positive and Negative Examples}
 
-We note in \autoref{alg:heap-refine} the procedure \seplearner is used, which is the core component of making \impact work for heap-manipulating programs. In this section, we describe this algorithm.
+We now describe the algorithms that allow \verifier to interface with the Oracle and find invariants. In particular, the \refinep procedure (\autoref{alg:heap-refine}) queries \seplearner for an interpolant, which in turn queries \newcandidate (\autoref{alg:newcandidate}). \newcandidate makes the call to the Oracle. We now describe these algorithms in greater detail.
 
-We defined the notion of interpolants in \autoref{sec:interpolants-from-proofs}, and the same applies to \seplearner, which is described in \autoref{alg:interplearner}.
+\seplearner contructs the interpolant for an unfolding $\mathcal{U}(\pi)$ of path $\pi$, where $\pi$ is a program path ending at an error location. Paths and unfoldings are formally defined in \autoref{sec:modeling-programs}, while interpolants for sequences are defined in \autoref{sec:interpolants-from-proofs}. These definitions apply identically to our case of heap-manipulating programs. \seplearner maintains two types of data:
+
+\begin{enumerate}
+  \item A current set of candidate patterns $\hat{A} = \hat{A_0}, \hat{A_1}, \cdots, \hat{A_n}$ for the vertices of the unwinding tree associated with path $\pi$
+  \item A set of positive and negative candidates $H_i^{+}, H_i^{-} 0 \leq i \leq n$, which contain concrete heaps that serve as positive and negative examples respectively for the Oracle
+\end{enumerate}
+
+If $\hat{A}$ is already an interpolant for $\mathcal{U}(\pi)$, it is returned. If not, then we pick some $\hat{A_i}$ for an update, which is done by calling \newcandidate (\autoref{line:interplearner-call-newcandidate}). \newcandidate returns an updated canddiate pattern that is set to $\hat{A_i}$, and the procedure continues, until a full path interpolant is found. \newcandidate also udpates the sets $H_i^{+}, H_i^{-}$, which we describe later. Note that the check for whether the current set of candidates are actually an interpolant is delegated to the \isinterpolant procedure (\autoref{line:interplearner-isinterpolant}).
 
 \begin{algorithm}[ht]
   % Declare functions
@@ -208,8 +215,9 @@ We defined the notion of interpolants in \autoref{sec:interpolants-from-proofs},
     Set $H_i^{-} = \{\}, 0 \leq i \leq n$ \\
 
     \While{$\neg$\isinterpolant($\hat{A},\mathcal{U}(\pi)$)}{
-      pick $i \in \{1,2,\cdots, n-1\}$
-      $\hat{A_i} = \newcandidate(l_i, \hat{A}, H^{+}, H^{-}, \psi, \mathcal{U}(\pi))$
+      \label{line:interplearner-isinterpolant}
+      pick $i \in \{1,2,\cdots, n-1\}$ \\
+      $\hat{A_i} = \newcandidate(l_i, \hat{A}, H^{+}, H^{-}, \mathcal{U}(\pi))$ \label{line:interplearner-call-newcandidate}
     }
     \Return $\hat{A_0}, \hat{A_1}, \cdots, \hat{A_n}$
   }
@@ -236,6 +244,8 @@ We defined the notion of interpolants in \autoref{sec:interpolants-from-proofs},
   \label{alg:isinterpolant}
 \end{algorithm}
 
+\newcandidate takes in a program location $l_i$, the current set of candidates $\hat{A}$, positive and negative examples $H_i^{+}, H_i^{-}$ seen so far, and the unfolding $\mathcal{U}(\pi)$. It returns a candidate can be used to update an existing candidate, while also updating the sets $H_i^{+}, H_i^{-}$.
+
 \begin{algorithm}[ht]
   % Declare functions
   \SetKwFunction{procnewcandidate}{NEWCANDIDATE}
@@ -244,7 +254,7 @@ We defined the notion of interpolants in \autoref{sec:interpolants-from-proofs},
   \SetKwProg{myproc}{Procedure}{}{}
 
   % expand
-  \myproc{\procnewcandidate{$l_i, \hat{A}, H^{+}, H^{-}, \psi, \mathcal{U}(\pi)$}:}{
+  \myproc{\procnewcandidate{$l_i, \hat{A}, H^{+}, H^{-}, \mathcal{U}(\pi)$}:}{
     %
     Let $\pi = (l_0, T_0, l_1)(l_1, T_1, l_2) \cdots (l_{n-1}, T_{n-1}, l_n)$ \\
     Set $S = \post^{*}(1_D, \pi_{0,i})$ \\
@@ -264,7 +274,7 @@ We defined the notion of interpolants in \autoref{sec:interpolants-from-proofs},
     }
     \Return $C$
   }
-  \caption{$\newcandidate$: takes as input a program location $l_i$, current set of candidates $\hat{A}$, sets of positive and negative examples for each location ($H^{+}, H^{-}$ respectively), map $\psi$, and unfolding $\mathcal{U}(\pi)$ of path $\pi$, and interacts with the Oracle $\mathcal{O}$ to find a new candidate for $l_i$.}
+  \caption{$\newcandidate$: takes as input a program location $l_i$, current set of candidates $\hat{A}$, sets of positive and negative examples for each location ($H^{+}, H^{-}$ respectively), and unfolding $\mathcal{U}(\pi)$ of path $\pi$, and interacts with the Oracle $\mathcal{O}$ to find a new candidate for $l_i$.}
   \label{alg:newcandidate}
 \end{algorithm}
 
