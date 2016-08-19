@@ -84,7 +84,7 @@ This section describes our algorithm for building a complete, safe, well-labeled
   \item \expand, which generates the successors of a leaf vertex (\autoref{alg:heap-expand})
   \item \refine, which refines the labels along a path, labeling an error vertex $\false$ (\autoref{alg:heap-refine})
   \item \cover, which expands the covering relation (\autoref{alg:heap-cover})
-  \item \seplearner, ... (\autoref{alg:invlearner})
+  \item \seplearner, ... (\autoref{alg:interplearner})
   \item \newcandidate, ... (\autoref{alg:newcandidate})
 \end{itemize}
 
@@ -169,17 +169,17 @@ Each of the three steps preserves well-labeledness of the unwinding. When none o
 
 We note in \autoref{alg:heap-refine} the procedure \seplearner is used, which is the core component of making \impact work for heap-manipulating programs. In this section, we describe this algorithm.
 
-We defined the notion of interpolants in \autoref{sec:interpolants-from-proofs}, and the same applies to \seplearner, which is described in \autoref{alg:invlearner}.
+We defined the notion of interpolants in \autoref{sec:interpolants-from-proofs}, and the same applies to \seplearner, which is described in \autoref{alg:interplearner}.
 
 \begin{algorithm}[ht]
   % Declare functions
-  \SetKwFunction{procinvlearner}{INVLEARNER}
+  \SetKwFunction{procinterplearner}{INTERPLEARNER}
 
   % Declare sub-program markers.
   \SetKwProg{myproc}{Procedure}{}{}
 
   % expand
-  \myproc{\procinvlearner{$\mathcal{U}(\pi)$}:}{
+  \myproc{\procinterplearner{$\mathcal{U}(\pi)$}:}{
     %
     Let $\pi = (l_0, T_0, l_1)(l_1, T_1, l_2) \cdots (l_{n-1}, T_{n-1}, l_n)$ \\
     Set $\hat{A_i} = 1_D, 0 \leq i < n, \hat{A_n} = 0_D$ \\
@@ -193,7 +193,7 @@ We defined the notion of interpolants in \autoref{sec:interpolants-from-proofs},
     \Return $\hat{A_0}, \hat{A_1}, \cdots, \hat{A_n}$
   }
   \caption{$\seplearner$: takes as input an unfolding $\mathcal{U}(\pi)$ of path $\pi$ and attempts to find an invariant for it.}
-  \label{alg:invlearner}
+  \label{alg:interplearner}
 \end{algorithm}
 
 \begin{algorithm}[ht]
