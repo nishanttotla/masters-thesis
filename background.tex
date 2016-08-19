@@ -103,6 +103,11 @@ This section describes a semi-algorithm from \cite{mcmillan06}, for building a c
 
 The interpolant in \refine can be generated from a refutation of $\mathcal{U}(\pi)$ by the method of \cite{mcmillan05}. Each of the three steps preserves well-labeledness of the unwinding. To make the unwinding safe, we have to only apply \refine to every error vertex. When none of the three steps can produce any change, the unwinding is both safe and complete, so we know that the original program is safe.
 
+\subsection{Algorithm Description}
+We now briefly explain how the three main procedures \expand, \refine, and \cover work.
+
+\expand, formally outlined in \autoref{alg:expand}, explores new actions for an uncovered leaf. An uncovered leaf (described in \autoref{defn:labeled-prog-unwinding}) is intuitively one for which all possible successor states have not been explored yet. If the vertex $v \in V$ supplied to \expand is an uncovered leaf, then for each possible action $T$ at the program location $M_v(v)$, a new vertex $w$ is added to the unwinding tree (\autoref{line:expand-add-new-vertex}). This is normally done when a leaf is such that it cannot be covered by any other vertex in the tree, and thus needs further state space exploration.
+
 \begin{algorithm}[ht]
   % Declare functions
   \SetKwFunction{procexpand}{EXPAND}
@@ -115,7 +120,7 @@ The interpolant in \refine can be generated from a refutation of $\mathcal{U}(\p
     %
     \If{$v$ is an uncovered leaf}{
         \ForEach{action $(M_v(v),T,m) \in \Delta$}{
-        add a new vertex $w$ to $V$ and a new edge $(v,w)$ to $E$; \\
+        add a new vertex $w$ to $V$ and a new edge $(v,w)$ to $E$; \label{line:expand-add-new-vertex} \\
         set $M_v(w) \leftarrow m$ and $\psi(w) \leftarrow \true$; \\
         set $M_e(v,w) \leftarrow T$;
       }
@@ -124,6 +129,8 @@ The interpolant in \refine can be generated from a refutation of $\mathcal{U}(\p
   \caption{$\expand$: takes as input a vertex $v \in V$ and expands the control flow graph based on all actions available at that vertex.}
   \label{alg:expand}
 \end{algorithm}
+
+\refine does that.
 
 \begin{algorithm}[ht]
   % Declare functions
@@ -154,6 +161,8 @@ The interpolant in \refine can be generated from a refutation of $\mathcal{U}(\p
   \caption{$\refine$: takes as input a vertex $v \in V$ at an error location and tags the path from root to $v$ with invariants.}
   \label{alg:refine}
 \end{algorithm}
+
+\cover helps.
 
 \begin{algorithm}[ht]
   % Declare functions
