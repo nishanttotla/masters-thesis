@@ -77,6 +77,20 @@ The formal rules for computing $\post$ for each individual action are presented 
     - $\sigma' = \sigma$
 \end{itemize}
 
+\section{\verifier}
+This section describes our algorithm for building a complete, safe, well-labeled unwinding of a heap-manipulating program. Our algorithm builds on top of the \impact algorithm defined in \autoref{sec:impact-algorithm}. Our algorithm may not terminate if the program is safe. If the program is unsafe, and our Oracle can help find the right interpolant, then our algorithm will terminate. A non-deterministic procedure with five basic steps is outlined here. The five steps are
+
+\begin{itemize}
+  \item \expand, which generates the successors of a leaf vertex (\autoref{alg:heap-expand})
+  \item \refine, which refines the labels along a path, labeling an error vertex $\false$ (\autoref{alg:heap-refine})
+  \item \cover, which expands the covering relation (\autoref{alg:heap-cover})
+  \item \seplearner, ... (\autoref{alg:invlearner})
+  \item \newcandidate, ... (\autoref{alg:newcandidate})
+\end{itemize}
+
+Each of the three steps preserves well-labeledness of the unwinding. When none of the three steps can produce any change, the unwinding is both safe and complete, so we know that the original program is safe.
+
+
 \begin{algorithm}[ht]
   % Declare functions
   \SetKwFunction{procexpand}{EXPAND}
