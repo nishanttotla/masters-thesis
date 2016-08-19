@@ -23,8 +23,8 @@ As defined in \autoref{defn:prog-unwinding}, an unwinding of a program $\mathcal
 
 As defined in \autoref{defn:labeled-heap-prog-unwinding}, a labeled unwinding of a program $\mathcal{A} = (\Lambda, \Delta, l_i, l_f)$ is a triple $(U, \psi, \rhd)$, where $U = (V, E, M_v, M_e)$ is an unwinding of $\mathcal{A}$, $\psi : V \to \heappats$ is called the vertex labeling, and $\rhd \subseteq V \times V$ is the covering relation. Intuitively, a labeled unwinding is a program unwinding where each vertex is labeled ($\psi$) with a heap pattern, and a covering relation $\rhd$ is used, which is used to keep track of covered vertices that need not be explored further.
 
-\section{Postcondition Transforms for Heap Operations}
-We first define the operator $\post$, which will be used for generating examples to interact with the Oracle.
+\subsection{Postcondition Transforms for Heap Operations}
+In addition to the previous definitions, we define the operator $\post$, which will be used for generating examples to interact with the Oracle. $\post$ is an operator for computing strongest postconditions for heap patterns modified by \lang instructions.
 
 % define labeled program unwinding
 \begin{defn}
