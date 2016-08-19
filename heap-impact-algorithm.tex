@@ -23,6 +23,60 @@ As defined in \autoref{defn:prog-unwinding}, an unwinding of a program $\mathcal
 
 As defined in \autoref{defn:labeled-heap-prog-unwinding}, a labeled unwinding of a program $\mathcal{A} = (\Lambda, \Delta, l_i, l_f)$ is a triple $(U, \psi, \rhd)$, where $U = (V, E, M_v, M_e)$ is an unwinding of $\mathcal{A}$, $\psi : V \to \heappats$ is called the vertex labeling, and $\rhd \subseteq V \times V$ is the covering relation. Intuitively, a labeled unwinding is a program unwinding where each vertex is labeled ($\psi$) with a heap pattern, and a covering relation $\rhd$ is used, which is used to keep track of covered vertices that need not be explored further.
 
+\section{Postcondition Transforms for Heap Operations}
+We first define the operator $\post$, which will be used for generating examples to interact with the Oracle.
+
+% define labeled program unwinding
+\begin{defn}
+  \label{defn:heap-post-transforms}
+  The operator $\post$, which computes the strongest postcondition for a given heap pattern, and action. That is $\post : \heappats \times \mathcal{T} \to \heappats$, where $\mathcal{T}$ is the set of all actions.
+
+  The $\post{*}$ operator can be defined as a repeated application of $\post$ along a given path. More formally, it is $\post{*} : \heappats \times \mathcal{P} \to \heappats$, where $\mathcal{P}$ is a path in the unwinding.
+\end{defn}
+
+We also note that the $\post$ operator can be overloaded to work with individual heaps instead of patterns, since single heaps can also be represented using a pattern.
+
+The formal rules for computing $\post$ for each individual action are presented here. We define them for major heap operations that are part of \lang. The formal requirement is that for a heap $h$, pattern $P$, and transition $T$, such that $h \matchedby P$, we must have $\post(h, T) \matchedby \post(P, T)$. Assume that the original pattern is represented by $P = (\nodesnm, \varlblnm, \predlblnm, \edgesnm, \sigma)$, and the pattern after transformation by $\post$ is represented by $P' = (\nodesnm', \varlblnm', \predlblnm', \edgesnm', \sigma')$. We define $P'$ using the definition of $P$, for each possible value of $T$ below. New variables are presented as updates to the values of old variables.
+
+\begin{itemize}
+  \item \textbf{ALLOC} ($v := alloc()$): \\
+    - $\nodesnm' = \nodesnm \cup \{n\}$ where $n \not \in \nodesnm$ is a new node allocated by $alloc()$ \\
+    - $\varlblnm'$ updates $\varlblnm$ such that $\varlblnm'(n, v) = \true$ and $\forall m \neq n, \varlblnm'(m, v) = \false$ \\
+    - $\predlblnm'$ updates $\predlblnm$ such that $\forall p, \predlblnm'(n, p) = \maybe$ \\
+    - $\edgesnm'$ updates $\edgesnm$ such that $\edgesnm'(n,f,m) = \false$, and $\edgesnm'(m,f,n) = \false$ for all fields $f$ and nodes $m \neq n$ \\
+    - $\sigma'$ updates $\sigma$ such that $\sigma'(n) = \true$
+  \item \textbf{COPY} ($v1 := v2$): \\
+    - $\nodesnm' = \nodesnm$ \\
+    - $\varlblnm'$ updates $\varlblnm$ such that $\forall n \in \nodesnm, \varlblnm'(v1, n) = \varlblnm(v2, n)$ \\
+    - $\predlblnm' = \predlblnm$ \\
+    - $\edgesnm' = \edgesnm$ \\
+    - $\sigma' = \sigma$
+  \item \textbf{LOAD} ($v1 := v2 \select f$): \\
+    - $\nodesnm' = \nodesnm$ \\
+    - $\varlblnm'$ updates $\varlblnm$ as follows: \\
+      \hspace*{1em} Let $S = \{n \in \nodesnm : \varlblnm(n, v2) = \true \vee \varlblnm(n, v2) = \maybe\}$ \\
+      \hspace*{1em} Let $T = \{n \in \nodesnm : \exists s \in S \cdot \edgesnm(s, f, n) = \true \vee \edgesnm(s, f, n) = \maybe\}$ \\
+      \hspace*{1em} if $T = \{t\}$ (singleton), then $\varlblnm'(t, v1) = \true$, otherwise $\forall t \in T, \varlblnm'(t, v1) = \maybe$ \\
+    - $\predlblnm' = \predlblnm$ \\
+    - $\edgesnm' = \edgesnm$ \\
+    - $\sigma' = \sigma$
+  \item \textbf{STORE} ($v1 \select f := v2$): \\
+    - $\nodesnm' = \nodesnm$ \\
+    - $\varlblnm' = \varlblnm$ \\
+    - $\predlblnm' = \predlblnm$ \\
+    - $\edgesnm'$ updates $\edgesnm$ as follows: \\
+      \hspace*{1em} Let $S = \{n \in \nodesnm : \varlblnm(n, v1) = \true \vee \varlblnm(n, v1) = \maybe\}$ \\
+      \hspace*{1em} Let $T = \{n \in \nodesnm : \varlblnm(n, v2) = \true \vee \varlblnm(n, v2) = \maybe\}$ \\
+      \hspace*{1em} $\forall s \in S, t \in T, \edgesnm'(s,f,t) = \maybe$ (and $\true$ if both $S$ and $T$ are singletons) \\
+    - $\sigma' = \sigma$
+  \item \textbf{PREDICATE} ($\predinstr$): \\
+    - $\nodesnm' = \nodesnm$ \\
+    - $\varlblnm' = \varlblnm$ \\
+    - $\forall n \in \nodesnm, p \in \predvars, \predlblnm'(n,p) = post(p, \predlblnm(n,p), \predinstr)$, where $post$ is a postcondition operator for three-valued predicates \\
+    - $\edgesnm' = \edgesnm$ \\
+    - $\sigma' = \sigma$
+\end{itemize}
+
 \begin{algorithm}[ht]
   % Declare functions
   \SetKwFunction{procexpand}{EXPAND}
@@ -96,60 +150,6 @@ As defined in \autoref{defn:labeled-heap-prog-unwinding}, a labeled unwinding of
   \caption{$\cover$: takes as input vertices $v, w \in V$ and attempts to cover $v$ with $w$.}
   \label{alg:heap-cover}
 \end{algorithm}
-
-\section{Postcondition Transforms for Heap Operations}
-We first define the operator $\post$, which will be used for generating examples to interact with the Oracle.
-
-% define labeled program unwinding
-\begin{defn}
-  \label{defn:heap-post-transforms}
-  The operator $\post$, which computes the strongest postcondition for a given heap pattern, and action. That is $\post : \heappats \times \mathcal{T} \to \heappats$, where $\mathcal{T}$ is the set of all actions.
-
-  The $\post{*}$ operator can be defined as a repeated application of $\post$ along a given path. More formally, it is $\post{*} : \heappats \times \mathcal{P} \to \heappats$, where $\mathcal{P}$ is a path in the unwinding.
-\end{defn}
-
-We also note that the $\post$ operator can be overloaded to work with individual heaps instead of patterns, since single heaps can also be represented using a pattern.
-
-The formal rules for computing $\post$ for each individual action are presented here. We define them for major heap operations that are part of \lang. The formal requirement is that for a heap $h$, pattern $P$, and transition $T$, such that $h \matchedby P$, we must have $\post(h, T) \matchedby \post(P, T)$. Assume that the original pattern is represented by $P = (\nodesnm, \varlblnm, \predlblnm, \edgesnm, \sigma)$, and the pattern after transformation by $\post$ is represented by $P' = (\nodesnm', \varlblnm', \predlblnm', \edgesnm', \sigma')$. We define $P'$ using the definition of $P$, for each possible value of $T$ below. New variables are presented as updates to the values of old variables.
-
-\begin{itemize}
-  \item \textbf{ALLOC} ($v := alloc()$): \\
-    - $\nodesnm' = \nodesnm \cup \{n\}$ where $n \not \in \nodesnm$ is a new node allocated by $alloc()$ \\
-    - $\varlblnm'$ updates $\varlblnm$ such that $\varlblnm'(n, v) = \true$ and $\forall m \neq n, \varlblnm'(m, v) = \false$ \\
-    - $\predlblnm'$ updates $\predlblnm$ such that $\forall p, \predlblnm'(n, p) = \maybe$ \\
-    - $\edgesnm'$ updates $\edgesnm$ such that $\edgesnm'(n,f,m) = \false$, and $\edgesnm'(m,f,n) = \false$ for all fields $f$ and nodes $m \neq n$ \\
-    - $\sigma'$ updates $\sigma$ such that $\sigma'(n) = \true$
-  \item \textbf{COPY} ($v1 := v2$): \\
-    - $\nodesnm' = \nodesnm$ \\
-    - $\varlblnm'$ updates $\varlblnm$ such that $\forall n \in \nodesnm, \varlblnm'(v1, n) = \varlblnm(v2, n)$ \\
-    - $\predlblnm' = \predlblnm$ \\
-    - $\edgesnm' = \edgesnm$ \\
-    - $\sigma' = \sigma$
-  \item \textbf{LOAD} ($v1 := v2 \select f$): \\
-    - $\nodesnm' = \nodesnm$ \\
-    - $\varlblnm'$ updates $\varlblnm$ as follows: \\
-      \hspace*{1em} Let $S = \{n \in \nodesnm : \varlblnm(n, v2) = \true \vee \varlblnm(n, v2) = \maybe\}$ \\
-      \hspace*{1em} Let $T = \{n \in \nodesnm : \exists s \in S \cdot \edgesnm(s, f, n) = \true \vee \edgesnm(s, f, n) = \maybe\}$ \\
-      \hspace*{1em} if $T = \{t\}$ (singleton), then $\varlblnm'(t, v1) = \true$, otherwise $\forall t \in T, \varlblnm'(t, v1) = \maybe$ \\
-    - $\predlblnm' = \predlblnm$ \\
-    - $\edgesnm' = \edgesnm$ \\
-    - $\sigma' = \sigma$
-  \item \textbf{STORE} ($v1 \select f := v2$): \\
-    - $\nodesnm' = \nodesnm$ \\
-    - $\varlblnm' = \varlblnm$ \\
-    - $\predlblnm' = \predlblnm$ \\
-    - $\edgesnm'$ updates $\edgesnm$ as follows: \\
-      \hspace*{1em} Let $S = \{n \in \nodesnm : \varlblnm(n, v1) = \true \vee \varlblnm(n, v1) = \maybe\}$ \\
-      \hspace*{1em} Let $T = \{n \in \nodesnm : \varlblnm(n, v2) = \true \vee \varlblnm(n, v2) = \maybe\}$ \\
-      \hspace*{1em} $\forall s \in S, t \in T, \edgesnm'(s,f,t) = \maybe$ (and $\true$ if both $S$ and $T$ are singletons) \\
-    - $\sigma' = \sigma$
-  \item \textbf{PREDICATE} ($\predinstr$): \\
-    - $\nodesnm' = \nodesnm$ \\
-    - $\varlblnm' = \varlblnm$ \\
-    - $\forall n \in \nodesnm, p \in \predvars, \predlblnm'(n,p) = post(p, \predlblnm(n,p), \predinstr)$, where $post$ is a postcondition operator for three-valued predicates \\
-    - $\edgesnm' = \edgesnm$ \\
-    - $\sigma' = \sigma$
-\end{itemize}
 
 \section{Learning Invariants from Positive and Negative Examples}
 
