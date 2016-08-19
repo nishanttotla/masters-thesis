@@ -189,10 +189,12 @@ We now briefly explain how the three main procedures \expand, \refine, and \cove
   \label{alg:cover}
 \end{algorithm}
 
-To build a well-labeled unwinding, a strategy is required, for applying the three unwinding rules. The most difficult question is when to apply \cover. Covering one vertex can result in uncovering others. Thurs, applying \cover non-deterministically may not terminate.
-
 \subsection{Termination}
-The \impact algorithm works by repeated applications of \expand, \cover, and \refine. When any of the three procedures don't cause any change in the unwinding tree, the algorithm terminates. The order of application matters, and the \unwind algorithm in \cite{mcmillan06} describes a systematic way of applying the three procedures. Forced covering (calling \cover on all nodes of a path after a \refine step) also serves as an optimization. All of these ideas apply directly to the case of heap-manipulating programs.
+The \impact algorithm works by repeated applications of \expand, \cover, and \refine. When any of the three procedures don't cause any change in the unwinding tree, the algorithm terminates. To build a well-labeled unwinding, a strategy is required for applying the three procedures above. The most difficult question is when to apply \cover. Covering one vertex can result in uncovering others. Thus, applying \cover non-deterministically may not terminate.
+
+To avoid the possibility of of non-termination, a total order $\preceq$ can be defined on the vertices. This order must respect the ancestor relation. That is, if $v \sqsubset w$, then $v \prec w$. For example, we could define $\preceq$ by a pre-order traversal of the tree, or numbering the vertices in order of creation. After that, \cover is restricted to only those pairs $(v,w)$ for which $w \prec v$. If adding $(v,w)$ to $\rhd$ leads to the removal of $(x,y)$ where $v \sqsubseteq y$, then by transitivity, we must have $v \prec x$. Thus, covering a vertex $v$ can only result in uncovering vertices greater than $v$, implying that we cannot apply \cover indefinitely.
+
+We call a vertex $v$ \textit{closed} if either it is covered, or no arc $(v,w)$ can be added to $\rhd$ while maintaining well-labeledness. It is possible to guarantee that when a vertex is expanded, all of its ancestors are closed, thus making it so that a vertex that could be covered isn't expanded unnecessarily. The \unwind algorithm in \cite{mcmillan06} describes a systematic way of doing this. Forced covering (calling \cover on all nodes of a path after a \refine step) also serves as an optimization. All of these ideas apply directly to the case of heap-manipulating programs.
 
 \section*{Summary}
 In this chapter, we presented a framework for modeling programs as state graphs, and an interpolant-based approach to verification that uses program unwindings to explore the state space. In the next chapter, we describe the formalism that allows us to represent and reason about heap memory. This will be useful for defining the verification algorithm for heap-manipulating programs.
