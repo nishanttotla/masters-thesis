@@ -8,4 +8,4 @@ To build, use the generate script
 $ ./generate.sh
 ```
 
-`pdflatex` and `bibtex` must be available on the system. The generate script also copies the generated document `p.pdf` to the local Dropbox folder. This is optional and can be removed.
+`pdflatex` and `bibtex` must be available on the system. The generate script also copies the generated document `p.pdf` to the local Dropbox folder if the `--dropbox` flag is provided. The Dropbox folder is assumed to be in the home directory.
