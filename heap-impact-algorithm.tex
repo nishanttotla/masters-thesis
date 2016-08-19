@@ -95,6 +95,10 @@ In addition to the three steps above, there are two main procedures that are nee
   \item \newcandidate, which is used by \seplearner to interact with the Oracle, and query for a heap pattern given positive and negative concrete heaps (\autoref{alg:newcandidate})
 \end{itemize}
 
+\subsection{Algorithm Description}
+We now briefly explain how the main procedures for \verifier work. The outline is very similar to that of the \impact algorithm defined in \autoref{sec:impact-algorithm}, but our modifications make it possible to use heap patterns in place of simple FOL formulas.
+
+\expand, formally outlined in \autoref{alg:heap-expand}, explores new actions for an uncovered leaf. An uncovered leaf (described in \autoref{defn:labeled-prog-unwinding}) is intuitively one for which all possible successor states have not been explored yet. If the vertex $v \in V$ supplied to \expand is an uncovered leaf, then for each possible action $T$ at the program location $M_v(v)$, a new vertex $w$ is added to the unwinding tree (\autoref{line:expandp-add-new-vertex}). This is normally done when a leaf is such that it cannot be covered by any other vertex in the tree, and thus needs further state space exploration. Notice that this is identical to \impact, but with they key difference that a new vertex in the unwinding is initialized with the universal heap $1_D$ instead of $\true$ (\autoref{line:expandp-universal-heap}).
 
 \begin{algorithm}[ht]
   % Declare functions
@@ -108,8 +112,8 @@ In addition to the three steps above, there are two main procedures that are nee
     %
     \If{$v$ is an uncovered leaf}{
         \ForEach{action $(M_v(v),T,m) \in \Delta$}{
-        add a new vertex $w$ to $V$ and a new edge $(v,w)$ to $E$; \\
-        set $M_v(w) \leftarrow m$ and $\psi(w) \leftarrow 1_D$; \\
+        add a new vertex $w$ to $V$ and a new edge $(v,w)$ to $E$; \label{line:expandp-add-new-vertex} \\
+        set $M_v(w) \leftarrow m$ and $\psi(w) \leftarrow 1_D$; \label{line:expandp-universal-heap} \\
         set $M_e(v,w) \leftarrow T$;
       }
     }
