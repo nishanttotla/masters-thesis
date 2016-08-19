@@ -165,7 +165,7 @@ We now briefly explain how the three main procedures \expand, \refine, and \cove
   \label{alg:refine}
 \end{algorithm}
 
-\cover helps.
+\cover is a simple procedure that takes two vertices $v, w \in V$, and attempts to cover $v$ with $w$, provided $v$ is an uncovered vertex that is not an ancestor of $w$, and they are associated with the same program location (\autoref{line:cover-pre-check}). If the predicate label at $v$ is subsumed by the predicate label at $w$, then it means that $v$ need not be explored further, and can be covered with $w$, by adding the pair $(v,w)$ to $\rhd$. Note that if a vertex is covered, then all its descendants are also automatically covered. Since we don't allow a covered vertex to cover other vertices, each vertex $y$ which is a descendant of $v$, and covers other vertices, must stop covering those vertices (\autoref{line:cover-stop-covering}).
 
 \begin{algorithm}[ht]
   % Declare functions
@@ -178,9 +178,10 @@ We now briefly explain how the three main procedures \expand, \refine, and \cove
   \myproc{\proccover{$v, w \in V$}:}{
     %
     \If{$v$ is uncovered and $M_v(v) = M_v(w)$ and $v \nvDash w$}{
+      \label{line:cover-pre-check}
       \If{$\psi(v) \vDash \psi(w)$}{
         add $(v,w)$ to $\rhd$; \\
-        delete all $(x,y) \in \rhd$, s.t. $v \sqsubseteq y$;
+        delete all $(x,y) \in \rhd$, s.t. $v \sqsubseteq y$; \label{line:cover-stop-covering}
       }
     }
   }
