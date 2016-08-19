@@ -155,7 +155,7 @@ The summary function $\sigma: \nodesnm \to \bools$ indicates where a node is a s
   \centering
   \includegraphics[width=7cm]{fig/summary1.pdf}
   \includegraphics[width=7cm]{fig/summary2.pdf}
-  \caption{The pattern on the left has three nodes, on of which is selected. On pressing the S key, it becomes a summary node, indicated by the larger size in the pattern on the right.}
+  \caption{The pattern on the left has three nodes, one of which is selected. On pressing the S key, it becomes a summary node, indicated by the larger size in the pattern on the right.}
   \label{fig:summary-nodes}
 \end{figure}
 
@@ -165,7 +165,7 @@ The generated patterns are used by the \verifier algorithm as candidates for ann
 \begin{enumerate}
   \item At any point, interaction with the Oracle (human user) is limited to requested patterns for a single vertex of the program unwinding tree.
   \item Start with $H^{+} = H^{-} = \{\}$. At this point, the user can provide an arbitrary pattern to begin with.
-  \item If the pattern (we call it $C$) is such that $\forall h \in H^{+}, h \matchedby C$ and $\forall h \in H^{-}, h \matchedby C$, then C is sent to the verifier. If it isn't, then the heaps in the existing sets $H^{+}, H^{-}$ for which these conditions are not satisfied are highlighted to the user.
+  \item If the pattern (we call it $C$) is such that $\forall h \in H^{+}, h \matchedby C$ and $\forall h \in H^{-}, h \not \matchedby C$, then C is sent to the verifier. On the other hand, if there is any heap in the existing sets $H^{+}, H^{-}$ for which these conditions are not satisfied, it is highlighted to the user.
   \item If the pattern is accepted in \autoref{alg:newcandidate}, then no more input is requested from the user.
   \item If the pattern is not accepted, one or both of $H^{+}$ or $H^{-}$ are updated, and the user needs to update the provided pattern. Return to Step 3.
 \end{enumerate}
