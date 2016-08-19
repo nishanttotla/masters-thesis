@@ -127,8 +127,7 @@ We now briefly explain how the main procedures for \verifier work. The outline i
   \item The program has a bug, and the error vertex is actually reachable
   \item The interaction with the Oracle did not result in an interpolant being found
 \end{enumerate}
-Since our Oracle cannot be guaranteed to definitely provide an interpolant, at this point, we quit \refinep and try again later when more vertices have been labeled with heap patterns (\autoref{line:refinep-program-unsafe}). If an interpolant is found, then it is used to strengthen the predicate labelings at the vertices along the path $\pi$. In particular, if the interpolant formula at a vertex $v_i$ is not entailed by the current heap pattern label at $v_i$ (\autoref{line:refinep-not-subsumed}), then the current label can be strengthened. Note that if this happens, then the stronger label at $v_i$ may possibly lead it to stop covering some of the vertices it previously covered. This is taken into account by removing all pairs $(\cdot, v_i)$ in the covering relation $\rhd$ (\autoref{line:refinep-remove-covering-relations}).
-
+Since our Oracle cannot be guaranteed to definitely provide an interpolant, at this point, we quit \refinep and try again later when more vertices have been labeled with stronger heap patterns (\autoref{line:refinep-program-unsafe}). If an interpolant is found, then it is used to strengthen the heap pattern labelings at the vertices along the path $\pi$. In particular, if the interpolant formula at a vertex $v_i$ is not entailed by the current heap pattern label at $v_i$ (\autoref{line:refinep-not-subsumed}), then the current label can be strengthened. Note that if this happens, then the stronger label at $v_i$ may possibly lead it to stop covering some of the vertices it previously covered. This is taken into account by removing all pairs $(\cdot, v_i)$ in the covering relation $\rhd$ (\autoref{line:refinep-remove-covering-relations}).
 
 \begin{algorithm}[ht]
   % Declare functions
@@ -163,9 +162,11 @@ Since our Oracle cannot be guaranteed to definitely provide an interpolant, at t
   \label{alg:heap-refine}
 \end{algorithm}
 
+\coverp is a simple procedure that takes two vertices $v, w \in V$, and attempts to cover $v$ with $w$, provided $v$ is an uncovered vertex that is not an ancestor of $w$, and they are associated with the same program location (\autoref{line:coverp-pre-check}). If the heap pattern label at $v$ entails the heap pattern label at $w$, then it means that $v$ need not be explored further, and can be covered with $w$, by adding the pair $(v,w)$ to $\rhd$. Note that if a vertex is covered, then all its descendants are also automatically covered. Since we don't allow a covered vertex to cover other vertices, each vertex $y$ which is a descendant of $v$, and covers other vertices, must stop covering those vertices (\autoref{line:coverp-stop-covering}).
+
 \begin{algorithm}[ht]
   % Declare functions
-  \SetKwFunction{proccover}{COVER}
+  \SetKwFunction{proccover}{COVERP}
 
   % Declare sub-program markers.
   \SetKwProg{myproc}{Procedure}{}{}
@@ -174,9 +175,10 @@ Since our Oracle cannot be guaranteed to definitely provide an interpolant, at t
   \myproc{\proccover{$v, w \in V$}:}{
     %
     \If{$v$ is uncovered and $M_v(v) = M_v(w)$ and $v \nvDash w$}{
+      \label{line:coverp-pre-check}
       \If{$\psi(v) \vDash \psi(w)$}{
         add $(v,w)$ to $\rhd$; \\
-        delete all $(x,y) \in \rhd$, s.t. $v \sqsubseteq y$;
+        delete all $(x,y) \in \rhd$, s.t. $v \sqsubseteq y$; \label{line:coverp-stop-covering}
       }
     }
   }
