@@ -190,7 +190,7 @@ Since our Oracle cannot be guaranteed to definitely provide an interpolant, at t
 
 We now describe the algorithms that allow \verifier to interface with the Oracle and find invariants. In particular, the \refinep procedure (\autoref{alg:heap-refine}) queries \seplearner for an interpolant, which in turn queries \newcandidate (\autoref{alg:newcandidate}). \newcandidate makes the call to the Oracle. We now describe these algorithms in greater detail.
 
-\seplearner contructs the interpolant for an unfolding $\mathcal{U}(\pi)$ of path $\pi$, where $\pi$ is a program path ending at an error location. Paths and unfoldings are formally defined in \autoref{sec:modeling-programs}, while interpolants for sequences are defined in \autoref{sec:interpolants-from-proofs}. These definitions apply identically to our case of heap-manipulating programs. \seplearner maintains two types of data:
+\seplearner contructs the interpolant for an unfolding $\mathcal{U}(\pi)$ of path $\pi$, where $\pi$ is a program path ending at an error location. Paths and unfoldings are formally defined in \autoref{sec:modeling-programs}, while interpolants for path sequences in heap-manipulating programs are defined in \autoref{sec:heap-interpolants-from-proofs}. These definitions apply directly to our case of heap-manipulating programs. \seplearner maintains two types of data:
 
 \begin{enumerate}
   \item A current set of candidate patterns $\hat{A} = \hat{A_0}, \hat{A_1}, \cdots, \hat{A_n}$ for the vertices of the unwinding tree associated with path $\pi$
@@ -224,6 +224,8 @@ If $\hat{A}$ is already an interpolant for $\mathcal{U}(\pi)$, it is returned. I
   \caption{$\seplearner$: takes as input an unfolding $\mathcal{U}(\pi)$ of path $\pi$ and attempts to find an invariant for it.}
   \label{alg:interplearner}
 \end{algorithm}
+
+\isinterpolant is a simpler procedure that checks if the current set of candidates $\hat{A_0}, \hat{A_1}, \cdots, \hat{A_n}$ satisfy the definition of path interpolants in \autoref{sec:heap-interpolants-from-proofs}.
 
 \begin{algorithm}[ht]
   % Declare functions
