@@ -5,7 +5,23 @@
 \label{ch:heap-impact-algorithm}
 %
 
-Building on top of the framework defined in \autoref{sec:impact-algorithm} and \autoref{ch:heap-patterns}, we can define \verifier, by modifying the \impact algorithm to work for heap-manipulating programs. In this section, we first define the three steps of \impact, that is \expand, \cover, and \refine. Then we describe an invariant-learning procedure that retrieves patterns from an Oracle, thereby completing the description of the algorithm.
+Building on top of the framework defined in \autoref{sec:impact-algorithm} and \autoref{ch:heap-patterns}, we can define \verifier, by modifying the \impact algorithm to work for heap-manipulating programs. In this chapter, we first define the three steps of \impact, that is \expand, \cover, and \refine. Then we describe an interpolant-learning procedure that retrieves patterns from an Oracle, thereby completing the description of the algorithm.
+
+\section{Notation Review}
+In this section, we briefly go over some of the notation from previous chapters that will be relevant to the description of \verifier.
+
+\subsection{Programs}
+Recall that a \textit{program} is a tuple $(\Lambda, \Delta, l_i, l_f)$, where $\Lambda$ is a finite set of program locations, $\Delta$ is a set of $actions$, $l_i \in \Lambda$ is the initial location and $l_f \in \Lambda$ is the error location. An $action$ is a triple $(l, T, m)$, where $l,m \in \Lambda$ are respectively the entry and exit locations of the action, and $G$ is a transition formula.
+
+\subsection{Program Paths}
+A $path$ $\pi$ of a program is a sequence of transitions of the form $(l_0, T_0, l_1)(l_1, T_1, l_2) \cdots (l_{n-1}, T_{n-1}, l_n)$. The path is an \textit{error path} when $l_0 = l_1$ and $l_n = l_f$. The unfolding $\mathcal{U}(\pi)$ of path $\pi$ is the sequence of formulas $T_0^{\langle 0 \rangle}, \cdots, T_{n-1}^{\langle n-1 \rangle}$, that is, the sequence of transition formulas $T_0, \cdots, T_{n-1}$, with each $T_i$ shifted $i$ time units into the future.
+
+For further details, the reader is referred to \autoref{sec:modeling-programs}.
+
+\subsection{Program Unwindings}
+As defined in \autoref{defn:prog-unwinding}, an unwinding of a program $\mathcal{A} = (\Lambda, \Delta, l_i, l_f)$ is a quadruple $(V, E, M_v, M_e)$, where $(V, E)$ is a directed tree rooted at $\epsilon$, $M_v : V \rightarrow \Lambda$ is the vertex map, and $M_e : E \rightarrow \Delta$ is the edge map, such that $M_v(\epsilon) = l_i$. Also, for every non-leaf vertex $v \in V$, for every action $(M_v(v), T, m) \in \Delta$, there exists an edge $(v,w) \in E$ such that $M_v(w) = m$ and $M_e(v,w) = T$. Intuitively, an unwinding is a tree where each vertex is mapped ($M_v$) to a program location, and each edge is mapped ($M_e$) to a step (action) in the program.
+
+As defined in \autoref{defn:labeled-heap-prog-unwinding}, a labeled unwinding of a program $\mathcal{A} = (\Lambda, \Delta, l_i, l_f)$ is a triple $(U, \psi, \rhd)$, where $U = (V, E, M_v, M_e)$ is an unwinding of $\mathcal{A}$, $\psi : V \to \heappats$ is called the vertex labeling, and $\rhd \subseteq V \times V$ is the covering relation. Intuitively, a labeled unwinding is a program unwinding where each vertex is labeled ($\psi$) with a heap pattern, and a covering relation $\rhd$ is used, which is used to keep track of covered vertices that need not be explored further.
 
 \begin{algorithm}[ht]
   % Declare functions
