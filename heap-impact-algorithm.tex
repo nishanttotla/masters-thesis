@@ -262,8 +262,8 @@ If $\hat{A}$ is already an interpolant for $\mathcal{U}(\pi)$, it is returned. I
 \begin{enumerate}
   \item Compute the strongest postcondition $S$, starting at the root of the tree (which is annotated with the universal pattern $1_D$) until $l_i$. This partial path is indicated by $\pi_{0,i}$ (\autoref{line:newcandidate-strongest-post}). $S$ will be useful to generate concrete heaps later on. We also start with an initial value of $1_D$ for the candidate $C$.
   \item Inside a loop to query the Oracle $\mathcal{O}$ for a heap pattern (\autoref{line:newcandidate-query-oracle}). The Oracle uses the current sets of positive and negative examples of concrete heaps ($H_i^{+}, H_i^{-}$ respectively).
-  \item The candidate $C$ at a location must be entailed by the strongest postcondition $S$ at that location. If this does not happen, it means that the candidate is not weak enough. In other words, there is at least one concrete heap $h$ in $S$ that is not contained in $C$. To indicate this, $h$ is added to the set of positive examples $H_i^{+}$ (\autoref{line:newcandidate-add-positive-example}), and the Oracle is queried again for an updated pattern candidate.
-  \item \autoref{line:newcandidate-add-negative-example-condition}
+  \item The candidate $C$ at a location must be entailed by the strongest postcondition $S$ at that location. If this does not happen, it means that the candidate is not ``weak enough''. In other words, there is at least one concrete heap $h$ in $S$ that is not contained in $C$. To indicate this, $h$ is added to the set of positive examples $H_i^{+}$ (\autoref{line:newcandidate-add-positive-example}), and the Oracle is queried again for an updated pattern candidate.
+  \item If the $\post$ transform of the candidate $C$ across the edge with action $T_i$ does not entail the candidate $\hat{A}_{i+1}$ at the next vertex in the path (\autoref{line:newcandidate-add-negative-example-condition}), then it means that the required condition for interpolation that we defined in \autoref{sec:heap-interpolants-from-proofs} is not satisfied. This means that $C$ is ``strong enough'', that is, it contains a heap $h$ that does not satisfy the interpolant condition, and should be removed. This heap is added to the set of negative examples $H_i^{+}$ (\autoref{line:newcandidate-add-negative-example}), and the Oracle is queried again for an updated pattern candidate.
   \item Finally, if none of these conditions hold, the candidate is returned to \seplearner, where it is incorporated into the current set of candidates for the interpolant.
 \end{enumerate}
 
@@ -287,8 +287,9 @@ If $\hat{A}$ is already an interpolant for $\mathcal{U}(\pi)$, it is returned. I
         continue
       }
       \If{$\post(C, T_i) \not \entails \hat{A}_{i+1}$}{
-        $\exists h \cdot h \matchedby C \wedge \post(h, T_i) \not \matchedby \hat{A}_{i+1}$ \label{line:newcandidate-add-negative-example-condition} \\
-        $H_i^{-} = \{h\} \cup H_i^{-}$ \\
+        \label{line:newcandidate-add-negative-example-condition}
+        $\exists h \cdot h \matchedby C \wedge \post(h, T_i) \not \matchedby \hat{A}_{i+1}$ \\
+        $H_i^{-} = \{h\} \cup H_i^{-}$ \label{line:newcandidate-add-negative-example} \\
         continue
       }
       break
