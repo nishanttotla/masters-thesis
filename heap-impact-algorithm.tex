@@ -257,7 +257,15 @@ If $\hat{A}$ is already an interpolant for $\mathcal{U}(\pi)$, it is returned. I
   \label{alg:isinterpolant}
 \end{algorithm}
 
-\newcandidate takes in a program location $l_i$, the current set of candidates $\hat{A}$, positive and negative examples $H_i^{+}, H_i^{-}$ seen so far, and the unfolding $\mathcal{U}(\pi)$. It returns a candidate can be used to update an existing candidate, while also updating the sets $H_i^{+}, H_i^{-}$.
+\newcandidate takes in a program location $l_i$, the current set of candidates $\hat{A}$, positive and negative examples $H_i^{+}, H_i^{-}$ seen so far, and the unfolding $\mathcal{U}(\pi)$. It returns a candidate can be used to update an existing candidate, while also updating the sets $H_i^{+}, H_i^{-}$. \newcandidate is the core procedure, as far as interacting with the Oracle is concerned. Here, we describe in simple terms how it works for a given location $l_i$ in a program path $\pi$:
+
+\begin{enumerate}
+  \item Compute the strongest postcondition $S$, starting at the root of the tree (which is annotated with the universal pattern $1_D$) until $l_i$. This partial path is indicated by $\pi_{0,i}$ (\autoref{line:newcandidate-strongest-post}). $S$ will be useful to generate concrete heaps later on. We also start with an initial value of $1_D$ for the candidate $C$.
+  \item Inside a loop to query the Oracle $\mathcal{O}$ for a heap pattern (\autoref{line:newcandidate-query-oracle}). The Oracle uses the current sets of positive and negative examples of concrete heaps ($H_i^{+}, H_i^{-}$ respectively).
+  \item The candidate $C$ at a location must be entailed by the strongest postcondition $S$ at that location. If this does not happen, it means that the candidate is not weak enough. In other words, there is at least one concrete heap $h$ in $S$ that is not contained in $C$. To indicate this, $h$ is added to the set of positive examples $H_i^{+}$ (\autoref{line:newcandidate-add-positive-example}), and the Oracle is queried again for an updated pattern candidate.
+  \item \autoref{line:newcandidate-add-negative-example-condition}
+  \item Finally, if none of these conditions hold, the candidate is returned to \seplearner, where it is incorporated into the current set of candidates for the interpolant.
+\end{enumerate}
 
 \begin{algorithm}[ht]
   % Declare functions
@@ -270,16 +278,16 @@ If $\hat{A}$ is already an interpolant for $\mathcal{U}(\pi)$, it is returned. I
   \myproc{\procnewcandidate{$l_i, \hat{A}, H^{+}, H^{-}, \mathcal{U}(\pi)$}:}{
     %
     Let $\pi = (l_0, T_0, l_1)(l_1, T_1, l_2) \cdots (l_{n-1}, T_{n-1}, l_n)$ \\
-    Set $S = \post^{*}(1_D, \pi_{0,i})$ \\
+    Set $S = \post^{*}(1_D, \pi_{0,i})$ \label{line:newcandidate-strongest-post} \\
     Set $C = 1_D$ \\
     \While{$\true$}{
-      $C = \mathcal{O}(H_i^{+}, H_i^{-})$ \\
+      $C = \mathcal{O}(H_i^{+}, H_i^{-})$ \label{line:newcandidate-query-oracle} \\
       \If{$S \not \entails C$}{
-        $H_i^{+} = \{h\} \cup H_i^{+}$ where $h \in S, h \not \in C$ \\
+        $H_i^{+} = \{h\} \cup H_i^{+}$ where $h \in S, h \not \in C$ \label{line:newcandidate-add-positive-example} \\
         continue
       }
       \If{$\post(C, T_i) \not \entails \hat{A}_{i+1}$}{
-        $\exists h \cdot h \matchedby C \wedge \post(h, T_i) \not \matchedby \hat{A}_{i+1}$ \\
+        $\exists h \cdot h \matchedby C \wedge \post(h, T_i) \not \matchedby \hat{A}_{i+1}$ \label{line:newcandidate-add-negative-example-condition} \\
         $H_i^{-} = \{h\} \cup H_i^{-}$ \\
         continue
       }
@@ -290,8 +298,6 @@ If $\hat{A}$ is already an interpolant for $\mathcal{U}(\pi)$, it is returned. I
   \caption{$\newcandidate$: takes as input a program location $l_i$, current set of candidates $\hat{A}$, sets of positive and negative examples for each location ($H^{+}, H^{-}$ respectively), and unfolding $\mathcal{U}(\pi)$ of path $\pi$, and interacts with the Oracle $\mathcal{O}$ to find a new candidate for $l_i$.}
   \label{alg:newcandidate}
 \end{algorithm}
-
-While \seplearner is the higher level procedure to find an interpolant, it uses a sub-procedure called \newcandidate as a feedback loop with the Oracle, to accept candidate heap patterns that can be used to construct an interpolant.
 
 \section*{Summary}
 This chapter presented \verifier, our algorithm for verifying heap-manipulating programs. \verifier uses an Oracle to perform the interpolation step, which helps in learning heap patterns from positive and negative concrete examples. The next chapter describes the implementation of an interface for one such Oracle - a human user.
