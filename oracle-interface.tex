@@ -11,9 +11,6 @@ The goal of the Oracle is to provide heap patterns that can be used to generate 
 \label{sec:web-interface}
 Our graphical interface, created using D3 \cite{d3js} is a way for our Oracle (human) to interact with the \verifier algorithm. The interface is designed to make it simple to input heap pattern graphs and receive quick feedback about the correctness the pattern graph. Pattern graphs have several characteristics, as described in \autoref{defn:pattern}, and it can be challenging and overwhelming for the user to input a graph that generalizes enough, but not so much that it becomes useless for the underlying verification algorithm. Since our Oracles are humans, it is crucial that we create the best experience for them to input information to the prover. According to us, the best way of doing that is to allow users to be able to ``draw'' graphs while getting instant feedback. D3 allows to create force-directed graphs that are precisely what we need.
 
-\subsection{Who are the Users?}
-Before we proceed further, it would be useful to define who we expect to be able to use our web interface. Technical/CS background, able to look at graphs and understand nodes/vertices. Not verification experts.
-
 \subsection{Force-Directed Graphs in D3.js}
 Before moving on with the description of our implementation, we briefly describe the Javascript library D3 that we used to build our heap pattern web interface. D3 allows to bind data to a Document Object Model (DOM), and then apply data-driven transformations to the document. For example, D3 can be used to generate an HTML table from an array of numbers. Or, the same data can be used to create an interactive SVG bar chart with smooth transitions and interaction. The key problem solved by D3 is efficient manipulation of documents based on data. D3 is capable of supporting large datasets, and a wide variety of dynamic behaviors and interactions.
 
@@ -41,6 +38,9 @@ Similarly, picking a heap variable (say $x$) and setting a value (say $\maybe$) 
   }
   \label{fig:basic-graph-interface}
 \end{figure}
+
+\subsubsection{Who are the Users?}
+Our system involves human users, so it is important to describe suitable candidates who will be able to use our system. We believe that a basic understanding of graphs or transition systems should be sufficient, and in fact very helpful in fully grasping what we expect from the user. This means that someone with an undergraduate degree in Computer Science or Mathematics, or indeed anyone who has learned about graphs and state transition systems would be a suitable user. A background in formal methods or verification is not required.
 
 We now dive deeper into all the features provided by the interface, and the user can easily provide a graph pattern matching the formalism described in \autoref{defn:pattern}. One of the important goals of this design is that the user should not have to understand or deal with the formalism itself, but just figures, so that someone with no knowledge of software verification or heap modeling can perform the function of an Oracle.
 
