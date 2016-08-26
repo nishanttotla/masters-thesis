@@ -184,6 +184,7 @@ The generated patterns are used by the \verifier algorithm as candidates for ann
 As described in \autoref{defn:heap-pat}, each individual heap can also be presented as a pattern that represents exactly that heap. As a result, all the individual heaps in $H^{+}$ and $H^{-}$ are also patterns, but with limited properties and and no $\maybe$ assignments to variables and edges, and no summary nodes. We now present an example to illustrate how the above steps work.
 
 \subsection{Illustrating User Interaction}
+\label{sec:illustrating-user-interaction}
 We note that all heaps have a special \nilconst node, which represents the \nullconst address. \nilconst nodes cannot be summary nodes, and have no outgoing edges. In this example, we consider the program \altlistsimplified in \autoref{fig:alt-list-simplified} that creates a linked list with alternating $\true$ and $\false$ values for the predicate $p$.
 
 \begin{figure}
@@ -267,5 +268,19 @@ After seeing all these examples, the user submits the pattern in \autoref{fig:al
   \label{fig:right-pattern}
 \end{figure}
 
+\section{Analyzing our Interface}
+Our example in \autoref{sec:illustrating-user-interaction} gives one possible user interaction flow for the \altlistsimplified program, but our description would be incomplete without a broader discussion of the capabilities and limitations of our interface.
+
+\subsection{Expressiveness of Heap Patterns}
+Some visual examples of heap patterns depicting interesting properties. We don't yet have theoretical results for what class of examples can be expressed by our formalism, but that is future work. Besides, one of the points of demonstrating this is to show that different formalisms can be plugged in to play with expressiveness.
+
+\subsection{Understandability of the Interface}
+Describes the backgrounds of the users we asked to use it, and two examples for which they could work out reasonable patterns.
+
+\subsection{Experiments}
+Need better title for this section. Describe what exists in the implementation. (This is also part of Sanjit's feedback).
+
+Also describe what needs to be done as future work.
+
 \section*{Summary}
-In this chapter, we presented the web interface for the Oracle in \verifier - a human user. We described the interface design, and an overview of how a user would interact with the interface to provide a useful heap pattern that can be used in verification. The next chapter presents some related work, and concludes with  our contributions and ideas for potential directions to take.
+In this chapter, we presented the web interface for the Oracle in \verifier - a human user. We described the interface design, and an overview of how a user would interact with the interface to provide a useful heap pattern that can be used in verification. We also discussed our overall implementation and its limitations. The next chapter presents some related work, and concludes with  our contributions and ideas for potential directions to take.
