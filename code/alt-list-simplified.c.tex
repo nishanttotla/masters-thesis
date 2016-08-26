@@ -1,18 +1,25 @@
 \begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8}]
-\PY{k+kt}{void} \PY{n+nf}{alt\PYZus{}list}\PY{p}{(}\PY{p}{)} \PY{p}{\PYZob{}}
-  \PY{k+kt}{bool} \PY{n}{d} \PY{o}{=} \PY{n}{TRUE}\PY{p}{;}
-  \PY{n}{List} \PY{n}{l} \PY{o}{=} \PY{n}{cons}\PY{p}{(}\PY{n}{d}\PY{p}{,} \PY{n}{NIL}\PY{p}{)}\PY{p}{;}
+\PY{k+kt}{void} \PY{n+nf}{alt\PYZus{}list\PYZus{}simplified}\PY{p}{(}\PY{p}{)} \PY{p}{\PYZob{}}
+  \PY{c+c1}{// set of predicates: \PYZob{}p\PYZcb{}}
+  \PY{c+c1}{// allocate an initial node with predicate value TRUE}
+  \PY{n}{var} \PY{n}{x} \PY{o}{=} \PY{n}{alloc}\PY{p}{(}\PY{p}{)}\PY{p}{;}
+  \PY{k+kt}{bool} \PY{n}{p\PYZus{}val} \PY{o}{=} \PY{n}{TRUE}
+  \PY{n}{set}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{p}\PY{p}{)} \PY{o}{=} \PY{n}{p\PYZus{}val}
+  \PY{c+c1}{// set y to be the tail of the list}
+  \PY{n}{var} \PY{n}{y} \PY{o}{=} \PY{n}{x}\PY{p}{;}
+  \PY{n}{y}\PY{o}{\PYZhy{}}\PY{o}{\PYZgt{}}\PY{n}{next} \PY{o}{=} \PY{n+nb}{NULL}
   \PY{c+c1}{// LOOP\PYZhy{}CONS: build a list with alternating Boolean values.}
   \PY{k}{while} \PY{p}{(}\PY{n}{non\PYZus{}det}\PY{p}{(}\PY{p}{)}\PY{p}{)} \PY{p}{\PYZob{}}
-    \PY{n}{d} \PY{o}{=} \PY{o}{!}\PY{n}{d}\PY{p}{;}
-    \PY{n}{l} \PY{o}{=} \PY{n}{cons}\PY{p}{(}\PY{n}{d}\PY{p}{,} \PY{n}{l}\PY{p}{)}\PY{p}{;}
+    \PY{c+c1}{// allocate a new node with alternating value}
+    \PY{n}{var} \PY{n}{z} \PY{o}{=} \PY{n}{alloc}\PY{p}{(}\PY{p}{)}
+    \PY{n}{p\PYZus{}val} \PY{o}{=} \PY{o}{!}\PY{n}{p\PYZus{}val}
+    \PY{n}{set}\PY{p}{(}\PY{n}{z}\PY{p}{,} \PY{n}{p}\PY{p}{)} \PY{o}{=} \PY{n}{p\PYZus{}val}
+    \PY{c+c1}{// append it to the existing list}
+    \PY{n}{y}\PY{o}{\PYZhy{}}\PY{o}{\PYZgt{}}\PY{n}{next} \PY{o}{=} \PY{n}{z}
+    \PY{n}{y} \PY{o}{=} \PY{n}{z}
   \PY{p}{\PYZcb{}}
-  \PY{c+c1}{// LOOP\PYZhy{}CHK: check that the Boolean values alternate.}
-  \PY{k}{while} \PY{p}{(}\PY{n}{l} \PY{o}{!}\PY{o}{=} \PY{n}{NIL}\PY{p}{)} \PY{p}{\PYZob{}}
-    \PY{n}{assert}\PY{p}{(}\PY{n}{l}\PY{o}{\PYZhy{}}\PY{o}{\PYZgt{}}\PY{n}{data} \PY{o}{=}\PY{o}{=} \PY{n}{d}\PY{p}{)}\PY{p}{;}
-    \PY{n}{d} \PY{o}{=} \PY{o}{!}\PY{n}{d}\PY{p}{;}
-    \PY{n}{l} \PY{o}{=} \PY{n}{l}\PY{o}{\PYZhy{}}\PY{o}{\PYZgt{}}\PY{n}{next}\PY{p}{;}
-  \PY{p}{\PYZcb{}}
+  \PY{n+nl}{checkpoint}\PY{p}{:}
+  \PY{c+c1}{// rest of the program}
   \PY{k}{return}\PY{p}{;}
 \PY{p}{\PYZcb{}}
 \end{Verbatim}
