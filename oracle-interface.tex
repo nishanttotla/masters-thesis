@@ -186,6 +186,19 @@ As described in \autoref{defn:heap-pat}, each individual heap can also be presen
 \subsection{Illustrating User Interaction}
 We note that all heaps have a special \nilconst node, which represents the \nullconst address. \nilconst nodes cannot be summary nodes, and have no outgoing edges. In this example, we assume that a program is creating a list with some properties, that the user doesn't really need to know. The user will only be presented with examples, and the user insight is expected based solely on those.
 
+\begin{figure}
+  \centering
+  \input{code/alt-list-simplified.c}
+  \caption{\altlist: a simplified version of an SV-COMP benchmark program that
+    (1) constructs a list with cells that store alternating Boolean values
+    and
+    %
+    (2) checks that the Boolean values in successive cells alternate.
+    %
+  }
+  \label{fig:alt-list-simplified}
+\end{figure}
+
 In this example, we assume only a single predicate $p \in \predvars$ exists, so all node colors only refer to that single predicate. We start with $H^{+} = H^{-} = \{\}$, at which point the user can't provide any insight. It might be worthwhile to have a default candidate be provided by the interface itself at this point, but we still leave it to the user just in case they have additional insight about the program from other sources. Suppose the user just provides a pattern with a single node labeled \nilconst (\autoref{fig:nil-node}).
 
 % Just the nil node.
