@@ -6,9 +6,10 @@ The verification of these systems is done by providing a formal proof on an abst
 
 \section{Software Verification}
 
-The goal of software verification is to assure that software fully satisfies all the expected requirements. Software verification has been successful for improving the quality of computer programs. Several fundamental concepts were invented in the last decade which made it possible to scale the technology from tiny examples to real programs. Predicate abstraction \cite{ball01} with counterexample guided abstraction refinement (CEGAR) \cite{clarke03} and lazy abstraction \cite{henzinger02} is one such set of techniques. Lazy abstraction with Interpolants \cite{mcmillan06} is another approach.
+The goal of software verification is to assure that software fully satisfies all the expected requirements. Software verification has been successful for improving the quality of computer programs. Several fundamental concepts were invented in the last decade which made it possible to scale the technology from tiny examples to real programs. Predicate abstraction \cite{ball01} with counterexample guided abstraction refinement (CEGAR) \cite{clarke03} and lazy abstraction \cite{henzinger02} is one such set of techniques. Lazy abstraction with Interpolants \cite{mcmillan06} is another approach. Several of these approaches are flexible and can be specialized or extended for sub-classes of programs or specifications.
 
-\section{Verifying Heap Programs}
+\section{Verifying Heap-manipulating Programs}
+A heap-manipulating program is one that updates heap memory using low-level memory operations (such as allocating or deallocating memory, or modifying pointers).
 
 \section{Oracle-guided Heap Interpolant Synthesis}
 Traditional formal methods do not scale to the size of software found in modern computer systems. Formal verification also currently requires highly specialized engineers with deep knowledge of software technology and mathematical theorem-proving techniques. These constraints make current formal verification techniques expensive and time-consuming.
