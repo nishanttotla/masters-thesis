@@ -19,24 +19,11 @@ The formal verification community has relentlessly pushed for automation, and it
 
 It might be a while before we have verification systems that don't require any human expertise, but an alternative approach to consider is to change the way humans provide insight to the verifier. Today, mostly domain experts interact with verification tools, but such experts are few and expensive. Besides, even experts might sometimes struggle to make progress at different stages of the algorithm. We believe that the experts and automated tools can be assisted in the verification process by a crowd of non-expert humans performing relatively simpler tasks. Each task might involve pattern recognition or other cognitive operations that humans are typically good at. The main challenges are to recognise steps in the verification process where human insight is useful, find ways to transform these steps into tasks that non-expert humans can perform, and finally combine the results of these tasks to use in the verification process.
 
-Along these lines, our system does .......... .
-
-The idea of tapping into a crowd of humans to assist in a computational
-task is not new. Crowdsourcing is the act of taking a
-job traditionally performed by a designated agent (usually an employee)
-and outsourcing it to an undefined, generally large group
-of people in the form of an open call [7]. Human computation is a
-paradigm for utilizing human processing power to solve problems
-that computers cannot yet solve [15]. (See Quinn and Bederson [12]
-for a more detailed description of these and related terms.) Our proposal
-is to use a combination of crowdsourcing and human computation
-to improve the state-of-the-art in verification. The availability
-of tools like Amazon’s Mechanical Turk [1] and TurKit [10] make
-such a combination easier to deploy today.
+Along these lines, our work in this thesis describes \verifier, an Oracle-guided verification algorithm for proving the safety of heap-manipulating programs. We present an extension of the interpolant-based verification algorithm in \cite{mcmillan06} to work for heaps, along with an interface that collects insight from an external Oracle. In our case, the Oracle is a human user (although it could be any other Oracle that can interact with the verifier). The user plays a graphical game that abstracts away details of the verification algorithm, allowing non-experts to play. Essentially, our system is a verification tool for heap-manipulating programs where crucial input is collected from human users.
 
 \section{Outline}
 
-The rest of this thesis is organized as follows. \autoref{ch:overview} gives a high-level overview of our approach with an example, laying an intuitive foundation for the formal description that follows. \autoref{ch:background} presents an extensive summary of the framework for finding inductive invariants from interpolants, and the Impact algorithm from \cite{mcmillan06}. \autoref{ch:heap-patterns} describes our formalism for representing heaps and heap patterns, and modeling heap-manipulating programs for verification. \autoref{ch:heap-impact-algorithm} gives a detailed description of our main algorithm, as an extension of the Impact algorithm. Our algorithm requires an Oracle, which we have chosen to be a human user, and \autoref{ch:interface-oracle} presents our user interface with some analysis. \autoref{ch:conclusion} discusses related work, and concludes.
+The rest of this thesis is organized as follows. \autoref{ch:overview} gives a high-level overview of our approach with an example, laying an intuitive foundation for the formal description that follows. \autoref{ch:background} presents an extensive summary of the framework for finding inductive invariants from interpolants, and the Impact algorithm from \cite{mcmillan06}. \autoref{ch:heap-patterns} describes our formalism for representing heaps and heap patterns, and modeling heap-manipulating programs for verification. \autoref{ch:heap-impact-algorithm} gives a detailed description of our main algorithm \verifier, as an extension of the Impact algorithm. Our algorithm requires an Oracle, which we have chosen to be a human user, and \autoref{ch:interface-oracle} presents our user interface with some analysis. \autoref{ch:conclusion} discusses related work, and concludes.
 
 \subsubsection{External Collaboration}
 The work in this thesis is part of the collaboration with Somesh Jha\footnote{University of Wisconsin, Madison}, William Harris\footnote{Georgia Institute of Technology}, and Drew Davidson\footnote{University of Wisconsin, Madison}. Somesh and Bill were immensely insightful in helping narrow down the problem domain, while providing constant guidance. Drew was very helpful with implementing our ideas. This work would not have been possible without our several regular weekly discussions.
