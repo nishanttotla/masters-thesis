@@ -273,13 +273,20 @@ After seeing all these examples, the user submits the pattern in \autoref{fig:al
 \section{Analyzing our Interface}
 Our example in \autoref{sec:illustrating-user-interaction} gives one possible user interaction flow for the \altlistsimplified program. In this section, we present a broader discussion of the capabilities and limitations of our interface. This is important to understand what kind of programs can be handled by the heap pattern language and \verifier. They key goal of \verifier is to make it easier to provide a way to input and use unbounded heap patterns.
 
+The visual graphical representation of heap patterns in our interface is based on \autoref{defn:pattern}. While the formalism is more difficult for humans to reason about, graphs are easier to understand. Nonetheless, the utility of our algorithm is limited by two things - (1) the expressiveness of the heap pattern language, and (2) the complexity of patterns that humans can provide. We now discuss these points in more detail.
+
 \subsection{Expressiveness of Heap Patterns}
 \label{sec:expressiveness-of-heap-patterns}
 Some visual examples of heap patterns depicting interesting properties. We don't yet have theoretical results for what class of examples can be expressed by our formalism, but that is future work. Besides, one of the points of demonstrating this is to show that different formalisms can be plugged in to play with expressiveness.
+SV-COMP examples of expressiveness with diagrams
 
 \subsection{Understandability of the Interface}
 \label{sec:understandability-of-interface}
 Describes the backgrounds of the users we asked to use it, and two examples for which they could work out reasonable patterns.
+
+\subsubsection{Complexity of Patterns provided by Users}
+Example users who used our interface
+What they thought
 
 \subsection{Experiments}
 Need better title for this section. Describe what exists in the implementation. (This is also part of Sanjit's feedback).
