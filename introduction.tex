@@ -15,6 +15,68 @@ linked data structures in the form used in low-level code are still missing.
 \section{Oracle-guided Heap Interpolant Synthesis}
 Traditional formal methods do not scale to the size of software found in modern computer systems. This is further exacerbated in the case of heap-manipulating programs. Verification also currently requires highly specialized engineers with deep knowledge of software technology and mathematical theorem-proving techniques. These constraints make current formal verification techniques expensive and time-consuming.
 
+
+
+
+
+The field of electronic design automation (EDA), in general, and
+formal verification, in particular, has relentlessly pushed for automation.
+For several problems, this is indeed the right strategy.
+But for many problems human insight and involvement remain invaluable.
+Consider, for example, the process of verifying a design.
+First of all, one needs to write a specification, typically in the form
+of properties (assertions) or a reference model. Second, one must
+create an environment model, typically in the form of constraints
+on the inputs or a state machine description. Next, one runs the
+verifier, such as a model checker, which is usually thought of as a
+“push-button” technique. While this is largely true, human insight
+is not entirely absent; e.g., one might need to supply hints to the
+verifier in the form of suitable abstraction techniques or (templates
+for) inductive invariants. If the verifier returns with a counterexample
+trace, one must debug the design by localizing the cause of
+error in time (relevant part of the trace) and space (relevant part of
+the design). Finally, the process of repairing the design to eliminate
+the bug is also one that needs human input. To summarize, even
+after decades of work on automating the verification process, we
+continue to need human insight in a variety of tasks, including writing
+specifications, creating models, guiding the verification engine,
+debugging and error localization, and repair.
+This paper takes the position that while we cannot completely
+remove human insight from the verification process, we can change
+the way humans provide insight to the verifier. Today, such input
+typically comes from expert verification engineers, trained in the
+tools of their field. But such experts are few and expensive. And
+even experts have a hard time answering questions such as: When
+are we done verifying? Have we written enough properties? Where
+is the bug? And so on. We contend that the experts and automated
+tools can be assisted in the verification process by a large crowd
+of non-expert humans performing simple and repetitive tasks. Each
+task involves a pattern recognition or other cognitive operations that
+humans are typically good at. The main technical challenges are
+to identify steps in the verification process where human insight is
+critical, find ways to transform these steps into tasks that non-expert
+humans can perform, and combine the results to resolve those steps
+in the verification process. As preliminary evidence to show that
+these challenges can be met, we present a system called CrowdMine
+for finding specifications from traces based on pattern recognition
+by humans.
+The idea of tapping into a crowd of humans to assist in a computational
+task is not new. Crowdsourcing is the act of taking a
+job traditionally performed by a designated agent (usually an employee)
+and outsourcing it to an undefined, generally large group
+of people in the form of an open call [7]. Human computation is a
+paradigm for utilizing human processing power to solve problems
+that computers cannot yet solve [15]. (See Quinn and Bederson [12]
+for a more detailed description of these and related terms.) Our proposal
+is to use a combination of crowdsourcing and human computation
+to improve the state-of-the-art in verification. The availability
+of tools like Amazon’s Mechanical Turk [1] and TurKit [10] make
+such a combination easier to deploy today.
+
+
+
+
+
 The rest of this thesis is organized as follows. \autoref{ch:overview} gives a high-level overview of our approach with an example, laying an intuitive foundation for the formal description that follows. \autoref{ch:background} presents an extensive summary of the framework for finding inductive invariants from interpolants, and the Impact algorithm from \cite{mcmillan06}. \autoref{ch:heap-patterns} describes our formalism for representing heaps and heap patterns, and modeling heap-manipulating programs for verification. \autoref{ch:heap-impact-algorithm} gives a detailed description of our main algorithm, as an extension of the Impact algorithm. Our algorithm requires an Oracle, which we have chosen to be a human user, and \autoref{ch:interface-oracle} presents our user interface with some analysis. \autoref{ch:conclusion} discusses related work, and concludes.
 
 \subsubsection{External Collaboration}
