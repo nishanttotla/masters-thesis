@@ -1,10 +1,29 @@
 \label{ch:intro}
 
-A lot of text about verification. Then some about the problem domain that is heap programs and stuff. And finally what's existing, what's we doin' yo.
+In the context of hardware and software systems, formal verification is the act of proving or disproving the correctness of intended algorithms underlying a system with respect to a certain formal specification or property, using formal methods of mathematics. Formal verification can be helpful in proving the correctness of systems such as: cryptographic protocols, combinational circuits, digital circuits with internal memory, and software expressed as source code. Verification uses a wide variety of techniques, in particular logic calculi, formal languages, automata theory, and program semantics, but also type systems and algebraic data types to problems in software and hardware specification and verification.
 
-Formal methods encompass a wide variety of techniques used to formally model, verify, and prove properties for several different kinds of systems. Many of these techniques are computationally expensive or undecidable. In the case of software, traditional formal methods do not scale to the size of software found in modern computer systems. Formal verification also currently requires highly specialized engineers with deep knowledge of software technology and mathematical theorem-proving techniques. These constraints make current formal verification techniques expensive and time-consuming.
+The verification of these systems is done by providing a formal proof on an abstract mathematical model of the system, the correspondence between the mathematical model and the nature of the system being otherwise known by construction. Examples of mathematical objects often used to model systems are: finite state machines, labeled transition systems, Petri nets, vector addition systems, timed automata, hybrid automata, process algebra, formal semantics of programming languages such as operational semantics, denotational semantics, axiomatic semantics and Hoare logic.
 
 \section{Software Verification}
+
+Software verification is ...
+
+In the case of software, traditional formal methods do not scale to the size of software found in modern computer systems. Formal verification also currently requires highly specialized engineers with deep knowledge of software technology and mathematical theorem-proving techniques. These constraints make current formal verification techniques expensive and time-consuming.
+
+Software verification has been successful for improving
+the quality of computer programs. Several fundamental
+concepts were invented in the last decade which made it
+possible to scale the technology from tiny examples to real
+programs. Predicate abstraction \cite{ball01} with counterexample guided
+abstraction refinement (CEGAR) \cite{clarke03} and lazy abstraction
+\cite{henzinger02} is one such technique. It was made popular
+by the tools SLAM [6] and BLAST [9], and is implemented
+in a number of other tools. Lazy abstraction with interpolants
+[20] is another approach, which is implemented in
+the tools IMPACT, WOLVERINE [24], and UFO [3]. More than
+half of the participants in the first competition on software
+verification [7], and almost all of those that are not based on
+bounded model checking, use one of these two concepts.
 
 \section{Verifying Heap Programs}
 
