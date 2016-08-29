@@ -80,6 +80,7 @@ along, making the visualization a graph built on top of an underlying force-dire
 graph drawing algorithm.
 
 \subsubsection{Advantages and Disadvantages of Force-directed graphs}
+\label{sec:advantages-disadvantages-force-directed-graphs}
 We chose force-directed graphs because they are designed for drawing graphs in an
 aesthetically pleasing way, especially ones for which structure is unknown beforehand.
 Our positive and negative heap examples are often large and have diverse structures, and
@@ -524,16 +525,17 @@ open it up to more users, perhaps with lesser expertise.
 
 \subsubsection{Feedback about the Interface}
 Based on the experience of our small set of users in
-\autoref{sec:understandability-of-interface}, we received interesting feedback that it
-would make sense to address as part of future work.
+\autoref{sec:understandability-of-interface}, we received interesting feedback that
+would make sense to address as part of future work. The key points are listed here
 
 \begin{enumerate}
-  \item force-directed non static nodes are harder to understand if graph layout changes significantly. Orientation of examples needs to be worked on.
-  \item summary nodes aren't entirely clear, and it's hard to think about mappings between summary and individual heap nodes. Perhaps live feedback is needed on a finer level of granularity.
-  \item Predicates need to be presented in a better way, than just coloring a full node, because for programs with larger number of predicates, it's hard to give a pattern. Even though we didn't really have examples to this effect, this is a valid point.
+  \item As seen in \autoref{fig:several-positive-examples} and also noted earlier in \autoref{sec:advantages-disadvantages-force-directed-graphs}, force-directed graph layouts aren't fully static, and can change even when only local alterations are made to the graph. While an aesthetic automated layout is desirable, some users complained about the lack of consistency in the rendering, leading to difficulties in fully understanding all examples. We need to fix this by using alternative layout algorithms, or modifying our force-directed layout to render in a more predictable manner.
+  \item One user found it hard to fully grasp the idea of summary nodes. While it was clear that summary nodes need to be able to represent multiple concrete nodes in individual heaps, it wasn't entirely easy to visualize this.
+  \item Some users pointed out that for programs with larger number of predicates, our scheme of coloring nodes based on selected predicate and its value could become difficult to understand. This is true, and so far all our examples have worked out with up to two or three predicates, but we'd like to think of a more natural way of representing predicate values in the future.
+  \item Everyone felt that it would be really helpful to have live feedback on the pattern being built by the user. Right now, the user constructs a heap pattern and submits it, and then gets to know of a positive example not matched by it, or a negative example matched by it. For more complex programs, it would be useful to have a measure of ``progress'' that would allow users to make a more directed effort towards providing the right pattern, rather than just having to make a guess. This is a challenging problem, and worth thinking about. This is even before the pattern is even submitted to the verifier, which might add more examples.
 \end{enumerate}
 
-\subsection{Experiments}
+\subsection{Overall Implementation}
 Need better title for this section. Describe what exists in the implementation.
 (This is also part of Sanjit's feedback).
 
