@@ -536,10 +536,12 @@ would make sense to address as part of future work. The key points are listed he
 \end{enumerate}
 
 \subsection{Overall Implementation}
-Our first-cut implementation for \verifier has the following features
+We now briefly describe our first-cut implementation of \verifier. It is meant to be
+a simple proof of concept. Here are some of its features.
 
 \begin{enumerate}
-  \item \expand \refine \cover based on CPAChecker's Impact.
+  \item The three key steps of \verifier are \expandp (\autoref{alg:heap-expand}), \refinep (\autoref{alg:heap-refine}), and \coverp (\autoref{alg:heap-cover}). We built these on top of the \impact algorithm in \cpachecker, which is a great tool for configurable software verification. \cpachecker is a generic framework that can support a lot of verification algorithms \cite{cpachecker}, and has a good implementation of the \impact algorithm from \cite{mcmillan06}. We were able to extend it by implementing the heap and heap pattern formalism in \cpachecker, and annotating nodes with heap patterns instead of predicates.
+  \item \expand \refine \cover based on \cpachecker \cite{cpachecker} Impact.
   \item our algorithms not implemented fully
   \item predicates provided manually
   \item oracle interface implemented fully
