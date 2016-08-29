@@ -26,7 +26,6 @@ As defined in \autoref{defn:labeled-heap-prog-unwinding}, a labeled unwinding of
 \subsection{Postcondition Transforms for Heap Operations}
 In addition to the previous definitions, we define the operator $\post$, which will be used for generating examples to interact with the Oracle. $\post$ is an operator for computing strongest postconditions for heap patterns modified by \lang instructions.
 
-% define labeled program unwinding
 \begin{defn}
   \label{defn:heap-post-transforms}
   The operator $\post$, which computes the strongest postcondition for a given heap pattern, and action. That is $\post : \heappats \times \mathcal{T} \to \heappats$, where $\mathcal{T}$ is the set of all actions.
