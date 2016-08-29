@@ -523,9 +523,15 @@ we received constructive feedback that would help improve the interface, and pos
 open it up to more users, perhaps with lesser expertise.
 
 \subsubsection{Feedback about the Interface}
-non static nodes
-confusion about summary
-present predicates in a better way than having to select one and display (doesn't work with multiple predicates that well)
+Based on the experience of our small set of users in
+\autoref{sec:understandability-of-interface}, we received interesting feedback that it
+would make sense to address as part of future work.
+
+\begin{enumerate}
+  \item force-directed non static nodes are harder to understand if graph layout changes significantly. Orientation of examples needs to be worked on.
+  \item summary nodes aren't entirely clear, and it's hard to think about mappings between summary and individual heap nodes. Perhaps live feedback is needed on a finer level of granularity.
+  \item Predicates need to be presented in a better way, than just coloring a full node, because for programs with larger number of predicates, it's hard to give a pattern. Even though we didn't really have examples to this effect, this is a valid point.
+\end{enumerate}
 
 \subsection{Experiments}
 Need better title for this section. Describe what exists in the implementation.
