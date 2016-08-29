@@ -481,7 +481,7 @@ with structures such as doubly linked lists, trees, and even other shapes that a
 common.
 
 We now demonstrate some interesting patten graphs, some of which are related to examples
- featured in the SV-COMP \cite{sv-comp} benchmarks.
+featured in the SV-COMP \cite{sv-comp} benchmarks.
 % https://github.com/sosy-lab/sv-benchmarks/tree/svcomp15/c/list-properties
 
 \subsubsection{Reachability}
@@ -496,23 +496,36 @@ The pattern will be too general, but might work
 \subsubsection{Two-part List}
 a*b*NIL
 
-The last few examples show that several useful properties can be expressed using our
-framework. In the future, we would like to explore whether our heap pattern formalism
-has an equivalent in logic for describing heaps. At the same time, we note that
-\verifier itself is not strictly tied down to a single formalism, and it is possible to
-annotate nodes in the unwinding tree with other kinds of structures or formulas, and
-provide an Oracle that can work with them.
+The last few examples show that useful properties related to heap data structures can be
+expressed using our framework. In the future, we would like to explore whether our heap
+pattern formalism has an equivalent in logic for describing heaps. At the same time, we
+note that \verifier itself is not strictly tied down to a single formalism, and it is
+possible to annotate nodes in the unwinding tree with other kinds of structures or
+formulas, and provide an Oracle that can work with them.
 
 \subsection{Understandability of the Interface}
 \label{sec:understandability-of-interface}
-While our interface has not been tested on a large scale, we let six different users try
+While our interface has not been tested at a large scale, we let six different users try
 it out. All of them had a computer science/electrical engineering undergraduate degree
 with programming experience. Three users were graduate students in computer science,
 while three others were software engineers.
 
-Describe two examples for which they could work out reasonable patterns.
+We showed them two different examples. The first one was the alternating list example
+illustrated in \autoref{sec:illustrating-user-interaction}. Three out of six users settled
+on the pattern shown in \autoref{fig:right-pattern}. Two users provided a less abstract
+pattern, which still satisfied our conditions based on the presented examples, while one
+user struggled to find a pattern at first, being confused by the definition of summary
+nodes. The second example we presented after the previous one was the simple reachability
+example described in \autoref{sec:expressiveness-of-heap-patterns}, and all users were
+able to describe the pattern we had in mind. While our interface obviously needs a lot
+more testing and results at a larger scale, the initial experience was encouraging, and
+we received constructive feedback that would help improve the interface, and possibly
+open it up to more users, perhaps with lesser expertise.
 
 \subsubsection{Feedback about the Interface}
+non static nodes
+confusion about summary
+present predicates in a better way than having to select one and display (doesn't work with multiple predicates that well)
 
 \subsection{Experiments}
 Need better title for this section. Describe what exists in the implementation.
