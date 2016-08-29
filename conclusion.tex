@@ -1,6 +1,8 @@
 \label{ch:conclusion}
 
-In this chapter, we briefly describe existing verification approaches, how they differ from our Oracle-guided approach, and summarize the contributions in this thesis.
+In this chapter, we briefly describe existing verification approaches, how they differ
+from our Oracle-guided approach, and summarize the contributions in this thesis.
+
 \section{Related Work}
 \label{sec:related-work}
 
@@ -40,39 +42,107 @@ heap graphs.
 
 \paragraph{Predicate Abstraction}
 % Predicate Abstraction:
-Predicate abstraction is an abstract interpretation technique in which the abstract domain is constructed from a given set of predicates over program variables. The concrete states of a system are mapped to abstract states according to their evaluation under a finite set of predicates. Automatic predicate abstraction algorithms have been designed and implemented before for finite and for infinite state systems. Predicate abstraction is well established in the literature \cite{ball01,henzinger02,henzinger04}. The primary limitation with most of these techniques is that predicates in logic cannot describe shapes.
+Predicate abstraction is an abstract interpretation technique in which the abstract
+domain is constructed from a given set of predicates over program variables. The concrete
+states of a system are mapped to abstract states according to their evaluation under a
+finite set of predicates. Automatic predicate abstraction algorithms have been designed
+and implemented before for finite and for infinite state systems. Predicate abstraction
+is well established in the literature \cite{ball01,henzinger02,henzinger04}. The primary
+limitation with most of these techniques is that predicates in logic cannot describe
+shapes.
 % Us:
-\verifier uses predicates to annotate heap patterns, relying on other technique to infer these predicates beforehand. Predicate abstraction is useful to do that, although we need more investigation into how to use it to infer the right predicates for our technique in a directed way and efficiently.
+\verifier uses predicates to annotate heap patterns, relying on other technique to infer
+these predicates beforehand. Predicate abstraction is useful to do that, although we
+need more investigation into how to use it to infer the right predicates for our
+technique in a directed way and efficiently.
 
 \paragraph{Interpolation}
 % Interpolation
-Interpolants have been widely studied and used in model checking and software verification. In various contexts, interpolation can be used as a substitute for image computation, which involves quantifier elimination and is thus computationally expensive. The idea is to replace the image with a weaker approximation that is still strong enough to prove some property, helping to construct and inductive invariant. Interpolant based techniques typically examine symbolic executions (finite paths) through the program, explicitly enumerating paths and employing heuristics to avoid path explosion \cite{albarghouthi12,heizmann10,mcmillan06,rummer13}. Some of them use other optimizations to cover wider search spaces, or compute invariants more efficiently. \verifier also uses the notion of interpolants applied to sequences, but specifically for heap patterns. Existing techniques don't work for this case because they deal with formulas that cannot desribe heaps or shapes in memory.
+Interpolants have been widely studied and used in model checking and software
+verification. In various contexts, interpolation can be used as a substitute for image
+computation, which involves quantifier elimination and is thus computationally
+expensive. The idea is to replace the image with a weaker approximation that is still
+strong enough to prove some property, helping to construct and inductive invariant.
+Interpolant based techniques typically examine symbolic executions (finite paths)
+through the program, explicitly enumerating paths and employing heuristics to avoid path
+explosion \cite{albarghouthi12,heizmann10,mcmillan06,rummer13}. Some of them use other
+optimizations to cover wider search spaces, or compute invariants more efficiently.
+\verifier also uses the notion of interpolants applied to sequences, but specifically
+for heap patterns. Existing techniques don't work for this case because they deal with
+formulas that cannot desribe heaps or shapes in memory.
 % Us
 
 \paragraph{Active Learning}
 % Active learning
-Active learning has explored as yet another technique, which is particularly useful for dealing with verification of data structures. The framework proposed in \cite{garg13} can model quantified invariants over linear data structures, and build poly-time active learning algorithms for them, where the learner is allowed to query the teacher with membership and equivalence queries.
+Active learning has explored as yet another technique, which is particularly useful for
+dealing with verification of data structures. The framework proposed in \cite{garg13}
+can model quantified invariants over linear data structures, and build poly-time active
+learning algorithms for them, where the learner is allowed to query the teacher with
+membership and equivalence queries.
 % Madhu's paper: only works on bounded tuples of lists
 % Us
 
 \paragraph{Shape Analysis}
-In program analysis, a shape analysis is a static code analysis technique that discovers and verifies properties of linked, dynamically allocated data structures in (usually imperative) computer programs. It has been applied to a variety of problems, including memory safety and checking state properties. For example, proving that two data structures cannot access the same piece of memory, or discriminating between cyclic and acyclic lists. Separation logic \cite{calcagano11,reynolds02} is one component of existing work on shape analysis. It extends the simple imperative programming language with commands (not expressions) for accessing and modifying shared structures, and for explicit allocation and deallocation of storage. Assertions are extended by introducing a ``separating conjunction'' that asserts that its subformulas hold for disjoint parts of the heap, and a closely related ``separating implication''. Coupled with the inductive definition of predicates on abstract data structures, this extension permits the concise and flexible description of
-structures with controlled sharing. Separation logic is quite expressive, but the major challenge lies in finding a suitable decidable sub-logic that is expressive enough for a given domain.
+In program analysis, a shape analysis is a static code analysis technique that discovers
+and verifies properties of linked, dynamically allocated data structures in (usually
+imperative) computer programs. It has been applied to a variety of problems, including
+memory safety and checking state properties. For example, proving that two data
+structures cannot access the same piece of memory, or discriminating between cyclic and
+acyclic lists. Separation logic \cite{calcagano11,reynolds02} is one component of
+existing work on shape analysis. It extends the simple imperative programming language
+with commands (not expressions) for accessing and modifying shared structures, and for
+explicit allocation and deallocation of storage. Assertions are extended by introducing
+a ``separating conjunction'' that asserts that its subformulas hold for disjoint parts
+of the heap, and a closely related ``separating implication''. Coupled with the
+inductive definition of predicates on abstract data structures, this extension permits
+the concise and flexible description of structures with controlled sharing. Separation
+logic is quite expressive, but the major challenge lies in finding a suitable decidable
+sub-logic that is expressive enough for a given domain.
 
-In addition to the logic approach, memory graphs have been extensively explored for shape analysis. A parametric framework for shape analysis was presented in \cite{sagiv02}, which can be instantiated in different ways to create shape-analysis algorithms that provide varying degrees of efficiency and precision. It also proposed three-valued logic structures, an idea we extensively use to model heap patterns in our work. Symbolic Memory Graphs (SMGs) \cite{dudka13} are another effective approach, particularly for modeling extremely low-level operations. The heap patterns used in \verifier are partially inspired by SMGs, but work at a higher level that is more suitable for an external Oracle, and in an interpolation-based verification framework.
+In addition to the logic approach, memory graphs have been extensively explored for
+shape analysis. A parametric framework for shape analysis was presented in
+\cite{sagiv02}, which can be instantiated in different ways to create shape-analysis
+algorithms that provide varying degrees of efficiency and precision. It also proposed
+three-valued logic structures, an idea we extensively use to model heap patterns in our
+work. Symbolic Memory Graphs (SMGs) \cite{dudka13} are another effective approach,
+particularly for modeling extremely low-level operations. The heap patterns used in
+\verifier are partially inspired by SMGs, but work at a higher level that is more
+suitable for an external Oracle, and in an interpolation-based verification framework.
 % Us
 
 \paragraph{Crowdsourcing for Formal Methods}
 % Other examples of humans as oracles
-The idea of using human input for assisting in computational tasks is not new. Human computation is a paradigm for utilizing human processing power to solve problems that computers cannot yet solve \cite{vonahn2005, quinn2011}. Formal verification techniques are currently computationally expensive/undecidable, or require highly specialized engineers with deep knowledge of software technology and mathematical theorem-proving techniques, making them expensive and time-consuming. CrowdMine \cite{wenchao2012} is a game devised for finding patterns from system traces that can suggest likely specifications. It transforms segments of a program trace into 2D images and then displays a small subset of them to a non-expert crowd in the form of a puzzle game, using the input to infer program specifications. A similar idea is present in \cite{ernst2012}, but the focus in on verifying security properties, which is achieved by having users play a game with ball-and-pipe puzzles.
+The idea of using human input for assisting in computational tasks is not new. Human
+computation is a paradigm for utilizing human processing power to solve problems that
+computers cannot yet solve \cite{vonahn2005, quinn2011}. Formal verification techniques
+are currently computationally expensive/undecidable, or require highly specialized
+engineers with deep knowledge of software technology and mathematical theorem-proving
+techniques, making them expensive and time-consuming. CrowdMine \cite{wenchao2012} is a
+game devised for finding patterns from system traces that can suggest likely
+specifications. It transforms segments of a program trace into 2D images and then
+displays a small subset of them to a non-expert crowd in the form of a puzzle game,
+using the input to infer program specifications. A similar idea is present in
+\cite{ernst2012}, but the focus in on verifying security properties, which is achieved
+by having users play a game with ball-and-pipe puzzles.
 
-The Crowd Sourced Formal Verification (CSFV) program by DARPA\footnote{Defense Advanced Research Projects Agency} is yet another major effort to investigate whether large numbers of non-experts can perform formal verification faster and more cost-effectively than conventional processes. The effort has produced some interesting games, which are listed under Verigames \cite{verigames}.
+The Crowd Sourced Formal Verification (CSFV) program by
+DARPA\footnote{Defense Advanced Research Projects Agency} is yet another major effort to
+investigate whether large numbers of non-experts can perform formal verification faster
+and more cost-effectively than conventional processes. The effort has produced some
+interesting games, which are listed under Verigames \cite{verigames}.
 
-Some other work includes \cite{pastore2013} which uses human input as test oracles for software testing, \cite{lebras2013} which uses human domain-knowledge about a given SAT formula to obtain backdoor variables for the SAT formula, and \cite{fast2013} which is a system for creating, grading, and analyzing derivation assignments across arbitrary formal
-domains. Thus students act as users and the system checks their assignments (proofs) for correctness.
+Some other work includes \cite{pastore2013} which uses human input as test oracles for
+software testing, \cite{lebras2013} which uses human domain-knowledge about a given SAT
+formula to obtain backdoor variables for the SAT formula, and \cite{fast2013} which is a
+system for creating, grading, and analyzing derivation assignments across arbitrary
+formal domains. Thus students act as users and the system checks their assignments
+(proofs) for correctness.
 
-Crowdsourcing has been successfully used in other areas as well. Eyewire \cite{eyewire} is a popular example. Gameplay involves 3D puzzles and advances neuroscience by helping researchers discover how neurons connect to process visual information. Solving puzzles actually reconstructs 3D models of neurons. Eyewire requires no scientific background to play.
-
+Crowdsourcing has been successfully used in other areas as well. Eyewire \cite{eyewire}
+is a popular example. Gameplay involves 3D puzzles and advances neuroscience by helping
+researchers discover how neurons connect to process visual information. Solving puzzles
+actually reconstructs 3D models of neurons. Eyewire requires no scientific background to
+play.
 % Also proceedings of HCOMP over the last four years.
 % Us
 
@@ -86,4 +156,13 @@ Our work can be summarized using the following key ideas:
   \item We demonstrated one example of such an Oracle - a human user who is good at generalizing shapes, and can provide valuable insight to help find heap interpolants.
 \end{enumerate}
 
-Our framework is very general, in the sense that it allows for any kind of ``pattern'' formalism to be used alongside a domain expert Oracle. This provides two advantages. Firstly, it makes it very easy to try a simple interpolation-based verification algorithm for a new domain, where one might not have good automated techniques for generalization, but good ``intuitive'' understanding about it. Secondly, it simplifies plugging in different Oracles into an existing verification algorithm, allowing for broader possible insight into the analysis. It is easy to extend this to the case of allowing for multiple Oracles working side by side in a single analysis, providing complementary insight into a verification problem. In the future, a theoretical analysis of Oracle-guided verification algorithms would be an interesting direction.
+Our framework is very general, in the sense that it allows for any kind of ``pattern''
+formalism to be used alongside a domain expert Oracle. This provides two advantages.
+Firstly, it makes it very easy to try a simple interpolation-based verification
+algorithm for a new domain, where one might not have good automated techniques for
+generalization, but good ``intuitive'' understanding about it. Secondly, it simplifies
+plugging in different Oracles into an existing verification algorithm, allowing for
+broader possible insight into the analysis. It is easy to extend this to the case of
+allowing for multiple Oracles working side by side in a single analysis, providing
+complementary insight into a verification problem. In the future, a theoretical analysis
+of Oracle-guided verification algorithms would be an interesting direction.
