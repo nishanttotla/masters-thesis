@@ -279,8 +279,9 @@ The visual graphical representation of heap patterns in our interface is based o
 \label{sec:expressiveness-of-heap-patterns}
 In \autoref{fig:right-pattern}, we saw a heap pattern representing an alternating list. While the pattern may not be able to perfectly capture all kinds of alternating lists, it was sufficient for the example at hand. Similarly, whether or not a pattern is sufficient depends significantly on the requirements of the underlying verification algorithm and the property to be proved.
 
-Some visual examples of heap patterns depicting interesting properties. We don't yet have theoretical results for what class of examples can be expressed by our formalism, but that is future work. Besides, one of the points of demonstrating this is to show that different formalisms can be plugged in to play with expressiveness.
 SV-COMP examples of expressiveness with diagrams
+
+The last few examples show that several useful properties can be expressed using our framework. In the future, we would like to explore whether our heap pattern formalism has an equivalent in logics for describing heaps. At the same time, we note that \verifier itself is not strictly tied down to a single formalism, and it is possible to annotate nodes in the unwinding tree with other kinds of structures or formulas, and provide an Oracle that can work with them.
 
 \subsection{Understandability of the Interface}
 \label{sec:understandability-of-interface}
