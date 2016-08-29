@@ -214,9 +214,20 @@ takes care of such constraints as follows:
 \end{figure}
 
 \subsubsection{Modifying the Predicate Variable Labeling}
-We briefly described the mechanism for updating the predicate variable labeling in \autoref{ex:basic-graph-interface}. The interface itself is simple, as shown in \autoref{fig:basic-graph-interface}. In addition, there are some features that make it simpler to keep track of assignments.
+We briefly described the mechanism for updating the predicate variable labeling in
+\autoref{ex:basic-graph-interface}. The interface itself is simple, as shown in
+\autoref{fig:basic-graph-interface}. In addition, there are some features that make it
+simpler to keep track of assignments.
 
-The predicate variable labeling is a map $\predlblnm: \nodesnm \times \predvars \to \threevals$, meaning that each pair of node and predicate variable must have a value. To indicate the current assignment, we use color coding for the nodes - $\predlblnm(n, p) = \true$ imples green, $\predlblnm(n, p) = \false$ imples red, and $\predlblnm(n, p) = \maybe$ implies light pink. Notice that the pattern graph can have multiple predicates available at a time, so the color coding depends on a predicate that is ``live'' at a given time. Predicates can be made live by simply selecting them in the interface shown in \autoref{fig:basic-graph-interface}.
+The predicate variable labeling is a map
+$\predlblnm: \nodesnm \times \predvars \to \threevals$, meaning that each pair of node
+and predicate variable must have a value. To indicate the current assignment, we use
+color coding for the nodes - $\predlblnm(n, p) = \true$ imples green,
+$\predlblnm(n, p) = \false$ imples red, and $\predlblnm(n, p) = \maybe$ implies light
+pink. Notice that the pattern graph can have multiple predicates available at a time, so
+the color coding depends on a predicate that is ``live'' at a given time. Predicates can
+be made live by simply selecting them in the interface shown in
+\autoref{fig:basic-graph-interface}.
 
 % Figure illustrating pred var modification.
 \begin{figure}
@@ -230,7 +241,16 @@ The predicate variable labeling is a map $\predlblnm: \nodesnm \times \predvars 
 \autoref{fig:modifying-pred-vars} illustrates how predicate variable labeling looks.
 
 \subsubsection{Modifying Edges}
-Edges are represented by the map $\edgesnm: \nodesnm \times \fields \times \nodesnm \to \threevals$. For our case, since we're only dealing with a single field in the interface, the map can be simplified to $\edgesnm: \nodesnm \times \nodesnm \to \threevals$, meaning that each pair of nodes have an edge between them in either direction. For two nodes $m, n$, $\edgesnm(m, n) = \true$ implies that a green edge exists pointing from $m$ to $n$. $\edgesnm(m, n) = \maybe$ implies that the edge is light pink instead. If $\edgesnm(m, n) = \false$, then this is indicated by the absence of an edge. Once again, this is to make sure that the pattern graph isn't overly cluttered because of too many $\false$ edges. An edge is also a link for the force-directed graph in D3.
+Edges are represented by the map
+$\edgesnm: \nodesnm \times \fields \times \nodesnm \to \threevals$. For our case, since
+we're only dealing with a single field in the interface, the map can be simplified to
+$\edgesnm: \nodesnm \times \nodesnm \to \threevals$, meaning that each pair of nodes
+have an edge between them in either direction. For two nodes
+$m, n$, $\edgesnm(m, n) = \true$ implies that a green edge exists pointing from $m$ to
+$n$. $\edgesnm(m, n) = \maybe$ implies that the edge is light pink instead. If
+$\edgesnm(m, n) = \false$, then this is indicated by the absence of an edge. Once again,
+this is to make sure that the pattern graph isn't overly cluttered because of too many
+$\false$ edges. An edge is also a link for the force-directed graph in D3.
 
 Interacting with edges is fairly simple:
 \begin{itemize}
@@ -251,9 +271,13 @@ Interacting with edges is fairly simple:
   \label{fig:modifying-edges}
 \end{figure}
 
-Edges are normally straight, but bidirectional edges are rounded for better visibility. \autoref{fig:modifying-edges} illustrates how the interface allows for interaction with edges.
+Edges are normally straight, but bidirectional edges are rounded for better visibility.
+\autoref{fig:modifying-edges} illustrates how the interface allows for interaction with
+edges.
 
-Just like $\varlblnm$, $\edgesnm$ is not allowed to have arbitrary assignments. For instance, a $\true$ edge going out from a node implies that there cannot be any other edge going out of the same node. Our interface takes care of such constraints as follows:
+Just like $\varlblnm$, $\edgesnm$ is not allowed to have arbitrary assignments. For
+instance, a $\true$ edge going out from a node implies that there cannot be any other
+edge going out of the same node. Our interface takes care of such constraints as follows:
 
 \begin{itemize}
   \item Setting an edge (from node $m$ to $n$) to $\true$ sets all outgoing edges from $m$ $\false$ automatically i.e. deletes them.
@@ -273,7 +297,10 @@ Just like $\varlblnm$, $\edgesnm$ is not allowed to have arbitrary assignments. 
 \autoref{fig:edge-constraints} illustrates how constraints on $\edgesnm$ are enforced by the interface.
 
 \subsubsection{Modifying the Summary Function}
-The summary function $\sigma: \nodesnm \to \bools$ indicates where a node is a summary node. Our interface indicates summary nodes by making them larger than other nodes. Selecting a node and pressing the S key toggles the value of $\sigma$ for that node. \autoref{fig:summary-nodes} illustrates an example of this.
+The summary function $\sigma: \nodesnm \to \bools$ indicates where a node is a summary
+node. Our interface indicates summary nodes by making them larger than other nodes.
+Selecting a node and pressing the S key toggles the value of $\sigma$ for that node.
+\autoref{fig:summary-nodes} illustrates an example of this.
 
 % Figure illustrating pred var modification.
 \begin{figure}
@@ -285,7 +312,9 @@ The summary function $\sigma: \nodesnm \to \bools$ indicates where a node is a s
 \end{figure}
 
 \section{User Interaction}
-The generated patterns are used by the \verifier algorithm as candidates for annotating vertices in the program unwinding tree. The following steps describe how interaction with the user works. We will later elaborate the same with an example.
+The generated patterns are used by the \verifier algorithm as candidates for annotating
+vertices in the program unwinding tree. The following steps describe how interaction
+with the user works. We will later elaborate the same with an example.
 
 \begin{enumerate}
   \item At any point, interaction with the Oracle (human user) is limited to requested patterns for a single vertex of the program unwinding tree.
@@ -295,11 +324,19 @@ The generated patterns are used by the \verifier algorithm as candidates for ann
   \item If the pattern is not accepted, one or both of $H^{+}$ or $H^{-}$ are updated, and the user needs to update the provided pattern. Return to Step 3.
 \end{enumerate}
 
-As described in \autoref{defn:heap-pat}, each individual heap can also be presented as a pattern that represents exactly that heap. As a result, all the individual heaps in $H^{+}$ and $H^{-}$ are also patterns, but with limited properties and and no $\maybe$ assignments to variables and edges, and no summary nodes. We now present an example to illustrate how the above steps work.
+As described in \autoref{defn:heap-pat}, each individual heap can also be presented as a
+pattern that represents exactly that heap. As a result, all the individual heaps in
+$H^{+}$ and $H^{-}$ are also patterns, but with limited properties and and no $\maybe$
+assignments to variables and edges, and no summary nodes. We now present an example to
+illustrate how the above steps work.
 
 \subsection{Illustrating User Interaction}
 \label{sec:illustrating-user-interaction}
-We note that all heaps have a special \nilconst node, which represents the \nullconst address. \nilconst nodes cannot be summary nodes, and have no outgoing edges. In this example, we consider the program \altlistsimplified in \autoref{fig:alt-list-simplified} that creates a linked list with alternating $\true$ and $\false$ values for the predicate $p$.
+We note that all heaps have a special \nilconst node, which represents the \nullconst
+address. \nilconst nodes cannot be summary nodes, and have no outgoing edges. In this
+example, we consider the program \altlistsimplified in \autoref{fig:alt-list-simplified}
+that creates a linked list with alternating $\true$ and $\false$ values for the
+predicate $p$.
 
 \begin{figure}
   \centering
@@ -308,7 +345,14 @@ We note that all heaps have a special \nilconst node, which represents the \null
   \label{fig:alt-list-simplified}
 \end{figure}
 
-The user is not expected to know what the program or the verification algorithm does, and will only be presented with examples. User insight is expected based solely on those. We assume that only a single predicate $p \in \predvars$ exists, so all node colors only refer to that single predicate. We start with $H^{+} = H^{-} = \{\}$, at which point the user can't really provide any insight. It might be worthwhile to have a default candidate be provided by the interface itself at this point, but we still leave it to the user just in case they have additional insight about the program from other sources. Suppose the user just provides a pattern with a single node labeled \nilconst (\autoref{fig:nil-node}).
+The user is not expected to know what the program or the verification algorithm does,
+and will only be presented with examples. User insight is expected based solely on
+those. We assume that only a single predicate $p \in \predvars$ exists, so all node
+colors only refer to that single predicate. We start with $H^{+} = H^{-} = \{\}$, at
+which point the user can't really provide any insight. It might be worthwhile to have a
+default candidate be provided by the interface itself at this point, but we still leave
+it to the user just in case they have additional insight about the program from other
+sources. Suppose the user just provides a pattern with a single node labeled \nilconst (\autoref{fig:nil-node}).
 
 % Just the nil node.
 \begin{figure}
@@ -320,7 +364,11 @@ The user is not expected to know what the program or the verification algorithm 
   \label{fig:nil-node}
 \end{figure}
 
-At this point, we get a new concrete heap back from the verifier (\autoref{fig:nil-node}). The user once again tries to respond in a simple way by providing the heap returned by the verifier as a pattern (\autoref{fig:nil-node}). In response to the pattern provided by the user, the verifier returns a new heap as part of $H^{+}$, shown in \autoref{fig:positive-examples}.
+At this point, we get a new concrete heap back from the verifier (\autoref{fig:nil-node}
+). The user once again tries to respond in a simple way by providing the heap returned
+by the verifier as a pattern (\autoref{fig:nil-node}). In response to the pattern
+provided by the user, the verifier returns a new heap as part of $H^{+}$, shown in
+\autoref{fig:positive-examples}.
 
 % Some positive examples.
 \begin{figure}
@@ -331,7 +379,13 @@ At this point, we get a new concrete heap back from the verifier (\autoref{fig:n
   \label{fig:positive-examples}
 \end{figure}
 
-Now is the first time the user needs to think of a non-trivial pattern, because the two heaps we have in $H^{+}$ are very different. At this point, the user makes two attempts, a wrong one and a right one, and we describe what happens in each case in \autoref{fig:pattern-attempts}. The right pattern uses a summary node, because summary nodes can abstract out zero or more concrete nodes. Similarly, $\maybe$ edges are used to indicate that the edge may or may not actually exist in a concrete pattern represented by the heap pattern.
+Now is the first time the user needs to think of a non-trivial pattern, because the two
+heaps we have in $H^{+}$ are very different. At this point, the user makes two attempts,
+a wrong one and a right one, and we describe what happens in each case in
+\autoref{fig:pattern-attempts}. The right pattern uses a summary node, because summary
+nodes can abstract out zero or more concrete nodes. Similarly, $\maybe$ edges are used
+to indicate that the edge may or may not actually exist in a concrete pattern
+represented by the heap pattern.
 
 % Some candidates.
 \begin{figure}
@@ -342,7 +396,12 @@ Now is the first time the user needs to think of a non-trivial pattern, because 
   \label{fig:pattern-attempts}
 \end{figure}
 
-After several back and forth interactions with the verifier, we might end up in a state where we have several positive examples, as shown in in \autoref{fig:several-positive-examples}. The user now begins to get an idea of what the program might actually be doing at this program location. It looks like the program constructs ``alternating'' linked lists that always start with a node where the predicate is $\true$. The heap variable $x$ acts as the head of the list.
+After several back and forth interactions with the verifier, we might end up in a state
+where we have several positive examples, as shown in in
+\autoref{fig:several-positive-examples}. The user now begins to get an idea of what the
+program might actually be doing at this program location. It looks like the program
+constructs ``alternating'' linked lists that always start with a node where the
+predicate is $\true$. The heap variable $x$ acts as the head of the list.
 
 % Some positive examples.
 \begin{figure}
@@ -356,7 +415,14 @@ After several back and forth interactions with the verifier, we might end up in 
   \label{fig:several-positive-examples}
 \end{figure}
 
-After seeing all these examples, the user submits the pattern in \autoref{fig:almost-right-pattern}, hoping that it would be accepted by the verifier. It might well be, depending on what state the verifier is in. But in our example, the pattern provided by the user turns out to be too general, and the verifier returns a negative example for the first time. Finally, $H^{-}$ is non-empty, as looks as shown in \autoref{fig:negative-example}. Picking up on this, the user makes a correction, submitting the pattern in \autoref{fig:right-pattern}, which is finally accepted by the verifier.
+After seeing all these examples, the user submits the pattern in
+\autoref{fig:almost-right-pattern}, hoping that it would be accepted by the verifier. It
+might well be, depending on what state the verifier is in. But in our example, the
+pattern provided by the user turns out to be too general, and the verifier returns a
+negative example for the first time. Finally, $H^{-}$ is non-empty, as looks as shown in
+\autoref{fig:negative-example}. Picking up on this, the user makes a correction,
+submitting the pattern in \autoref{fig:right-pattern}, which is finally accepted by the
+verifier.
 
 % Almost right pattern.
 \begin{figure}
