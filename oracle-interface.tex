@@ -271,15 +271,39 @@ After seeing all these examples, the user submits the pattern in \autoref{fig:al
 \end{figure}
 
 \section{Analyzing our Interface}
-Our example in \autoref{sec:illustrating-user-interaction} gives one possible user interaction flow for the \altlistsimplified program. In this section, we present a broader discussion of the capabilities and limitations of our interface. This is important to understand what kind of programs can be handled by the heap pattern language and \verifier. They key goal of \verifier is to make it easier to provide a way to input and use unbounded heap patterns.
+Our example in \autoref{sec:illustrating-user-interaction} gives one possible user
+interaction flow for the \altlistsimplified program. In this section, we present a
+broader discussion of the capabilities and limitations of our interface. This is
+important to understand what kind of programs can be handled by the heap pattern
+language and \verifier. They key goal of \verifier is to make it easier to provide a way
+to input and use unbounded heap patterns.
 
-The visual graphical representation of heap patterns in our interface is based on \autoref{defn:pattern}. While the formalism is more difficult for humans to reason about, graphs are easier to understand. Nonetheless, the utility of our algorithm is limited by two things - (1) the expressiveness of the heap pattern language, and (2) the complexity of patterns that humans can provide. We now discuss these points in more detail.
+The visual graphical representation of heap patterns in our interface is based on
+\autoref{defn:pattern}. While the formalism is more difficult for humans to reason
+about, graphs are easier to understand. Nonetheless, the utility of our algorithm is
+limited by two things - (1) the expressiveness of the heap pattern language, and (2) the
+complexity of patterns that humans can provide. We now discuss these points in more
+detail.
 
 \subsection{Expressiveness of Heap Patterns}
 \label{sec:expressiveness-of-heap-patterns}
-In \autoref{fig:right-pattern}, we saw a heap pattern representing an alternating list. While the pattern may not be able to perfectly capture all kinds of alternating lists, it was sufficient for the example at hand. Similarly, a pattern might also over-generalize, but it might work for a certain node in our unwinding tree. This is a great feature of interpolant-based techniques, where as long as our interpolant is able to label an error node unreachable, it is sufficient and nodes don't need to be labeled with the strongest possible labels. Whether or not a pattern is sufficient depends significantly on the requirements of the underlying verification algorithm and the property to be proved. In this section, we demonstrate some examples of heap patterns that can represent some interesting shape properties. Notice that our current implementation only supports nodes that have a single pointer field. In the future, we would like to support nodes with multiple pointer fields, which would allow us to deal with structures such as doubly linked lists, trees, and even other shapes that are less common.
+In \autoref{fig:right-pattern}, we saw a heap pattern representing an alternating list.
+While the pattern may not be able to perfectly capture all kinds of alternating lists,
+it was sufficient for the example at hand. Similarly, a pattern might also
+over-generalize, but it might work for a certain node in our unwinding tree. This is a
+great feature of interpolant-based techniques, where as long as our interpolant is able
+to label an error node unreachable, it is sufficient and nodes don't need to be labeled
+with the strongest possible labels. Whether or not a pattern is sufficient depends
+significantly on the requirements of the underlying verification algorithm and the
+property to be proved. In this section, we demonstrate some examples of heap patterns
+that can represent some interesting shape properties. Notice that our current
+implementation only supports nodes that have a single pointer field. In the future, we
+would like to support nodes with multiple pointer fields, which would allow us to deal
+with structures such as doubly linked lists, trees, and even other shapes that are less
+common.
 
-We now demonstrate some interesting patten graphs, some of which are part of the SV-COMP \cite{sv-comp} benchmarks.
+We now demonstrate some interesting patten graphs, some of which are part of the SV-COMP
+\cite{sv-comp} benchmarks.
 % https://github.com/sosy-lab/sv-benchmarks/tree/svcomp15/c/list-properties
 
 \subsubsection{Reachability}
@@ -294,20 +318,34 @@ The pattern will be too general, but might work
 \subsubsection{Two-part List}
 a*b*NIL
 
-The last few examples show that several useful properties can be expressed using our framework. In the future, we would like to explore whether our heap pattern formalism has an equivalent in logics for describing heaps. At the same time, we note that \verifier itself is not strictly tied down to a single formalism, and it is possible to annotate nodes in the unwinding tree with other kinds of structures or formulas, and provide an Oracle that can work with them.
+The last few examples show that several useful properties can be expressed using our
+framework. In the future, we would like to explore whether our heap pattern formalism
+has an equivalent in logics for describing heaps. At the same time, we note that
+\verifier itself is not strictly tied down to a single formalism, and it is possible to
+annotate nodes in the unwinding tree with other kinds of structures or formulas, and
+provide an Oracle that can work with them.
 
 \subsection{Understandability of the Interface}
 \label{sec:understandability-of-interface}
-While our interface has not been tested on a large scale, we let six different users try it out. All of them had a computer science/electrical engineering undergraduate degree with programming experience. Three users were graduate students in computer science, while three others were software engineers.
+While our interface has not been tested on a large scale, we let six different users try
+it out. All of them had a computer science/electrical engineering undergraduate degree
+with programming experience. Three users were graduate students in computer science,
+while three others were software engineers.
 
 Describe two examples for which they could work out reasonable patterns.
 
 \subsubsection{Feedback about the Interface}
 
 \subsection{Experiments}
-Need better title for this section. Describe what exists in the implementation. (This is also part of Sanjit's feedback).
+Need better title for this section. Describe what exists in the implementation.
+(This is also part of Sanjit's feedback).
 
 Also describe what needs to be done as future work.
 
 \section*{Summary}
-In this chapter, we presented the web interface for the Oracle in \verifier - a human user. We described the interface design, and an overview of how a user would interact with the interface to provide a useful heap pattern that can be used in verification. We also discussed our overall implementation and its limitations. The next chapter presents some related work, and concludes with  our contributions and ideas for potential directions to take.
+In this chapter, we presented the web interface for the Oracle in \verifier - a human
+user. We described the interface design, and an overview of how a user would interact
+with the interface to provide a useful heap pattern that can be used in verification. We
+also discussed our overall implementation and its limitations. The next chapter presents
+some related work, and concludes with  our contributions and ideas for potential
+directions to take.
