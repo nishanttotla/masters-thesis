@@ -277,9 +277,16 @@ The visual graphical representation of heap patterns in our interface is based o
 
 \subsection{Expressiveness of Heap Patterns}
 \label{sec:expressiveness-of-heap-patterns}
-In \autoref{fig:right-pattern}, we saw a heap pattern representing an alternating list. While the pattern may not be able to perfectly capture all kinds of alternating lists, it was sufficient for the example at hand. Similarly, whether or not a pattern is sufficient depends significantly on the requirements of the underlying verification algorithm and the property to be proved. In this section, we demonstrate some examples of heap patterns that can represent some interesting shape properties. Notice that our current implementation only supports nodes that have a single pointer field. In the future, we would like to support nodes with multiple pointer fields, which would allow us to deal with structures such as doubly linked lists, trees, and even other shapes that are less common.
+In \autoref{fig:right-pattern}, we saw a heap pattern representing an alternating list. While the pattern may not be able to perfectly capture all kinds of alternating lists, it was sufficient for the example at hand. Similarly, a pattern might also over-generalize, but it might work for a certain node in our unwinding tree. This is a great feature of interpolant-based techniques, where as long as our interpolant is able to label an error node unreachable, it is sufficient and nodes don't need to be labeled with the strongest possible labels. Whether or not a pattern is sufficient depends significantly on the requirements of the underlying verification algorithm and the property to be proved. In this section, we demonstrate some examples of heap patterns that can represent some interesting shape properties. Notice that our current implementation only supports nodes that have a single pointer field. In the future, we would like to support nodes with multiple pointer fields, which would allow us to deal with structures such as doubly linked lists, trees, and even other shapes that are less common.
 
 SV-COMP examples of expressiveness with diagrams
+% https://github.com/sosy-lab/sv-benchmarks/tree/svcomp15/c/list-properties
+
+\subsubsection{Reachability}
+A list where a certain pointer is always reachable from the start
+
+\subsubsection{Cyclic List}
+A little unclear how, but we'll see. Think of automata.
 
 The last few examples show that several useful properties can be expressed using our framework. In the future, we would like to explore whether our heap pattern formalism has an equivalent in logics for describing heaps. At the same time, we note that \verifier itself is not strictly tied down to a single formalism, and it is possible to annotate nodes in the unwinding tree with other kinds of structures or formulas, and provide an Oracle that can work with them.
 
