@@ -2,40 +2,123 @@
 % \section{Interface with the Oracle}
 \label{ch:interface-oracle}
 
-In this chapter, we describe one implementation of the Oracle. In \autoref{alg:newcandidate}, the candidate is obtained as $C = \mathcal{O}(H_i^{+}, H_i^{-})$. The Oracle $\mathcal{O}$ considers two sets of concrete heaps $H_i^{+}$ and $H_i^{-}$, and returns a candidate pattern $C$ which is then evaluated. After the evaluation, it is either accepted, or needs to be further refined, in which case $H_i^{+}$ or $H_i^{-}$ are updated, and a new query is submitted to the Oracle. This process repeats until a suitable candidate is found for the current vertex in the program unwinding.
+In this chapter, we describe one implementation of the Oracle. In
+\autoref{alg:newcandidate}, the candidate is obtained as
+$C = \mathcal{O}(H_i^{+}, H_i^{-})$. The Oracle $\mathcal{O}$ considers two sets of
+concrete heaps $H_i^{+}$ and $H_i^{-}$, and returns a candidate pattern $C$ which is
+then evaluated. After the evaluation, it is either accepted, or needs to be further
+refined, in which case $H_i^{+}$ or $H_i^{-}$ are updated, and a new query is submitted
+to the Oracle. This process repeats until a suitable candidate is found for the current
+vertex in the program unwinding.
 
 \section{Human as an Oracle}
-Human beings are good at finding patterns in several types of spatial data. This fact has been utilized for crowdsourcing the harder parts of several difficult technical problems \cite{wenchao2012, verigames, eyewire}. The important challenges are to identify steps in the problem where human insight is critical, find ways to transform these steps into tasks that non-expert humans can perform, and combine the results to resolve those steps in the solution. In our problem of verifying heap-manipulating programs, the goal of the Oracle is to provide heap patterns that can be used to generate interpolants, which are then used for verification. Finding these interpolants automatically is a difficult step in program verification, while checking a provided interpolant for correctness is relatively easier to automate. Later in \autoref{sec:expressiveness-of-heap-patterns} and \autoref{sec:understandability-of-interface}, we discuss more elaborately how our heap pattern language and interface fare as tools to input human insight.
+Human beings are good at finding patterns in several types of spatial data. This fact
+has been utilized for crowdsourcing the harder parts of several difficult technical
+problems \cite{wenchao2012, verigames, eyewire}. The important challenges are to
+identify steps in the problem where human insight is critical, find ways to transform
+these steps into tasks that non-expert humans can perform, and combine the results to
+resolve those steps in the solution. In our problem of verifying heap-manipulating
+programs, the goal of the Oracle is to provide heap patterns that can be used to
+generate interpolants, which are then used for verification. Finding these interpolants
+automatically is a difficult step in program verification, while checking a provided
+interpolant for correctness is relatively easier to automate. Later in
+\autoref{sec:expressiveness-of-heap-patterns} and
+\autoref{sec:understandability-of-interface}, we discuss more elaborately how our heap
+pattern language and interface fare as tools to input human insight.
 
 \section{Web Interface}
 \label{sec:web-interface}
-As a practical demonstration of the Oracle, we designed a web interface that shows examples of concrete heap to a human user. The interface allows them to construct a pattern graph using a graphical interface. The pattern graph should be such that it covers all positive examples, but doesn't cover any negative example.
+As a practical demonstration of the Oracle, we designed a web interface that shows
+examples of concrete heap to a human user. The interface allows them to construct a
+pattern graph using a graphical interface. The pattern graph should be such that it
+covers all positive examples, but doesn't cover any negative example.
 
-Our graphical interface, created using D3 \cite{d3js} is a way for our Oracle (human) to interact with the \verifier algorithm. The interface is designed to make it simple to input heap pattern graphs and receive quick feedback about the correctness the pattern graph. Pattern graphs have several characteristics, as described in \autoref{defn:pattern}, and it can be challenging and overwhelming for the user to input a graph that generalizes enough, but not so much that it becomes useless for the underlying verification algorithm. Since our Oracles are humans, it is crucial that we create the best experience for them to input information to the prover.
+Our graphical interface, created using D3 \cite{d3js} is a way for our Oracle (human) to
+interact with the \verifier algorithm. The interface is designed to make it simple to
+input heap pattern graphs and receive quick feedback about the correctness the pattern
+graph. Pattern graphs have several characteristics, as described in
+\autoref{defn:pattern}, and it can be challenging and overwhelming for the user to input
+a graph that generalizes enough, but not so much that it becomes useless for the
+underlying verification algorithm. Since our Oracles are humans, it is crucial that we
+create the best experience for them to input information to the prover.
 
-Later, we describe in \autoref{sec:who-are-the-users} what kind of background we expect from our users. One of our goals was to design an interface that would not need expertise in software verification. This means that the user input language has to be such that it not only works well with our heap pattern formalism, but also avoids the need for users to interact with the formalism directly. Since heaps and heap patterns are essentially graphs, we decided it was reasonable to represent these as visual graphs, and also allow users to ``draw'' graphs while getting instant feedback. We decided to use force-directed graphs in D3 for our implementation.
+Later, we describe in \autoref{sec:who-are-the-users} what kind of background we expect
+from our users. One of our goals was to design an interface that would not need
+expertise in software verification. This means that the user input language has to be
+such that it not only works well with our heap pattern formalism, but also avoids the
+need for users to interact with the formalism directly. Since heaps and heap patterns
+are essentially graphs, we decided it was reasonable to represent these as visual
+graphs, and also allow users to ``draw'' graphs while getting instant feedback. We
+decided to use force-directed graphs in D3 for our implementation.
 
 \subsection{Force-Directed Graphs in D3.js}
-Before moving on with the description of our implementation, we briefly describe the Javascript library D3 that we used to build our heap pattern web interface. D3 allows to bind data to a Document Object Model (DOM), and then apply data-driven transformations to the document. For example, D3 can be used to generate an HTML table from an array of numbers. Or, the same data can be used to create an interactive SVG bar chart with smooth transitions and interaction. The key problem solved by D3 is efficient manipulation of documents based on data. D3 is capable of supporting large datasets, and a wide variety of dynamic behaviors and interactions.
+Before moving on with the description of our implementation, we briefly describe the
+Javascript library D3 that we used to build our heap pattern web interface. D3 allows to
+bind data to a Document Object Model (DOM), and then apply data-driven transformations
+to the document. For example, D3 can be used to generate an HTML table from an array of
+numbers. Or, the same data can be used to create an interactive SVG bar chart with
+smooth transitions and interaction. The key problem solved by D3 is efficient
+manipulation of documents based on data. D3 is capable of supporting large datasets, and
+a wide variety of dynamic behaviors and interactions.
 
-Force-directed graph drawing algorithms \cite{eades84, fruchterman91} are a class of algorithms for drawing graphs in an aesthetically pleasing way. Their purpose is to position the nodes of a graph in two or three-dimensional space so that all edges are of more or less equal length and there are as few crossing edges as possible, by assigning forces among the set of edges and the set of nodes, based on their relative positions, and then using these forces either to simulate the motion of the edges and nodes or to minimize their energy. This is exactly like a simulation of an actual physical system in space. It is possible to define different ``forces'' such as those arising from gravity, electrical charges, elasticity, etc., and assign them to edges, nodes, and other components of the graph. The algorithm combines all these forces together, trying to reach a stable state. The key is to carefully calibrate the forces so that the resulting graph visualization is suitable. There are several ways force-directed graphs can be modeled, but we used D3's inbuilt model, that makes it really easy to create a simple force-directed graph. It works by defining nodes and links, and appends HTML objects to them. As the nodes and links interact to reach stable state, the HTML objects move along, making the visualization a graph built on top of an underlying force-directed graph drawing algorithm.
+Force-directed graph drawing algorithms \cite{eades84, fruchterman91} are a class of
+algorithms for drawing graphs in an aesthetically pleasing way. Their purpose is to
+position the nodes of a graph in two or three-dimensional space so that all edges are of
+more or less equal length and there are as few crossing edges as possible, by assigning
+forces among the set of edges and the set of nodes, based on their relative positions,
+and then using these forces either to simulate the motion of the edges and nodes or to
+minimize their energy. This is exactly like a simulation of an actual physical system in
+space. It is possible to define different ``forces'' such as those arising from gravity,
+electrical charges, elasticity, etc., and assign them to edges, nodes, and other
+components of the graph. The algorithm combines all these forces together, trying to
+reach a stable state. The key is to carefully calibrate the forces so that the resulting
+graph visualization is suitable. There are several ways force-directed graphs can be
+modeled, but we used D3's inbuilt model, that makes it really easy to create a simple
+force-directed graph. It works by defining nodes and links, and appends HTML objects to
+them. As the nodes and links interact to reach stable state, the HTML objects move
+along, making the visualization a graph built on top of an underlying force-directed
+graph drawing algorithm.
 
 \subsubsection{Advantages and Disadvantages of Force-directed graphs}
-We chose force-directed graphs because they are designed for drawing graphs in an aesthetically pleasing way, especially ones for which structure is unknown beforehand. Our positive and negative heap examples are often large and have diverse structures, and it's not trivial to have a pre-defined way of drawing them. Force-directed drawing algorithms take care of this, and are highly configurable. Our earlier familiarity with them was also a factor in the choice.
+We chose force-directed graphs because they are designed for drawing graphs in an
+aesthetically pleasing way, especially ones for which structure is unknown beforehand.
+Our positive and negative heap examples are often large and have diverse structures, and
+it's not trivial to have a pre-defined way of drawing them. Force-directed drawing
+algorithms take care of this, and are highly configurable. Our earlier familiarity with
+them was also a factor in the choice.
 
-The one major disadvantage is that the spatial relationships of the original nodes change when nodes or edges are modified. Essentially, a local modification can cause a global change of layout, making it harder for users to remember how the same example changed over time. In the future, it will certainly be worthwhile to explore more graph-drawing algorithms.
+The one major disadvantage is that the spatial relationships of the original nodes
+change when nodes or edges are modified. Essentially, a local modification can cause a
+global change of layout, making it harder for users to remember how the same example
+changed over time. In the future, it will certainly be worthwhile to explore more
+graph-drawing algorithms.
 
 \subsection{Interface for Drawing Pattern Graphs}
 
-The basic interface for drawing heap graphs is shown in \autoref{fig:basic-graph-interface}. This is what it would look like on starting the visualization. The graph on the right is a force-directed graph representing the current heap pattern. Nodes are represented by circles, and edges by arrows connecting the circles. Arrows are directed, and for simplicity we assume that each node has outgoing fields of only one type. For instance, a data structure with a $next$ pointer would fit this case very well. All nodes and edges are interactive, and allow for different actions to express a rich language of heap patterns.
+The basic interface for drawing heap graphs is shown in
+\autoref{fig:basic-graph-interface}. This is what it would look like on starting the
+visualization. The graph on the right is a force-directed graph representing the current
+heap pattern. Nodes are represented by circles, and edges by arrows connecting the
+circles. Arrows are directed, and for simplicity we assume that each node has outgoing
+fields of only one type. For instance, a data structure with a $next$ pointer would fit
+this case very well. All nodes and edges are interactive, and allow for different
+actions to express a rich language of heap patterns.
 
-The form on the left allows the user to interact with the graph and set values for the heap and predicate labelings. The predicates and heap variables have been inferred by the program analysis already.
+The form on the left allows the user to interact with the graph and set values for the
+heap and predicate labelings. The predicates and heap variables have been inferred by
+the program analysis already.
 
 \begin{ex}
 \label{ex:basic-graph-interface}
-In \autoref{fig:basic-graph-interface}, the user can select a node (say $n$) by clicking it, pick a predicate (say $p1$), pick a value (say $\true$), and click on "Set value". This would set the value for the the pair of selected node and predicate to $\true$. In our heap pattern formalism from \autoref{defn:pattern}, this would amount to setting $\predlblnm(n, p1) = \true$.
+In \autoref{fig:basic-graph-interface}, the user can select a node (say $n$) by clicking
+it, pick a predicate (say $p1$), pick a value (say $\true$), and click on "Set value".
+This would set the value for the the pair of selected node and predicate to $\true$. In
+our heap pattern formalism from \autoref{defn:pattern}, this would amount to setting
+$\predlblnm(n, p1) = \true$.
 
-Similarly, picking a heap variable (say $x$) and setting a value (say $\maybe$) for it using the form would amount to setting $\varlblnm(n,x) = \maybe$ for the selected node $n$.
+Similarly, picking a heap variable (say $x$) and setting a value (say $\maybe$) for it
+using the form would amount to setting $\varlblnm(n,x) = \maybe$ for the selected node
+$n$.
 \end{ex}
 
 % Figure with the basic pattern graph interface
@@ -50,11 +133,26 @@ Similarly, picking a heap variable (say $x$) and setting a value (say $\maybe$) 
 
 \subsubsection{Who are the Users?}
 \label{sec:who-are-the-users}
-Our system involves human users, so it is important to describe suitable candidates who will be able to use our system. We believe that a basic understanding of graphs or transition systems should be sufficient, and in fact very helpful in fully grasping what we expect from the user. This means that someone with an undergraduate degree in Computer Science or Mathematics, or indeed anyone who has learned about graphs and state transition systems would be a suitable user. A background in formal methods or verification is not required.
+Our system involves human users, so it is important to describe suitable candidates who
+will be able to use our system. We believe that a basic understanding of graphs or
+transition systems should be sufficient, and in fact very helpful in fully grasping what
+we expect from the user. This means that someone with an undergraduate degree in
+Computer Science or Mathematics, or indeed anyone who has learned about graphs and state
+transition systems would be a suitable user. A background in formal methods or
+verification is not required.
 
-We now dive deeper into all the features provided by the interface, and the user can easily provide a graph pattern matching the formalism described in \autoref{defn:pattern}. One of the important goals of this design is that the user should not have to understand or deal with the formalism itself, but just figures, so that someone with no knowledge of software verification or heap modeling can perform the function of an Oracle.
+We now dive deeper into all the features provided by the interface, and the user can
+easily provide a graph pattern matching the formalism described in
+\autoref{defn:pattern}. One of the important goals of this design is that the user
+should not have to understand or deal with the formalism itself, but just figures, so
+that someone with no knowledge of software verification or heap modeling can perform the
+function of an Oracle.
 
-A heap pattern is a labeled graph represented by the tuple $(\nodesnm, \varlblnm, \predlblnm, \edgesnm, \sigma)$, respectively containing the set of nodes, heap variable labeling, predicate labeling, edges, and summary function. Our interface allows the user to modify the values of each of these attributes of the pattern. We now describe each of these in greater detail.
+A heap pattern is a labeled graph represented by the tuple
+$(\nodesnm, \varlblnm, \predlblnm, \edgesnm, \sigma)$, respectively containing the set
+of nodes, heap variable labeling, predicate labeling, edges, and summary function. Our
+interface allows the user to modify the values of each of these attributes of the
+pattern. We now describe each of these in greater detail.
 
 \subsubsection{Modifying Nodes}
 Interacting with nodes allows the user to modify the existing set of nodes. The following actions are available:
@@ -77,11 +175,25 @@ Interacting with nodes allows the user to modify the existing set of nodes. The 
 \end{figure}
 
 \subsubsection{Modifying the Heap Variable Labeling}
-We briefly described the mechanism for updating the heap variable labeling in \autoref{ex:basic-graph-interface}. The interface itself is simple, as shown in \autoref{fig:basic-graph-interface}. In addition, there are some features that make it simpler to keep track of assignments, while preventing user mistakes.
+We briefly described the mechanism for updating the heap variable labeling in
+\autoref{ex:basic-graph-interface}. The interface itself is simple, as shown in
+\autoref{fig:basic-graph-interface}. In addition, there are some features that make it
+simpler to keep track of assignments, while preventing user mistakes.
 
-The heap variable labeling is a map $\varlblnm: \nodesnm \times \heapvars \to \threevals$, meaning that each pair of node and heap variable must have a value. To indicate the current assignment, we label the node accordingly. For instance, if the current heap variables are $x, y, z$, and for node $n$, the values of $\varlblnm$ are $\varlblnm(n, x) = \maybe, \varlblnm(n, y) = \true, \varlblnm(n, z) = \false$, then the node will get labeled as $x?y$. The $?$ indicates a $\maybe$ value, the absence of a $?$ indicates $\true$, and absence of the variable altogether indicates $\false$. This keeps the labeling simple, preventing clutter from a large number of $\false$ values, while still making it simple to get a quick idea of the current assignments. Finally, a node with no variable assignments will simply have the label $-$.
+The heap variable labeling is a map $\varlblnm: \nodesnm \times \heapvars \to \threevals$,
+meaning that each pair of node and heap variable must have a value. To indicate the
+current assignment, we label the node accordingly. For instance, if the current heap
+variables are $x, y, z$, and for node $n$, the values of $\varlblnm$ are
+$\varlblnm(n, x) = \maybe, \varlblnm(n, y) = \true, \varlblnm(n, z) = \false$, then the
+node will get labeled as $x?y$. The $?$ indicates a $\maybe$ value, the absence of a $?$
+indicates $\true$, and absence of the variable altogether indicates $\false$. This keeps
+the labeling simple, preventing clutter from a large number of $\false$ values, while
+still making it simple to get a quick idea of the current assignments. Finally, a node
+with no variable assignments will simply have the label $-$.
 
-We note that $\varlblnm$ is not allowed to have arbitrary assignments. For instance, a variable $x$ cannot be $\true$ for more than one node at the same time. Our interface takes care of such constraints as follows:
+We note that $\varlblnm$ is not allowed to have arbitrary assignments. For instance, a
+variable $x$ cannot be $\true$ for more than one node at the same time. Our interface
+takes care of such constraints as follows:
 
 \begin{itemize}
   \item Setting a variable to $\true$ for a node sets it to $\false$ for all other nodes automatically.
