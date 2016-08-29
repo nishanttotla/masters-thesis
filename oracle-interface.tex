@@ -277,7 +277,7 @@ The visual graphical representation of heap patterns in our interface is based o
 
 \subsection{Expressiveness of Heap Patterns}
 \label{sec:expressiveness-of-heap-patterns}
-In \autoref{fig:right-pattern}, we saw a heap pattern representing an alternating list. While the pattern may not be able to perfectly capture all kinds of alternating lists, it was sufficient for the example at hand. Similarly, whether or not a pattern is sufficient depends significantly on the requirements of the underlying verification algorithm and the property to be proved.
+In \autoref{fig:right-pattern}, we saw a heap pattern representing an alternating list. While the pattern may not be able to perfectly capture all kinds of alternating lists, it was sufficient for the example at hand. Similarly, whether or not a pattern is sufficient depends significantly on the requirements of the underlying verification algorithm and the property to be proved. In this section, we demonstrate some examples of heap patterns that can represent some interesting shape properties. Notice that our current implementation only supports nodes that have a single pointer field. In the future, we would like to support nodes with multiple pointer fields, which would allow us to deal with structures such as doubly linked lists, trees, and even other shapes that are less common.
 
 SV-COMP examples of expressiveness with diagrams
 
