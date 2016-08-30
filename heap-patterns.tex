@@ -4,7 +4,8 @@
 \label{ch:heap-patterns}
 %
 
-To extend the \impact algorithm to heaps, we first define a framework for representing and reasoning about heaps.
+To extend the \impact algorithm to heaps, we first define a framework for representing and
+reasoning about heaps.
 
 
 In this section, we first define a standard language that performs low-level
@@ -439,7 +440,12 @@ By definition, every pattern $P \neq 0_D$ satisfies the following properties:
 \section{Modeling Heap Programs}
 \label{sec:modeling-heap-programs}
 
-We can now use the heap patterns described in \autoref{defn:pattern} to model programs for our modified \impact algorithm for heap-manipulating programs. Heap programs are modeled similarly to other programs, as described in \autoref{sec:modeling-programs}. For the purposes of the \impact algorithm, the key difference is in how program unwindings are constructed. Instead of labeling vertices of the unwinding with FOL formulas, we use heap patterns.
+We can now use the heap patterns described in \autoref{defn:pattern} to model programs for
+our modified \impact algorithm for heap-manipulating programs. Heap programs are modeled
+similarly to other programs, as described in \autoref{sec:modeling-programs}. For the
+purposes of the \impact algorithm, the key difference is in how program unwindings are
+constructed. Instead of labeling vertices of the unwinding with FOL formulas, we use heap
+patterns.
 
 % define labeled program unwinding
 \begin{defn}
@@ -458,4 +464,8 @@ We can now use the heap patterns described in \autoref{defn:pattern} to model pr
 Each heap pattern contains a special node \nilconst, which is used to represent the location of pointers that aren't allocated to a specific node.
 
 \section*{Summary}
-In this chapter, we presented a language \lang for imperative programs that perform low-level heap operations. We defined a formal representation of a heap for \lang, and the idea of heap patterns which can be used to represent multiple heaps. We discussed the idea of pattern entailment, and the modeling of \lang programs for verification. The next chapter describes \verifier, our algorithm for verifying heap-manipulating programs.
+In this chapter, we presented a language \lang for imperative programs that perform
+low-level heap operations. We defined a formal representation of a heap for \lang, and the
+idea of heap patterns which can be used to represent multiple heaps. We discussed the idea
+of pattern entailment, and the modeling of \lang programs for verification. The next
+chapter describes \verifier, our algorithm for verifying heap-manipulating programs.
