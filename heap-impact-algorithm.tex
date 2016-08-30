@@ -5,26 +5,58 @@
 \label{ch:heap-impact-algorithm}
 %
 
-Building on top of the framework defined in \autoref{sec:impact-algorithm} and \autoref{ch:heap-patterns}, we can define \verifier, by modifying the \impact algorithm to work for heap-manipulating programs. In this chapter, we first define the three steps of \impact, that is \expand, \cover, and \refine for \verifier, respectively calling them \expandp, \coverp, and \refinep. Then we describe an interpolant-learning procedure that retrieves patterns from an Oracle, thereby completing the description of the algorithm.
+Building on top of the framework defined in \autoref{sec:impact-algorithm} and
+\autoref{ch:heap-patterns}, we can define \verifier, by modifying the \impact algorithm to
+work for heap-manipulating programs. In this chapter, we first define the three steps
+of \impact, that is \expand, \cover, and \refine for \verifier, respectively calling
+them \expandp, \coverp, and \refinep. Then we describe an interpolant-learning procedure
+that retrieves patterns from an Oracle, thereby completing the description of the
+algorithm.
 
 \section{Notation Review}
-In this section, we briefly go over some of the notation from previous chapters that will be relevant to the description of \verifier.
+In this section, we briefly go over some of the notation from previous chapters that will
+be relevant to the description of \verifier.
 
 \subsection{Programs}
-Recall that a \textit{program} is a tuple $(\Lambda, \Delta, l_i, l_f)$, where $\Lambda$ is a finite set of program locations, $\Delta$ is a set of $actions$, $l_i \in \Lambda$ is the initial location and $l_f \in \Lambda$ is the error location. An $action$ is a triple $(l, T, m)$, where $l,m \in \Lambda$ are respectively the entry and exit locations of the action, and $G$ is a transition formula.
+Recall that a \textit{program} is a tuple $(\Lambda, \Delta, l_i, l_f)$, where $\Lambda$
+is a finite set of program locations, $\Delta$ is a set of $actions$, $l_i \in \Lambda$ is
+the initial location and $l_f \in \Lambda$ is the error location. An $action$ is a triple
+$(l, T, m)$, where $l,m \in \Lambda$ are respectively the entry and exit locations of the
+action, and $G$ is a transition formula.
 
 \subsection{Program Paths}
-A $path$ $\pi$ of a program is a sequence of transitions of the form $(l_0, T_0, l_1)(l_1, T_1, l_2) \cdots (l_{n-1}, T_{n-1}, l_n)$. The path is an \textit{error path} when $l_0 = l_1$ and $l_n = l_f$. The unfolding $\mathcal{U}(\pi)$ of path $\pi$ is the sequence of formulas $T_0^{\langle 0 \rangle}, \cdots, T_{n-1}^{\langle n-1 \rangle}$, that is, the sequence of transition formulas $T_0, \cdots, T_{n-1}$, with each $T_i$ shifted $i$ time units into the future.
+A $path$ $\pi$ of a program is a sequence of transitions of the form
+$(l_0, T_0, l_1)(l_1, T_1, l_2) \cdots (l_{n-1}, T_{n-1}, l_n)$. The path is an
+\textit{error path} when $l_0 = l_1$ and $l_n = l_f$. The unfolding $\mathcal{U}(\pi)$ of
+path $\pi$ is the sequence of formulas
+$T_0^{\langle 0 \rangle}, \cdots, T_{n-1}^{\langle n-1 \rangle}$, that is, the sequence of
+transition formulas $T_0, \cdots, T_{n-1}$, with each $T_i$ shifted $i$ time units into
+the future.
 
 For further details, the reader is referred to \autoref{sec:modeling-programs}.
 
 \subsection{Program Unwindings}
-As defined in \autoref{defn:prog-unwinding}, an unwinding of a program $\mathcal{A} = (\Lambda, \Delta, l_i, l_f)$ is a quadruple $(V, E, M_v, M_e)$, where $(V, E)$ is a directed tree rooted at $\epsilon$, $M_v : V \rightarrow \Lambda$ is the vertex map, and $M_e : E \rightarrow \Delta$ is the edge map, such that $M_v(\epsilon) = l_i$. Also, for every non-leaf vertex $v \in V$, for every action $(M_v(v), T, m) \in \Delta$, there exists an edge $(v,w) \in E$ such that $M_v(w) = m$ and $M_e(v,w) = T$. Intuitively, an unwinding is a tree where each vertex is mapped ($M_v$) to a program location, and each edge is mapped ($M_e$) to a step (action) in the program.
+As defined in \autoref{defn:prog-unwinding}, an unwinding of a program
+$\mathcal{A} = (\Lambda, \Delta, l_i, l_f)$ is a quadruple $(V, E, M_v, M_e)$, where
+$(V, E)$ is a directed tree rooted at $\epsilon$, $M_v : V \rightarrow \Lambda$ is the
+vertex map, and $M_e : E \rightarrow \Delta$ is the edge map, such that
+$M_v(\epsilon) = l_i$. Also, for every non-leaf vertex $v \in V$, for every action
+$(M_v(v), T, m) \in \Delta$, there exists an edge $(v,w) \in E$ such that $M_v(w) = m$ and
+$M_e(v,w) = T$. Intuitively, an unwinding is a tree where each vertex is mapped ($M_v$) to
+a program location, and each edge is mapped ($M_e$) to a step (action) in the program.
 
-As defined in \autoref{defn:labeled-heap-prog-unwinding}, a labeled unwinding of a program $\mathcal{A} = (\Lambda, \Delta, l_i, l_f)$ is a triple $(U, \psi, \rhd)$, where $U = (V, E, M_v, M_e)$ is an unwinding of $\mathcal{A}$, $\psi : V \to \heappats$ is called the vertex labeling, and $\rhd \subseteq V \times V$ is the covering relation. Intuitively, a labeled unwinding is a program unwinding where each vertex is labeled ($\psi$) with a heap pattern, and a covering relation $\rhd$ is used, which is used to keep track of covered vertices that need not be explored further.
+As defined in \autoref{defn:labeled-heap-prog-unwinding}, a labeled unwinding of a program
+$\mathcal{A} = (\Lambda, \Delta, l_i, l_f)$ is a triple $(U, \psi, \rhd)$, where
+$U = (V, E, M_v, M_e)$ is an unwinding of $\mathcal{A}$, $\psi : V \to \heappats$ is
+called the vertex labeling, and $\rhd \subseteq V \times V$ is the covering relation.
+Intuitively, a labeled unwinding is a program unwinding where each vertex is labeled
+($\psi$) with a heap pattern, and a covering relation $\rhd$ is used, which is used to
+keep track of covered vertices that need not be explored further.
 
 \subsection{Postcondition Transforms for Heap Operations}
-In addition to the previous definitions, we define the operator $\post$, which will be used for generating examples to interact with the Oracle. $\post$ is an operator for computing strongest postconditions for heap patterns modified by \lang instructions.
+In addition to the previous definitions, we define the operator $\post$, which will be
+used for generating examples to interact with the Oracle. $\post$ is an operator for
+computing strongest postconditions for heap patterns modified by \lang instructions.
 
 \begin{defn}
   \label{defn:heap-post-transforms}
@@ -33,9 +65,18 @@ In addition to the previous definitions, we define the operator $\post$, which w
   The $\post{*}$ operator can be defined as a repeated application of $\post$ along a given path. More formally, it is $\post{*} : \heappats \times \mathcal{P} \to \heappats$, where $\mathcal{P}$ is a path in the unwinding.
 \end{defn}
 
-We also note that the $\post$ operator can be overloaded to work with individual heaps instead of patterns, since single heaps can also be represented using a pattern.
+We also note that the $\post$ operator can be overloaded to work with individual heaps
+instead of patterns, since single heaps can also be represented using a pattern.
 
-The formal rules for computing $\post$ for each individual action are presented here. We define them for major heap operations that are part of \lang. The formal requirement is that for a heap $h$, pattern $P$, and transition $T$, such that $h \matchedby P$, we must have $\post(h, T) \matchedby \post(P, T)$. Assume that the original pattern is represented by $P = (\nodesnm, \varlblnm, \predlblnm, \edgesnm, \sigma)$, and the pattern after transformation by $\post$ is represented by $P' = (\nodesnm', \varlblnm', \predlblnm', \edgesnm', \sigma')$. We define $P'$ using the definition of $P$, for each possible value of $T$ below. New variables are presented as updates to the values of old variables.
+The formal rules for computing $\post$ for each individual action are presented here. We
+define them for major heap operations that are part of \lang. The formal requirement is
+that for a heap $h$, pattern $P$, and transition $T$, such that $h \matchedby P$, we must
+have $\post(h, T) \matchedby \post(P, T)$. Assume that the original pattern is represented
+by $P = (\nodesnm, \varlblnm, \predlblnm, \edgesnm, \sigma)$, and the pattern after
+transformation by $\post$ is represented by
+$P' = (\nodesnm', \varlblnm', \predlblnm', \edgesnm', \sigma')$. We define $P'$ using the
+definition of $P$, for each possible value of $T$ below. New variables are presented as
+updates to the values of old variables.
 
 \begin{itemize}
   \item \textbf{ALLOC} ($v := alloc()$): \\
@@ -85,10 +126,16 @@ Based on \autoref{sec:interpolants-from-proofs}, we can define heap pattern inte
   \item for all $1 \leq i \leq n, \post(\hat{P_{i-1}}, A_i) \entails \hat{P_i}$ and
 \end{itemize}
 
-This means that the the $\post$ transform (strongest postcondition) of $\hat{P_{i-1}}$ over $A_i$ entails $\hat{P_{i}}$.
+This means that the the $\post$ transform (strongest postcondition) of $\hat{P_{i-1}}$
+over $A_i$ entails $\hat{P_{i}}$.
 
 \section{\verifier}
-This section describes our algorithm for building a complete, safe, well-labeled unwinding of a heap-manipulating program. Our algorithm builds on top of the \impact algorithm defined in \autoref{sec:impact-algorithm}. Our algorithm may not terminate if the program is safe. If the program is unsafe, and our Oracle can help find the right interpolant, then our algorithm will terminate. A non-deterministic procedure with three basic steps is outlined here. The three steps are
+This section describes our algorithm for building a complete, safe, well-labeled unwinding
+of a heap-manipulating program. Our algorithm builds on top of the \impact algorithm
+defined in \autoref{sec:impact-algorithm}. Our algorithm may not terminate if the program
+is safe. If the program is unsafe, and our Oracle can help find the right interpolant,
+then our algorithm will terminate. A non-deterministic procedure with three basic steps is
+outlined here. The three steps are
 
 \begin{itemize}
   \item \expandp, which generates the successors of a leaf vertex (\autoref{alg:heap-expand})
@@ -96,9 +143,13 @@ This section describes our algorithm for building a complete, safe, well-labeled
   \item \coverp, which expands the covering relation (\autoref{alg:heap-cover})
 \end{itemize}
 
-Each of the three steps preserves well-labeledness of the unwinding. When none of the three steps can produce any change, the unwinding is both safe and complete, so we know that the original program is safe.
+Each of the three steps preserves well-labeledness of the unwinding. When none of the
+three steps can produce any change, the unwinding is both safe and complete, so we know
+that the original program is safe.
 
-In addition to the three steps above, there are two main procedures that are needed by \refinep which allow it to interact with the Oracle and generate interpolants for the verification. The procedures are
+In addition to the three steps above, there are two main procedures that are needed by
+\refinep which allow it to interact with the Oracle and generate interpolants for the
+verification. The procedures are
 
 \begin{itemize}
   \item \seplearner, which \refinep relies on to provide a valid interpolant for an error location (\autoref{alg:interplearner})
@@ -106,9 +157,20 @@ In addition to the three steps above, there are two main procedures that are nee
 \end{itemize}
 
 \subsection{Algorithm Description}
-We now briefly explain how the main procedures for \verifier work. The outline is very similar to that of the \impact algorithm defined in \autoref{sec:impact-algorithm}, but our modifications make it possible to use heap patterns in place of simple FOL formulas.
+We now briefly explain how the main procedures for \verifier work. The outline is very
+similar to that of the \impact algorithm defined in \autoref{sec:impact-algorithm}, but
+our modifications make it possible to use heap patterns in place of simple FOL formulas.
 
-\expandp, formally outlined in \autoref{alg:heap-expand}, explores new actions for an uncovered leaf. An uncovered leaf (described in \autoref{defn:labeled-prog-unwinding}) is intuitively one for which all possible successor states have not been explored yet. If the vertex $v \in V$ supplied to \expandp is an uncovered leaf, then for each possible action $T$ at the program location $M_v(v)$, a new vertex $w$ is added to the unwinding tree (\autoref{line:expandp-add-new-vertex}). This is normally done when a leaf is such that it cannot be covered by any other vertex in the tree, and thus needs further state space exploration. Notice that this is identical to \impact, but with they key difference that a new vertex in the unwinding is initialized with the universal heap $1_D$ instead of $\true$ (\autoref{line:expandp-universal-heap}).
+\expandp, formally outlined in \autoref{alg:heap-expand}, explores new actions for an
+uncovered leaf. An uncovered leaf (described in \autoref{defn:labeled-prog-unwinding}) is
+intuitively one for which all possible successor states have not been explored yet. If the
+vertex $v \in V$ supplied to \expandp is an uncovered leaf, then for each possible action
+$T$ at the program location $M_v(v)$, a new vertex $w$ is added to the unwinding tree
+(\autoref{line:expandp-add-new-vertex}). This is normally done when a leaf is such that it
+cannot be covered by any other vertex in the tree, and thus needs further state space
+exploration. Notice that this is identical to \impact, but with they key difference that a
+new vertex in the unwinding is initialized with the universal heap $1_D$ instead of
+$\true$ (\autoref{line:expandp-universal-heap}).
 
 \begin{algorithm}[ht]
   % Declare functions
@@ -132,12 +194,29 @@ We now briefly explain how the main procedures for \verifier work. The outline i
   \label{alg:heap-expand}
 \end{algorithm}
 
-\refinep is the procedure that generates the interpolant, and can potentially mark an error vertex unreachable. Firstly, we note that if \refinep succeeds, then $\phi(v)$ must be $0_D$, the empty heap pattern (since $\hat{A}_n$ is always $0_D$). Thus, to make the unwinding safe, we have to only apply \refinep to every error vertex (\autoref{line:refinep-only-error-vertex}) that hasn't yet been marked $0_D$. For such an error vertex $v$, \refinep makes a call to \seplearner (\autoref{alg:interplearner}) to find an interpolant for the path from root to error vertex (\autoref{line:refinep-query-decision-procedure}). If an interpolant is not found it could mean one of two things
+\refinep is the procedure that generates the interpolant, and can potentially mark an
+error vertex unreachable. Firstly, we note that if \refinep succeeds, then $\phi(v)$ must
+be $0_D$, the empty heap pattern (since $\hat{A}_n$ is always $0_D$). Thus, to make the
+unwinding safe, we have to only apply \refinep to every error vertex
+(\autoref{line:refinep-only-error-vertex}) that hasn't yet been marked $0_D$. For such an
+error vertex $v$, \refinep makes a call to \seplearner (\autoref{alg:interplearner}) to
+find an interpolant for the path from root to error vertex
+(\autoref{line:refinep-query-decision-procedure}). If an interpolant is not found it could
+mean one of two things
 \begin{enumerate}
   \item The program has a bug, and the error vertex is actually reachable
   \item The interaction with the Oracle did not result in an interpolant being found
 \end{enumerate}
-Since our Oracle cannot be guaranteed to definitely provide an interpolant, at this point, we quit \refinep and try again later when more vertices have been labeled with stronger heap patterns (\autoref{line:refinep-program-unsafe}). If an interpolant is found, then it is used to strengthen the heap pattern labelings at the vertices along the path $\pi$. In particular, if the interpolant formula at a vertex $v_i$ is not entailed by the current heap pattern label at $v_i$ (\autoref{line:refinep-not-subsumed}), then the current label can be strengthened. Note that if this happens, then the stronger label at $v_i$ may possibly lead it to stop covering some of the vertices it previously covered. This is taken into account by removing all pairs $(\cdot, v_i)$ in the covering relation $\rhd$ (\autoref{line:refinep-remove-covering-relations}).
+Since our Oracle cannot be guaranteed to definitely provide an interpolant, at this point,
+we quit \refinep and try again later when more vertices have been labeled with stronger
+heap patterns (\autoref{line:refinep-program-unsafe}). If an interpolant is found, then it
+is used to strengthen the heap pattern labelings at the vertices along the path $\pi$. In
+particular, if the interpolant formula at a vertex $v_i$ is not entailed by the current
+heap pattern label at $v_i$ (\autoref{line:refinep-not-subsumed}), then the current label
+can be strengthened. Note that if this happens, then the stronger label at $v_i$ may
+possibly lead it to stop covering some of the vertices it previously covered. This is
+taken into account by removing all pairs $(\cdot, v_i)$ in the covering relation $\rhd$
+(\autoref{line:refinep-remove-covering-relations}).
 
 \begin{algorithm}[ht]
   % Declare functions
@@ -172,7 +251,15 @@ Since our Oracle cannot be guaranteed to definitely provide an interpolant, at t
   \label{alg:heap-refine}
 \end{algorithm}
 
-\coverp is a simple procedure that takes two vertices $v, w \in V$, and attempts to cover $v$ with $w$, provided $v$ is an uncovered vertex that is not an ancestor of $w$, and they are associated with the same program location (\autoref{line:coverp-pre-check}). If the heap pattern label at $v$ entails the heap pattern label at $w$, then it means that $v$ need not be explored further, and can be covered with $w$, by adding the pair $(v,w)$ to $\rhd$. Note that if a vertex is covered, then all its descendants are also automatically covered. Since we don't allow a covered vertex to cover other vertices, each vertex $y$ which is a descendant of $v$, and covers other vertices, must stop covering those vertices (\autoref{line:coverp-stop-covering}).
+\coverp is a simple procedure that takes two vertices $v, w \in V$, and attempts to cover
+$v$ with $w$, provided $v$ is an uncovered vertex that is not an ancestor of $w$, and they
+are associated with the same program location (\autoref{line:coverp-pre-check}). If the
+heap pattern label at $v$ entails the heap pattern label at $w$, then it means that $v$
+need not be explored further, and can be covered with $w$, by adding the pair $(v,w)$ to
+$\rhd$. Note that if a vertex is covered, then all its descendants are also automatically
+covered. Since we don't allow a covered vertex to cover other vertices, each vertex $y$
+which is a descendant of $v$, and covers other vertices, must stop covering those vertices
+(\autoref{line:coverp-stop-covering}).
 
 \begin{algorithm}[ht]
   % Declare functions
@@ -198,16 +285,32 @@ Since our Oracle cannot be guaranteed to definitely provide an interpolant, at t
 
 \subsection*{Learning Invariants from Positive and Negative Examples}
 
-We now describe the algorithms that allow \verifier to interface with the Oracle and find invariants. In particular, the \refinep procedure (\autoref{alg:heap-refine}) queries \seplearner for an interpolant, which in turn queries \newcandidate (\autoref{alg:newcandidate}). \newcandidate makes the call to the Oracle. We now describe these algorithms in greater detail.
+We now describe the algorithms that allow \verifier to interface with the Oracle and find
+invariants. In particular, the \refinep procedure (\autoref{alg:heap-refine}) queries
+\seplearner for an interpolant, which in turn queries \newcandidate
+(\autoref{alg:newcandidate}). \newcandidate makes the call to the Oracle. We now describe
+these algorithms in greater detail.
 
-\seplearner contructs the interpolant for an unfolding $\mathcal{U}(\pi)$ of path $\pi$, where $\pi$ is a program path ending at an error location. Paths and unfoldings are formally defined in \autoref{sec:modeling-programs}, while interpolants for path sequences in heap-manipulating programs are defined in \autoref{sec:heap-interpolants-from-proofs}. These definitions apply directly to our case of heap-manipulating programs. \seplearner maintains two types of data:
+\seplearner contructs the interpolant for an unfolding $\mathcal{U}(\pi)$ of path $\pi$,
+where $\pi$ is a program path ending at an error location. Paths and unfoldings are
+formally defined in \autoref{sec:modeling-programs}, while interpolants for path sequences
+in heap-manipulating programs are defined in \autoref{sec:heap-interpolants-from-proofs}.
+These definitions apply directly to our case of heap-manipulating programs. \seplearner
+maintains two types of data:
 
 \begin{enumerate}
   \item A current set of candidate patterns $\hat{A} = \hat{A_0}, \hat{A_1}, \cdots, \hat{A_n}$ for the vertices of the unwinding tree associated with path $\pi$
   \item A set of positive and negative candidates $H_i^{+}, H_i^{-} 0 \leq i \leq n$, which contain concrete heaps that serve as positive and negative examples respectively for the Oracle
 \end{enumerate}
 
-If $\hat{A}$ is already an interpolant for $\mathcal{U}(\pi)$, it is returned. If not, then we pick some $\hat{A_i}$ for an update, which is done by calling \newcandidate (\autoref{line:interplearner-call-newcandidate}). \newcandidate returns an updated canddiate pattern that is set to $\hat{A_i}$, and the procedure continues, until a full path interpolant is found. \newcandidate also udpates the sets $H_i^{+}, H_i^{-}$, which we describe later. Note that the check for whether the current set of candidates are actually an interpolant is delegated to the \isinterpolant procedure (\autoref{line:interplearner-isinterpolant}).
+If $\hat{A}$ is already an interpolant for $\mathcal{U}(\pi)$, it is returned. If not,
+then we pick some $\hat{A_i}$ for an update, which is done by calling \newcandidate
+(\autoref{line:interplearner-call-newcandidate}). \newcandidate returns an updated
+canddiate pattern that is set to $\hat{A_i}$, and the procedure continues, until a full
+path interpolant is found. \newcandidate also udpates the sets $H_i^{+}, H_i^{-}$, which
+we describe later. Note that the check for whether the current set of candidates are
+actually an interpolant is delegated to the \isinterpolant procedure
+(\autoref{line:interplearner-isinterpolant}).
 
 \begin{algorithm}[ht]
   % Declare functions
@@ -256,7 +359,12 @@ If $\hat{A}$ is already an interpolant for $\mathcal{U}(\pi)$, it is returned. I
   \label{alg:isinterpolant}
 \end{algorithm}
 
-\newcandidate takes in a program location $l_i$, the current set of candidates $\hat{A}$, positive and negative examples $H_i^{+}, H_i^{-}$ seen so far, and the unfolding $\mathcal{U}(\pi)$. It returns a candidate can be used to update an existing candidate, while also updating the sets $H_i^{+}, H_i^{-}$. \newcandidate is the core procedure, as far as interacting with the Oracle is concerned. Here, we describe in simple terms how it works for a given location $l_i$ in a program path $\pi$:
+\newcandidate takes in a program location $l_i$, the current set of candidates $\hat{A}$,
+positive and negative examples $H_i^{+}, H_i^{-}$ seen so far, and the unfolding
+$\mathcal{U}(\pi)$. It returns a candidate can be used to update an existing candidate,
+while also updating the sets $H_i^{+}, H_i^{-}$. \newcandidate is the core procedure, as
+far as interacting with the Oracle is concerned. Here, we describe in simple terms how it
+works for a given location $l_i$ in a program path $\pi$:
 
 \begin{enumerate}
   \item Compute the strongest postcondition $S$, starting at the root of the tree (which is annotated with the universal pattern $1_D$) until $l_i$. This partial path is indicated by $\pi_{0,i}$ (\autoref{line:newcandidate-strongest-post}). $S$ will be useful to generate concrete heaps later on. We also start with an initial value of $1_D$ for the candidate $C$.
@@ -300,4 +408,7 @@ If $\hat{A}$ is already an interpolant for $\mathcal{U}(\pi)$, it is returned. I
 \end{algorithm}
 
 \section*{Summary}
-This chapter presented \verifier, our algorithm for verifying heap-manipulating programs. \verifier uses an Oracle to perform the interpolation step, which helps in learning heap patterns from positive and negative concrete examples. The next chapter describes the implementation of an interface for one such Oracle - a human user.
+This chapter presented \verifier, our algorithm for verifying heap-manipulating programs.
+\verifier uses an Oracle to perform the interpolation step, which helps in learning heap
+patterns from positive and negative concrete examples. The next chapter describes the
+implementation of an interface for one such Oracle - a human user.
