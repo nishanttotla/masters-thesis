@@ -486,13 +486,16 @@ featured in the SV-COMP \cite{sv-comp} benchmarks.
 % https://github.com/sosy-lab/sv-benchmarks/tree/svcomp15/c/list-properties
 
 \subsubsection{Reachability}
-Consider a program that constructs a singly-linked list where the $\true$ value is always reachable from the head of the list.
+Consider a program that constructs a singly-linked list where the $\true$ value is always
+reachable from the head of the list.
 
-\subsubsection{Inverted Tree}
-An inver
+\subsubsection{Conditional Predicates}
+A list with two predicates $p_1$ and $p_2$, such that they're either both $\true$ or both
+$\false$.
 
 \subsubsection{Two-part List}
-A list that consists of two segments. For a fixed predicate $p$ the first few nodes are all $\true$, and the rest are all $\false$, followed by \nilconst.
+A list that consists of two segments. For a fixed predicate $p$ the first few nodes are
+all $\true$, and the rest are all $\false$, followed by \nilconst.
 
 The last few examples show that useful properties related to heap data structures can be
 expressed using our framework. In the future, we would like to explore whether our heap
