@@ -543,10 +543,8 @@ a simple proof of concept. Here are some of its features.
   \item The three key steps of \verifier are \expandp (\autoref{alg:heap-expand}), \refinep (\autoref{alg:heap-refine}), and \coverp (\autoref{alg:heap-cover}). We built these on top of the \impact algorithm in \cpachecker, which is a great tool for configurable software verification. \cpachecker is a generic framework that can support a lot of verification algorithms \cite{cpachecker}, and has a good implementation of the \impact algorithm from \cite{mcmillan06}. We were able to extend it by implementing the heap and heap pattern formalism in \cpachecker, and annotating nodes with heap patterns instead of predicates.
   \item We implemented the $\post$ operator (\autoref{defn:heap-post-transforms}) for heap patterns, which allows us to generate new candidates in \newcandidate (\autoref{alg:newcandidate}).
   \item The first version of \verifier does not fully implement \seplearner (\autoref{alg:interplearner}) and \newcandidate (\autoref{alg:newcandidate}). In our limited tests with users, we simulated those procedures manually.
-  \item Separate from \cpachecker, we implemented our Oracle interface using D3.
+  \item Separate from \cpachecker, we implemented our Oracle interface using D3. The two are supposed to interface using a common graph representation format, although this does not currently exist in our implementation.
 \end{enumerate}
-
-Also describe what needs to be done as future work.
 
 \section*{Summary}
 In this chapter, we presented the web interface for the Oracle in \verifier - a human
