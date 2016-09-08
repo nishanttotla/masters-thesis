@@ -501,8 +501,21 @@ in \autoref{fig:reachability-example}.
 \end{figure}
 
 \subsubsection{Conditional Predicates}
-A list with two predicates $p_1$ and $p_2$, such that they're either both $\true$ or both
-$\false$. [FIGURE TO BE ADDED]
+In this example, we consider two predicates $p_1$ and $p_2$. Suppose a program constructs
+a singly-linked list such that for each node in the list, $p_1$ and $p_2$ always get
+opposite values. That is, if $p_1$ is $\true$, then $p_2$ must be $\false$, and vice
+versa. \autoref{fig:conditional-predicate-example} demonstrates a heap pattern which
+captures this property. The figure on the left is what the pattern looks like when $p_1$
+is selected in our interface, and the figure on the right is when $p_2$ is selected.
+$x \in \heapvars$ is the head pointer for the list.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=7cm]{fig/expressiveness2-1.pdf}
+  \includegraphics[width=7cm]{fig/expressiveness2-2.pdf}
+  \caption{A heap pattern which demonstrates a list for which two predicates $p_1$ and $p_2$ cannot have the same value for any node.}
+  \label{fig:conditional-predicate-example}
+\end{figure}
 
 \subsubsection{Two-part List}
 A list that consists of two segments. For a fixed predicate $p$ the first few nodes are
