@@ -486,8 +486,19 @@ featured in the SV-COMP \cite{sv-comp} benchmarks.
 % https://github.com/sosy-lab/sv-benchmarks/tree/svcomp15/c/list-properties
 
 \subsubsection{Reachability}
-Consider a program that constructs a singly-linked list where the $\true$ value is always
-reachable from the head of the list. [FIGURE TO BE ADDED]
+Consider a program that constructs a singly-linked list, such that for a fixed
+predicate $p$, there exists a single node in the list where $p$ is $\true$. Essentially,
+this node is always reachable from the head of the list, regardless of how many nodes the
+list has. An example of a heap pattern that could capture such a property is shown
+in \autoref{fig:reachability-example}.
+
+% Reachability example.
+\begin{figure}
+  \centering
+  \includegraphics[width=7cm]{fig/expressiveness1.pdf}
+  \caption{An example heap pattern that represents singly-linked lists that have one $\true$ node for a fixed predicate $p$. This node is always reachable from the head of the list.}
+  \label{fig:reachability-example}
+\end{figure}
 
 \subsubsection{Conditional Predicates}
 A list with two predicates $p_1$ and $p_2$, such that they're either both $\true$ or both
