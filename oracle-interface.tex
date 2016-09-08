@@ -509,6 +509,7 @@ captures this property. The figure on the left is what the pattern looks like wh
 is selected in our interface, and the figure on the right is when $p_2$ is selected.
 $x \in \heapvars$ is the head pointer for the list.
 
+% Conditional predicates example.
 \begin{figure}
   \centering
   \includegraphics[width=7cm]{fig/expressiveness2-1.pdf}
@@ -518,8 +519,18 @@ $x \in \heapvars$ is the head pointer for the list.
 \end{figure}
 
 \subsubsection{Two-part List}
-A list that consists of two segments. For a fixed predicate $p$ the first few nodes are
-all $\true$, and the rest are all $\false$, followed by \nilconst. [FIGURE TO BE ADDED]
+Consider a program that for a fixed predicate $p$ constructs a singly-linked list such
+that the list is composed of two distinct parts. For the first part, $p$ is $\true$
+and for the second part, $p$ is $\false$. A pattern that represents this is shown
+in \autoref{fig:two-part-list-example}.
+
+% Two-part list example.
+\begin{figure}
+  \centering
+  \includegraphics[width=7cm]{fig/expressiveness3.pdf}
+  \caption{A heap pattern that represents a list made up of a $\true$ segment followed by a $\false$ segment.}
+  \label{fig:two-part-list-example}
+\end{figure}
 
 The last few examples show that useful properties related to heap data structures can be
 expressed using our framework. In the future, we would like to explore whether our heap
