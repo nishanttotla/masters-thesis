@@ -1,7 +1,7 @@
 \label{ch:conclusion}
 
 In this chapter, we briefly describe existing verification approaches, how they differ
-from our Oracle-guided approach, and summarize the contributions in this thesis.
+from our oracle-guided approach, and summarize the contributions in this thesis.
 
 \section{Related Work}
 \label{sec:related-work}
@@ -152,7 +152,7 @@ Our work can be summarized using the following key ideas:
 \begin{enumerate}
   \item We extended the interpolant-based verification algorithm from \cite{mcmillan06} to work for the domain of heap-manipulating programs.
   \item We defined the heap pattern formalism for expressing sets of concrete heaps.
-  \item We introduced the idea of Oracle-guided verification, defining a framework which allows the verification algorithm to use an external Oracle for the generalization step.
+  \item We introduced the idea of oracle-guided verification, defining a framework which allows the verification algorithm to use an external Oracle for the generalization step.
   \item We demonstrated one example of such an Oracle - a human user who is good at generalizing shapes, and can provide valuable insight to help find heap interpolants.
 \end{enumerate}
 
@@ -165,4 +165,4 @@ plugging in different Oracles into an existing verification algorithm, allowing 
 broader possible insight into the analysis. It is easy to extend this to the case of
 allowing for multiple Oracles working side by side in a single analysis, providing
 complementary insight into a verification problem. In the future, a theoretical analysis
-of Oracle-guided verification algorithms would be an interesting direction.
+of oracle-guided verification algorithms would be an interesting direction.
