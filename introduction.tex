@@ -100,12 +100,25 @@ requires an Oracle, which we have chosen to be a human user, and
 \autoref{ch:interface-oracle} presents our user interface with some analysis.
 \autoref{ch:conclusion} discusses related work, and concludes.
 
-\subsubsection{External Collaboration}
+\subsubsection{Collaboration}
 The work in this thesis is part of the collaboration with Somesh
-Jha\footnote{University of Wisconsin, Madison}, William
+Jha\footnote{University of Wisconsin, Madison}, William (Bill)
 Harris\footnote{Georgia Institute of Technology}, and Drew
 Davidson\footnote{University of Wisconsin, Madison}. Somesh and Bill were immensely
-insightful in helping narrow down the problem domain, while providing constant guidance.
-Drew was very helpful with implementing our ideas. This work would not have been
-possible without our several regular weekly discussions.
+insightful in helping narrow down the problem domain.
+The heap pattern formalism that forms a major part of the formal background for this
+thesis was conceived over the course of several regular weekly meetings with Bill, Somesh,
+and Sanjit. This involved understanding and analyzing several existing approaches, and
+narrowing down on the properties we cared about for an oracle-guided framework. They
+were also instrumental in advancing theoretical analysis of heap patterns
+(this is still work in progress, and didn't make it into the thesis).
+
+Drew and I worked together implementing our ideas, initially building on top
+of Predator \cite{dudka13}, and later in \cpachecker \cite{cpachecker}. Later on,
+I worked on finishing this implementation, and also independently built the
+user interface to human oracles \autoref{ch:interface-oracle}.
+
+This work would not have been possible without our regular weekly discussions, constant
+guidance from Bill, Somesh, and Sanjit, and the shared effort with Drew on implementing
+these ideas.
 
