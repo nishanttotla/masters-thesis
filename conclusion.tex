@@ -93,20 +93,24 @@ selection that affects existing data-driven techniques.
 A theory of formal synthesis in inductive learning is presented in \cite{jha-arxiv15}.
 While our work in this thesis focuses on verification, synthesis is the dual problem
 of finding programs from specifications, and in the case of inductive synthesis, by using
-examples. This paper formalizes oracle-guided inductive synthesis (OGIS), as a framework that captures a family of synthesizers that operate by iteratively querying an oracle. Counterexample-guided inductive synthesis (CEGIS) is then presented as an instance of OGIS.
+examples. This paper formalizes oracle-guided inductive synthesis (OGIS), as a framework
+that captures a family of synthesizers that operate by iteratively querying an oracle.
+Counterexample-guided inductive synthesis (CEGIS) is then presented as an instance
+of OGIS.
 
-HERE
-\cite{sagiv2016}
-
-% Further the paper Susmit and I wrote on a Theory of Formal Synthesis
-% via Inductive Learning, that generalizes active learning and query-based
-% learning to the oracle-guided inductive synthesis framework.
+The work in \cite{sagiv2016} describes a system called Ivy, whose key principle
+is that whenever verification fails, it graphically displays a concrete
+counterexample to induction. The user then interactively guides
+generalization from this counterexample. This process
+continues until an inductive invariant is found. Ivy searches
+for universally quantified invariants, and uses
+a restricted modeling language which ensures that all verification conditions
+can be checked algorithmically. All user interactions are performed using
+graphical models, easing the user's task.
 
 % A broader discussion of the role of learning in synthesis is
 % given in my Proc. IEEE paper. Would be good to expand this section to give
 % this broader view.
-
-% Sagiv et al's PLDI 2016 paper on the Ivy system would also come here.
 
 \paragraph{Shape Analysis}
 In program analysis, a shape analysis is a static code analysis technique that discovers
